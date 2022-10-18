@@ -6,7 +6,6 @@ import React, { } from 'react';
 import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { BalanceDisplay } from '../components/BalanceDisplay';
 import YourSoaps from '../components/YourSoaps';
-import Blog from '../components/Blog';
 
 const Collection: NextPage = (props) => {
   
