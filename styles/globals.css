@@ -22,3 +22,6 @@
   src: url("../public/fonts/Phenomena-Regular.otf");
 }
 
+body {
+  background-color: white;
+}

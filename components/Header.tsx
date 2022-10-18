@@ -1,4 +1,5 @@
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import Link from 'next/link'
 
 export default function Header() {
 
@@ -19,7 +20,9 @@ export default function Header() {
             </header> */}
 
             <nav className="py-3 mb-2 flex justify-between">
-                <h1 className='text-4xl font-phenomenaBlack h-12 leading-8'>soap</h1>
+                <Link href="/">
+                    <h1 className='text-6xl font-phenomenaBlack h-12 leading-8 cursor-pointer'> soap</h1>
+                </Link>
                 <ul className="flex items-center font-neueHaasUnicaRegular">
                     {/* <li className="pl-6">
                         <p>Discover</p>
@@ -28,7 +31,9 @@ export default function Header() {
                         Try
                     </li> */}
                     <li className="pl-6">
-                    <WalletMultiButton className='bg-black leading-none'/>
+                        <WalletMultiButton className='bg-black leading-none text-xl'>
+                            Slide In
+                        </WalletMultiButton>
                     </li>
                 </ul>
             </nav>
