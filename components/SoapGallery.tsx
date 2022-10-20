@@ -5,7 +5,7 @@ import Link from 'next/link'
 const axios = require('axios')
 import Image from 'next/image'
 
-const params = new URLSearchParams({
+const heliosParams = new URLSearchParams({
     "api-key": "7891f7f8-bd63-4506-9ba3-a4ec8ab81ddd" // FIXME REPLACE THIS
 });
 
@@ -16,13 +16,9 @@ export const SoapGallery: FC = () => {
     const [balance, setBalance] = useState(0)
     const { connection } = useConnection()
     const { publicKey } = useWallet()
-    const [ walletAddress, setWalletAddress] = useState('')
+    const [walletAddress, setWalletAddress] = useState<string | null>(null)
 
     useEffect(() => {
-        const walletAddress = localStorage.getItem('walletEncryptionKey')
-        console.log("walletaddress: ", walletAddress)
-        setWalletAddress(walletAddress)
-
 
         if (!connection || !publicKey) { return }
 
@@ -31,32 +27,38 @@ export const SoapGallery: FC = () => {
             console.log("logged in wallet: ", publicKey.toBase58())
         })
 
-        //const url = buildHeliusUrl("addresses", publicKey.toBase58(), "nfts", params);
-        const url = buildHeliusUrl("addresses", "CN5zRzJGNqp5GNyfWjwSKeg8BuG5XJezAHMHfV7e69TT", "nfts", params);
-        console.log("Wallet from helius is CN5zRzJGNqp5GNyfWjwSKeg8BuG5XJezAHMHfV7e69TT")
-        console.log(url)
-        const getNFTs = async () => {
-            const { data } = await axios.get(url)
-            console.log("nfts held: ", data)
-        }
-        getNFTs()
-
-        // TODO:
-        // Get all NFTs that belong to the 9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV collection from user's wallet
-        // Display all of them in a nice card system
-
     }, [connection, publicKey])
 
     // Load user pubkey into state
     useEffect(() => {
-        if (localStorage.getItem('userPublicKey')) {
-            console.log("We found a public key of a user, we'll continue with that:")
-            console.log(localStorage.getItem('userPublicKey'))
-            setWalletAddress(localStorage.getItem('userPublicKey'))
-        } else {
-            console.log("you got no userPublicKey in your local storage ser")
-
+        if (!walletAddress) {
+            if (localStorage.getItem('userPublicKey')) {
+                console.log("We found a public key of a user, we'll continue with that: ", localStorage.getItem('userPublicKey'))
+                setWalletAddress(localStorage.getItem('userPublicKey'))
+            } else {
+                console.log("you got no userPublicKey in your local storage ser")
+                return
+            }
         }
+        
+        const walletAddy = localStorage.getItem('userPublicKey')
+        //const url = buildHeliusUrl("addresses", publicKey.toBase58(), "nfts", params);
+        const url = buildHeliusUrl("addresses", walletAddy, "nfts", heliosParams);
+        console.log(`Wallet from helius is ${walletAddy}`)
+        console.log("Queriyng Helois: ", url)
+        const getNFTs = async () => {
+            const { data } = await axios.get(url)
+            // console.log("nfts held: ", data)
+            return data
+        }
+        const nftsHeld = getNFTs()
+        console.log("NFTs held in wallet: ", nftsHeld)
+
+
+
+        // TODO:
+        // Get all NFTs that belong to the 9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV collection from user's wallet
+        // Display all of them in a nice card system
     }, [])
 
 
@@ -68,7 +70,7 @@ export const SoapGallery: FC = () => {
     //     console.log("nfts held: ", data)
     // }
 
-    
+
 
     return (
         <>
@@ -76,7 +78,7 @@ export const SoapGallery: FC = () => {
                 <p className='' >{publicKey ? `Balance of ${publicKey.toBase58().slice(0, 5)}... is ${balance / LAMPORTS_PER_SOL} SOL` : 'Wallet not connected'}</p>
             </div> */}
             <div >
-                <p>Wallet: { walletAddress }</p>
+                <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl'>Wallet: {walletAddress ? `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "Not logged in"}</p>
             </div>
             <div className="flex text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-96">
                 {/* <p className='' >{publicKey ? `${getNFTs()}` : 'Wallet not connected'}</p> */}

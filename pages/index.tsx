@@ -20,13 +20,13 @@ const Homes: NextPage = (props) => {
       </Head>
       <main >
         <Header></Header>
-        <div className="py-2 justify-center flex ">
+        {/* <div className="py-2 justify-center flex ">
           <Link href="/mobile">
             <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-96 h-12">
               Wallet Adapters
             </button>
           </Link>
-        </div>
+        </div> */}
         <Hero></Hero>
       </main>
     </div>

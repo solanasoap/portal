@@ -20,6 +20,7 @@ import nacl from "tweetnacl";
 import { useLocalStorage } from "@solana/wallet-adapter-react";
 import { TextEncoder } from "util";
 import base from "base-x";
+import router from "next/router";
 
 export const BASE_URL = "https://phantom.app/ul/v1/";
 const NETWORK = clusterApiUrl("mainnet-beta");
@@ -31,16 +32,14 @@ const NETWORK = clusterApiUrl("mainnet-beta");
 /// target page try autoconnect
 /// reads state for what it's looking for if signed in
 /// shows "log in mfer" if not signed in
-const base_url = process.env.BASE_URL
 
 const buildUrl = (walletEndpoint: string, path: string, params: URLSearchParams) =>
     `https://${walletEndpoint}/ul/v1/${path}?${params.toString()}`;
 
 export default function MobileAdapter() {
 
-    const base_url = "portal-solsoap.vercel.app" // WHY TF THIS AINT WORKING process.env.BASE_URL
+    const base_url = process.env.NEXT_PUBLIC_BASE_URL
     const onConnectRedirectLink = `https://${base_url}/phantom/onConnect`
-    const urlEncodedConnectLink = `phantom://v1/connect?app_url=%20https%3A%2F%2Fe${base_url}`
     console.log("URL", base_url)
 
     const [deepLink, setDeepLink] = useState<string>("");
@@ -53,9 +52,9 @@ export default function MobileAdapter() {
     const [sharedSecret, setSharedSecret] = useState<Uint8Array>();
     const [session, setSession] = useState<string>();
     const [phantomWalletPublicKey, setPhantomWalletPublicKey] = useState<PublicKey>();
+    const [walletAddress, setWalletAddress] = useState<string | null>(null)
 
     const connect = (walletEndpoint: string) => {
-        console.log("dappkeypair.publickey in connect: ", dappKeyPair.publicKey)
         const params = new URLSearchParams({
             dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
             cluster: "mainnet-beta",
@@ -67,6 +66,15 @@ export default function MobileAdapter() {
         return url
     };
 
+    const disconnect = () => {
+        console.log("Clearing local storage of wallet info. Disconnecting...")
+        // localStorage.removeItem('dappKeyPairSecretKey') // not remove yet...
+        localStorage.removeItem('userPublicKey')
+        alert("Wallet disconnected!")
+        // router.push("/mobile")
+        router.reload()
+    }
+
     useEffect(() => {
         //console.log(nacl.box.keyPair())
 
@@ -77,6 +85,15 @@ export default function MobileAdapter() {
         // check if localstorage exists for local keypair
         // load if yes
         // create and save if no
+
+        if (!walletAddress) {
+            if (localStorage.getItem('userPublicKey')) {
+                console.log("We found a public key of a user, we'll continue with that: ", localStorage.getItem('userPublicKey'))
+                setWalletAddress(localStorage.getItem('userPublicKey'))
+            } else {
+                console.log("MobileAdapter: you got no userPublicKey in your local storage ser")
+            }
+        }
 
         if (localStorage.getItem('dappKeyPairSecretKey')) {
             console.log("Reusing keypair in local storage.")
@@ -107,19 +124,29 @@ export default function MobileAdapter() {
 
     return (
         <>
-            <div className="py-2 justify-center flex ">
+            {/* <div className="py-2 justify-center flex ">
                 <Link href="https://phantom.app/ul/browse/https%3A%2F%2Fe%2Fsoaps?ref=<%20https%3A%2F%2Feportal-solsoap.vercel.app/">
                     <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-48 h-12">
                         Open in Phantom
                     </button>
                 </Link>
+            </div> */}
+            <div>
+                <h1 className="flex text-3xl justify-start pt-4 pb-2 font-bold">
+                    {walletAddress ? `Logged in: ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "Not logged in"}
+                </h1>
             </div>
-            <div className="py-2 justify-center flex ">
+            <div className="py-2 justify-start flex ">
                 <Link href={`${connect("phantom.app")}`}>
-                    <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-48 h-12">
+                    <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-64 h-16">
                         Deeplink in Phantom
                     </button>
                 </Link>
+            </div>
+            <div className="py-2 justify-start flex ">
+                <button onClick={disconnect} className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-64 h-16">
+                    Disconnect
+                </button>
             </div>
 
 

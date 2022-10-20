@@ -16,42 +16,17 @@ const OnConnect: NextPage = (props) => {
     // Get Query Params from Phantom deeplink redirect
     const router = useRouter()
     const queryParams = router.query
-    console.log("query params: ", queryParams)
+    // console.log("query params: ", queryParams)
 
-    const [walletState, setWalletState] = useWalletContext();
-    setWalletState(queryParams)
-    console.log("Wallet state: ", walletState)
-
-    // Save data from query param to local storage
-    const [data, setData] = useLocalStorage('walletData', null);
+    // const [walletState, setWalletState] = useWalletContext();
+    // setWalletState(queryParams)
 
     const [dappKeyPair, setDappKeyPair] = useState<BoxKeyPair>();
     const [phantomWalletPublicKey, setPhantomWalletPublicKey] =
         useState<PublicKey | string>("");
 
 
-    // const [ pubKey, setPubKey ] = useState(null)
-    const [walletEncryptionKey, setWalletEncryptionKey] = useState<any | null>(null);
-
     useEffect(() => {
-        setWalletEncryptionKey(router.query.phantom_encryption_public_key)
-        localStorage.setItem('walletEncryptionKey', queryParams.phantom_encryption_public_key.toString())
-        console.log("Wallet encryption key from localstorage: " + localStorage.getItem('walletEncryptionKey'))
-        //setData(queryParams.data)
-        // const router = useRouter()
-        // const phantom_encryptipion_pubkey = router.query["phantom_encryption_public_key"]
-        // console.log(phantom_encryptipion_pubkey)
-        // console.log(router.query)
-
-        console.log("We in usefeecct")
-        if (!router.query.data) {
-            console.log("Walet didn't give any info")
-            router.push("/mobile")
-        }
-        console.log(router.query.phantom_encryption_public_key)
-        console.log("Wallet encryption key: ", walletEncryptionKey)
-
-
 
         // TODO:
         // Get all NFTs that belong to the 9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV collection from user's wallet
@@ -82,32 +57,39 @@ const OnConnect: NextPage = (props) => {
 
         }
 
+        if (router.query.data) {
 
-        console.log(router.query.phantom_encryption_public_key.toString())
-        console.log(router.query.data.toString())
-        console.log(router.query.nonce.toString())
+            console.log(router.query.phantom_encryption_public_key.toString())
+            console.log(router.query.data.toString())
+            console.log(router.query.nonce.toString())
 
-        const sharedSecretDapp = nacl.box.before(
-            bs58.decode(router.query.phantom_encryption_public_key.toString()),
-            shouldDappKeyPair2.secretKey
-        );
-        const connectData = decryptPayload(
-            router.query.data.toString(),
-            router.query.nonce.toString(),
-            sharedSecretDapp
-        );
-        // setSharedSecret(sharedSecretDapp);
-        // setSession(connectData.session);
-        setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
-        console.log(`connected to ${connectData.public_key.toString()}`);
+            const sharedSecretDapp = nacl.box.before(
+                bs58.decode(router.query.phantom_encryption_public_key.toString()),
+                shouldDappKeyPair2.secretKey
+            );
+            const connectData = decryptPayload(
+                router.query.data.toString(),
+                router.query.nonce.toString(),
+                sharedSecretDapp
+            );
+            // setSharedSecret(sharedSecretDapp);
+            // setSession(connectData.session);
+            setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
+            console.log(`connected to ${connectData.public_key.toString()}`);
 
-        // Save public key of wallet in Local Storage
-        localStorage.setItem('userPublicKey', connectData.public_key.toString())
+            // Save public key of wallet in Local Storage
+            localStorage.setItem('userPublicKey', connectData.public_key.toString())
 
-        // TODO:
-        // Redirect to /soaps
-        // show wallet better on /soaps
-        // (Optional) Get and display all soaps or all nfts
+
+            // TODO:
+            // Redirect to /soaps
+            // show wallet better on /soaps
+            // (Optional) Get and display all soaps or all nfts
+            router.push("/soaps")
+        } else {
+            router.push("/mobile")
+        }
+
     }, []);
 
 
@@ -121,13 +103,10 @@ const OnConnect: NextPage = (props) => {
                 </Head>
                 <main >
                     <Header></Header>
-                    <p>Phantom Encrypton Pubkey: {walletEncryptionKey}</p>
-                    <br />
-                    <p>Data: {router.query.data}</p>
-                    <br />
-                    <p>Nonce: {router.query.nonce}</p>
-                    <br />
-                    <p>Wallet pubkey: { phantomWalletPublicKey.toString() }</p>
+                    {/* <p>Wallet pubkey: {phantomWalletPublicKey.toString()}</p>
+                    <div >
+                        <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl'>Wallet: {phantomWalletPublicKey.toString() ? `${phantomWalletPublicKey.toString().slice(0, 4)}...${phantomWalletPublicKey.toString().slice(-4)}` : "Not logged in"}</p>
+                    </div> */}
                     {/* {{props}} */}
 
                 </main>
