@@ -32,7 +32,7 @@ export default function Header() {
                     </li> */}
                     <li className="pl-6">
                         <WalletMultiButton className='bg-black leading-none text-xl'>
-                            Slide In
+
                         </WalletMultiButton>
                     </li>
                 </ul>

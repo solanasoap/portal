@@ -14,7 +14,7 @@ export default function Hero() {
                         <p> Give out soaps as rewards, communicate with holders, and engage your tribe. With soap, people can prove their actions and get immersed in an on-chain world. </p>
                     </div>
                     <div className="py-8">
-                        <Link href="/collection">
+                        <Link href="/soaps">
                         <button className=" bg-RBGradient-Blue-Right hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg uppercase font-neueHaasUnicaBlack">
                             see your soaps
                         </button>

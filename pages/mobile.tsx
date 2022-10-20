@@ -5,24 +5,21 @@ import Hero from '../components/Hero'
 import React, { } from 'react';
 import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { BalanceDisplay } from '../components/BalanceDisplay';
-import YourSoaps from '../components/YourSoaps';
+import MobileAdapter from '../components/MobileAdapter';
 
 const Collection: NextPage = (props) => {
   
   
     return (
-  
-      // <ConnectionProvider endpoint={endpoint}>
-      //   <WalletProvider wallets={[wallet]}>
       <div className="px-5">
         <Head>
-          <title>Your soap collection</title>
+          <title>New mobile adapter</title>
           <meta name="description" content="See your collection of soaps." />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main >
           <Header></Header>
-          <YourSoaps></YourSoaps>
+          <MobileAdapter></MobileAdapter>
           <BalanceDisplay></BalanceDisplay>
 
         </main>

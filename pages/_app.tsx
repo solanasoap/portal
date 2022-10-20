@@ -5,16 +5,13 @@ import {
     GlowWalletAdapter,
     LedgerWalletAdapter,
     PhantomWalletAdapter,
-    SlopeWalletAdapter,
     SolflareWalletAdapter,
     SolletExtensionWalletAdapter,
-    SolletWalletAdapter,
-    TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { AppProps } from 'next/app';
 import { FC, useMemo } from 'react';
-import { MobileWalletContext } from '../utils/MobileWalletContext'
+import { WalletWrapper } from '../context/MobileWalletContext';
 
 // Use require instead of import since order matters
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -34,22 +31,24 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         () => [
             new GlowWalletAdapter(),
             new PhantomWalletAdapter(),
-            new SolflareWalletAdapter()
+            new SolflareWalletAdapter(),
+            new LedgerWalletAdapter(),
+            new SolletExtensionWalletAdapter()
         ],
         [network]
     );
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect={true} localStorageKey="soapWalletAdapter">
-                <MobileWalletContext.Provider value="Hello from context.">
-                    <WalletModalProvider>
-                        <Component {...pageProps} />
-                    </WalletModalProvider>
-                </MobileWalletContext.Provider>
-            </WalletProvider>
-        </ConnectionProvider>
+        <WalletWrapper>
+            <ConnectionProvider endpoint={endpoint}>
+                <WalletProvider wallets={wallets} autoConnect={true} localStorageKey="soapWalletAdapter">
+                        <WalletModalProvider>
+                            <Component {...pageProps} />
+                        </WalletModalProvider>
+                </WalletProvider>
+            </ConnectionProvider>
+        </WalletWrapper>
     );
 };
 
-export default App;
+export default App; 
