@@ -19,6 +19,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import nacl from "tweetnacl";
 import { useLocalStorage } from "@solana/wallet-adapter-react";
 import { TextEncoder } from "util";
+import base from "base-x";
 
 export const BASE_URL = "https://phantom.app/ul/v1/";
 const NETWORK = clusterApiUrl("mainnet-beta");
@@ -30,18 +31,18 @@ const NETWORK = clusterApiUrl("mainnet-beta");
 /// target page try autoconnect
 /// reads state for what it's looking for if signed in
 /// shows "log in mfer" if not signed in
-const onConnectRedirectLink = "https://e175-213-220-159-212.eu.ngrok.io/phantom/onConnect"
-
-
-const urlEncodedConnectLink = "phantom://v1/connect?app_url=%20https%3A%2F%2Fe175-213-220-159-212.eu.ngrok.io"
-const openInPhantomURL = "THIS I NEED TO GET TO ULTIAMTELY"
-
-
+const base_url = process.env.BASE_URL
 
 const buildUrl = (walletEndpoint: string, path: string, params: URLSearchParams) =>
     `https://${walletEndpoint}/ul/v1/${path}?${params.toString()}`;
 
 export default function MobileAdapter() {
+
+    const base_url = "portal-solsoap.vercel.app" // WHY TF THIS AINT WORKING process.env.BASE_URL
+    const onConnectRedirectLink = `https://${base_url}/phantom/onConnect`
+    const urlEncodedConnectLink = `phantom://v1/connect?app_url=%20https%3A%2F%2Fe${base_url}`
+    console.log("URL", base_url)
+
     const [deepLink, setDeepLink] = useState<string>("");
     const [logs, setLogs] = useState<string[]>([]);
     const connection = new Connection(NETWORK);
@@ -58,7 +59,7 @@ export default function MobileAdapter() {
         const params = new URLSearchParams({
             dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
             cluster: "mainnet-beta",
-            app_url: "https://e175-213-220-159-212.eu.ngrok.io",
+            app_url: `https://${base_url}`,
             redirect_link: onConnectRedirectLink,
         });
 
@@ -107,7 +108,7 @@ export default function MobileAdapter() {
     return (
         <>
             <div className="py-2 justify-center flex ">
-                <Link href="https://phantom.app/ul/browse/https%3A%2F%2Fe175-213-220-159-212.eu.ngrok.io%2Fsoaps?ref=<%20https%3A%2F%2Fe175-213-220-159-212.eu.ngrok.io">
+                <Link href="https://phantom.app/ul/browse/https%3A%2F%2Fe%2Fsoaps?ref=<%20https%3A%2F%2Feportal-solsoap.vercel.app/">
                     <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-48 h-12">
                         Open in Phantom
                     </button>
@@ -120,7 +121,9 @@ export default function MobileAdapter() {
                     </button>
                 </Link>
             </div>
-            <div className="py-2 justify-center flex ">
+
+
+            {/* <div className="py-2 justify-center flex ">
                 <Link href="https://solflare.com/ul/browse/https%3A%2F%2Fe175-213-220-159-212.eu.ngrok.io%2Fsoaps?ref=<%20https%3A%2F%2Fe175-213-220-159-212.eu.ngrok.io">
                     <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-48 h-12">
                         Open in Solflare
@@ -133,7 +136,9 @@ export default function MobileAdapter() {
                         Deeplink in Solflare
                     </button>
                 </Link>
-            </div>
+            </div> */}
+
+
             {/* <div>
                 { dappKeyPair.publicKey.toString() }
             </div> */}
