@@ -6,20 +6,9 @@ import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/
 import { useRouter } from 'next/router'
 
 
-
 const mxconnection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/"); // FIXME REPLACE THIS
 const mx = Metaplex.make(mxconnection);
-
 const soapCollectionId = new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV")
-
-const heliosParams = new URLSearchParams({
-    "api-key": "7891f7f8-bd63-4506-9ba3-a4ec8ab81ddd" // FIXME REPLACE THIS
-});
-
-// MAY NOT NEED HELIUS
-const buildHeliusUrl = (path: string, address: string, genre: string, params: URLSearchParams) =>
-    `https://api.helius.xyz/v0/${path}/${address}/${genre}?${params.toString()}`;
-
 
 
 export const SoapGallery: FC = () => {
@@ -52,12 +41,13 @@ export const SoapGallery: FC = () => {
         }
     };
 
+    // redirect to login page
     const goToLoginPage = async () => {
         await sleep(2000)
         router.push('mobile')
     }
 
-    function sleep(ms) {
+    function sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
@@ -134,9 +124,6 @@ export const SoapGallery: FC = () => {
                 return
             }
         }
-
-        // TODO:
-        // Display all of them in a nice card system
     }, [])
 
     return (
@@ -197,15 +184,16 @@ export const SoapGallery: FC = () => {
                     </div> */}
                     </div>
                 </>
-            ) : (
+            ) : (loading && (
                 <div className='flex justify-center'>
                     <img className="" src="/loading.svg" />
                 </div>
+            )
             )}
 
             {!currentView && walletAddress && !userHasSoap && (
                 <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
-                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You ain&#39;t got no soap, smelly mfer</p>
+                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You ain&#39;t got no soap, we can smell.</p>
                 </div>
             )}
         </>

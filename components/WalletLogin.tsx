@@ -72,7 +72,7 @@ export default function WalletLogin() {
         localStorage.removeItem('userPublicKey')
         alert("Wallet disconnected!")
         // router.push("/mobile")
-        router.reload()
+        router.push('/')
     }
 
     useEffect(() => {
@@ -83,9 +83,7 @@ export default function WalletLogin() {
         // FIXME: Add local persistance safely // fix to one custom keypair (pubkey)
 
         // check if localstorage exists for local keypair
-        // load if yes
-        // create and save if no
-
+        // load if yes, create and save if no
         if (!walletAddress) {
             if (localStorage.getItem('userPublicKey')) {
                 console.log("We found a public key of a user, we'll continue with that: ", localStorage.getItem('userPublicKey'))
