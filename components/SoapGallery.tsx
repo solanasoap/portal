@@ -6,7 +6,7 @@ import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/
 
 
 
-const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/914e7031c3225e57b4a8295a35457913e59475cc/"); // FIXME REPLACE THIS
+const connection = new Connection(`https://broken-green-forest.solana-mainnet.discover.quiknode.pro/${process.env.QUICKNODE_API_KEY}/`); // FIXME REPLACE THIS
 const mx = Metaplex.make(connection);
 
 const soapCollectionId = new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV")
