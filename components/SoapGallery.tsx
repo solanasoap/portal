@@ -172,7 +172,7 @@ export const SoapGallery: FC = () => {
             )}
             {!currentView && walletAddress && (
                 <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
-                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You ain't got no soap, smelly mfer</p>
+                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You aint got no soap, smelly mfer</p>
                 </div>
             )}
         </>
