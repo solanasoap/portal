@@ -5,7 +5,7 @@ import Hero from '../components/Hero'
 import React, { } from 'react';
 import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { BalanceDisplay } from '../components/BalanceDisplay';
-import MobileAdapter from '../components/MobileAdapter';
+import WalletLogin from '../components/WalletLogin';
 
 const Collection: NextPage = (props) => {
   
@@ -19,7 +19,7 @@ const Collection: NextPage = (props) => {
         </Head>
         <main >
           <Header></Header>
-          <MobileAdapter></MobileAdapter>
+          <WalletLogin></WalletLogin>
           <BalanceDisplay></BalanceDisplay>
 
         </main>

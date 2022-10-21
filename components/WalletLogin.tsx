@@ -36,7 +36,7 @@ const NETWORK = clusterApiUrl("mainnet-beta");
 const buildUrl = (walletEndpoint: string, path: string, params: URLSearchParams) =>
     `https://${walletEndpoint}/ul/v1/${path}?${params.toString()}`;
 
-export default function MobileAdapter() {
+export default function WalletLogin() {
 
     const base_url = process.env.NEXT_PUBLIC_BASE_URL
     const onConnectRedirectLink = `https://${base_url}/phantom/onConnect`
@@ -91,7 +91,7 @@ export default function MobileAdapter() {
                 console.log("We found a public key of a user, we'll continue with that: ", localStorage.getItem('userPublicKey'))
                 setWalletAddress(localStorage.getItem('userPublicKey'))
             } else {
-                console.log("MobileAdapter: you got no userPublicKey in your local storage ser")
+                console.log("WalletLogin: you got no userPublicKey in your local storage ser")
             }
         }
 

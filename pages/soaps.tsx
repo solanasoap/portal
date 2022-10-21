@@ -5,7 +5,7 @@ import Hero from '../components/Hero'
 import React, { } from 'react';
 import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { BalanceDisplay } from '../components/BalanceDisplay';
-import MobileAdapter from '../components/MobileAdapter';
+import WalletLogin from '../components/WalletLogin';
 import { SoapGallery } from '../components/SoapGallery';
 
 const Collection: NextPage = (props) => {
