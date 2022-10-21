@@ -152,7 +152,7 @@ export const SoapGallery: FC = () => {
                             Welcome to your soap collection
                         </p>
                         <p className='font-phenomenaRegular text-xl text-center'>
-                            These are all the 🧼 you've collected into your wallet. Busy life huh!
+                            These are all the 🧼 you&#39;ve collected into your wallet. Busy life huh!
                         </p>
                     </div>
                     <div className="flex-col text-white bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right px-8 pt-2 mb-4 rounded-lg min-h-full">
@@ -205,7 +205,7 @@ export const SoapGallery: FC = () => {
 
             {!currentView && walletAddress && !userHasSoap && (
                 <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
-                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You aint got no soap, smelly mfer</p>
+                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You ain&#39;t got no soap, smelly mfer</p>
                 </div>
             )}
         </>
