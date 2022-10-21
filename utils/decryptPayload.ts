@@ -14,7 +14,7 @@ export const decryptPayload = (
     sharedSecret
   );
   if (!decryptedData) {
-    throw new Error("Unable to decrypt data");
+    return null
   }
   return JSON.parse(Buffer.from(decryptedData).toString("utf8"));
 };

@@ -6,7 +6,7 @@ import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/
 
 
 
-const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/929aa3b11ec93c3cc584e9b028b6652db2c69546/"); // FIXME REPLACE THIS
+const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/914e7031c3225e57b4a8295a35457913e59475cc/"); // FIXME REPLACE THIS
 const mx = Metaplex.make(connection);
 
 const soapCollectionId = new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV")
@@ -70,7 +70,13 @@ export const SoapGallery: FC = () => {
             const endIndex = currentPage * perPage;
             const nfts = await loadData(startIndex, endIndex);
 
-            setCurrentView(nfts);
+            if (!nfts.length) {
+                // console.log("No NFTs held by wallet.")
+                setCurrentView(null);
+            } else {
+                setCurrentView(nfts);
+            }
+
             setLoading(false);
         };
 
@@ -112,40 +118,16 @@ export const SoapGallery: FC = () => {
             }
         }
 
-        const walletAddy = localStorage.getItem('userPublicKey')
-        //const url = buildHeliusUrl("addresses", publicKey.toBase58(), "nfts", params);
-        const url = buildHeliusUrl("addresses", walletAddy, "nfts", heliosParams);
-        console.log(`Wallet from helius is ${walletAddy}`)
-        console.log("Queriyng Helois: ", url)
-        const getNFTs = async () => {
-            const { data } = await axios.get(url)
-            var soaps = []
-            var onPage = 1
-            while (onPage! > data.numberOfPages) {
-                // get all tokens data into soaps array from page
-                // query for next page
-                // run again
-                console.log("from while statement ", data.nfts)
-            }
-            console.log("nfts held: ", data.nfts)
-            console.log(data.numberOfPages)
-            return data
-        }
-        const nftsHeld = getNFTs()
-        console.log("NFTs held in wallet: ", nftsHeld)
-
-
-
         // TODO:
         // Display all of them in a nice card system
     }, [])
 
     return (
         <>
-            <div >
+            <div className="flex justify-center pb-2">
                 <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl'>{walletAddress ? `Wallet: ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "Please log in to see your soaps."}</p>
             </div>
-            {walletAddress && (
+            {walletAddress && currentView && (
                 <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
                     <div>
                         {loading ? ( // false by default
@@ -187,7 +169,12 @@ export const SoapGallery: FC = () => {
                         )}
                     </div>
                 </div>
-                )}
+            )}
+            {!currentView && walletAddress && (
+                <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
+                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You ain't got no soap, smelly mfer</p>
+                </div>
+            )}
         </>
     )
 }

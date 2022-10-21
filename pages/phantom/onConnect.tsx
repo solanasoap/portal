@@ -39,7 +39,7 @@ const OnConnect: NextPage = (props) => {
 
             // Get "dappKeyPairSecretKey" from local storage
             const dappKeyPairSecretKeyLocalStorage = JSON.parse(localStorage.getItem('dappKeyPairSecretKey'))
-            console.log("dappkeypairsecretkeylocalstorage: ", dappKeyPairSecretKeyLocalStorage)
+            // console.log("dappkeypairsecretkeylocalstorage: ", dappKeyPairSecretKeyLocalStorage)
 
             // Create array from JSON secret key
             var secretKeyArray = [];
@@ -49,29 +49,36 @@ const OnConnect: NextPage = (props) => {
             // Create Uint8Array for secret key to be used in keypair
             const secretKeyUint8 = Uint8Array.from(secretKeyArray)
             const shouldDappKeyPair = nacl.box.keyPair.fromSecretKey(secretKeyUint8)
-            console.log("ShouldDappKeyPair: ", shouldDappKeyPair)
+            // console.log("ShouldDappKeyPair: ", shouldDappKeyPair)
 
             setDappKeyPair(shouldDappKeyPair)
             shouldDappKeyPair2 = shouldDappKeyPair
-            console.log("dappKeyPair: ", dappKeyPair)
+            // console.log("dappKeyPair: ", dappKeyPair)
 
         }
 
         if (router.query.data) {
 
-            console.log(router.query.phantom_encryption_public_key.toString())
-            console.log(router.query.data.toString())
-            console.log(router.query.nonce.toString())
+            // console.log(router.query.phantom_encryption_public_key.toString())
+            // console.log(router.query.data.toString())
+            // console.log(router.query.nonce.toString())
 
             const sharedSecretDapp = nacl.box.before(
                 bs58.decode(router.query.phantom_encryption_public_key.toString()),
                 shouldDappKeyPair2.secretKey
             );
+
             const connectData = decryptPayload(
                 router.query.data.toString(),
                 router.query.nonce.toString(),
                 sharedSecretDapp
-            );
+            )
+
+            // FIXME: Redirects to auth page in case payload can't be decrypted
+            // eg. Going from in-view browser to full safari, local storage doesn't transfer
+            // todo: make it nicer
+            if (!connectData) { router.push("/mobile"); return }
+            
             // setSharedSecret(sharedSecretDapp);
             // setSession(connectData.session);
             setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
@@ -79,14 +86,10 @@ const OnConnect: NextPage = (props) => {
 
             // Save public key of wallet in Local Storage
             localStorage.setItem('userPublicKey', connectData.public_key.toString())
-
-
-            // TODO:
-            // Redirect to /soaps
-            // show wallet better on /soaps
-            // (Optional) Get and display all soaps or all nfts
+            // Direct to soaps
             router.push("/soaps")
         } else {
+            // Direct to auth if not called from deeplink redirect
             router.push("/mobile")
         }
 
