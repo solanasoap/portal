@@ -6,8 +6,8 @@ import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/
 
 
 
-const connection = new Connection(`https://broken-green-forest.solana-mainnet.discover.quiknode.pro/${process.env.QUICKNODE_API_KEY}/`); // FIXME REPLACE THIS
-const mx = Metaplex.make(connection);
+const mxconnection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/"); // FIXME REPLACE THIS
+const mx = Metaplex.make(mxconnection);
 
 const soapCollectionId = new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV")
 
@@ -22,6 +22,8 @@ const buildHeliusUrl = (path: string, address: string, genre: string, params: UR
 
 
 export const SoapGallery: FC = () => {
+    console.log(mxconnection.rpcEndpoint)
+
     const [balance, setBalance] = useState(0)
     const { connection } = useConnection()
     const { publicKey } = useWallet()
@@ -32,6 +34,7 @@ export const SoapGallery: FC = () => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentView, setCurrentView] = useState(null);
+    const [userHasSoap, setUserHasSoap] = useState(true)
     const perPage = 1;
 
     // Fetch all NFTs held by wallet
@@ -73,6 +76,7 @@ export const SoapGallery: FC = () => {
             if (!nfts.length) {
                 // console.log("No NFTs held by wallet.")
                 setCurrentView(null);
+                setUserHasSoap(false)
             } else {
                 setCurrentView(nfts);
             }
@@ -170,7 +174,7 @@ export const SoapGallery: FC = () => {
                     </div>
                 </div>
             )}
-            {!currentView && walletAddress && (
+            {!currentView && walletAddress && !userHasSoap && (
                 <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
                     <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You aint got no soap, smelly mfer</p>
                 </div>
