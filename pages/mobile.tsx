@@ -38,7 +38,7 @@ const Collection: NextPage = (props) => {
             </div>
             <div className="float-right font-neueHaasUnicaRegular bg-white rounded-lg mx-32">
               <div className=" p-4">
-                <QRCode value={process.env.NEXT_PUBLIC_BASE_URL} />
+                <QRCode value={"https://" + process.env.NEXT_PUBLIC_BASE_URL} />
               </div>
             </div>
           </div>
