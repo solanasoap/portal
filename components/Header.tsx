@@ -1,32 +1,37 @@
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from 'next/link'
+import { useEffect, useState } from "react";
 
 export default function Header() {
+    const [walletAddress, setWalletAddress] = useState<string | null>(null)
+
+
+    // First load only
+    useEffect(() => {
+
+        if (!walletAddress) {
+            if (localStorage.getItem('userPublicKey')) {
+                // console.log("We found a public key of a user, we'll continue with that: ", localStorage.getItem('userPublicKey'))
+                setWalletAddress(localStorage.getItem('userPublicKey'))
+            } else {
+                return
+            }
+        }
+
+        // TODO:
+        // Display all of them in a nice card system
+    }, [])
 
     return (
         <>
-            {/* <header className="flex items-center justify-between bg-blue-100 px-10 py-2 bg-blue-100">
-                <img
-                    src="https://cdn.hashnode.com/res/hashnode/image/upload/v1643004937711/k3NMskkSn.png"
-                    width="50"
-                    alt="Daily Dev Tips Logo"
-                />
-                <strong>This is my website</strong>
-                <button
-                    className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
-                >
-                    Click me
-                </button>
-            </header> */}
-
             <nav className="py-3 mb-2 flex justify-between">
                 <Link href="/">
                     <h1 className='text-6xl font-phenomenaBlack h-12 leading-8 cursor-pointer'> soap</h1>
                 </Link>
                 <ul className="flex items-center font-neueHaasUnicaRegular">
                     <Link href="/mobile">
-                        <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-auto h-12">
-                            WALLET
+                        <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 w-40 rounded w-auto h-12">
+                        {walletAddress ? ` ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "WALLET"}
                         </button>
                     </Link>
                     {/* <li className="pl-6">

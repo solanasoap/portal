@@ -1,7 +1,7 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { FC, useEffect, useState } from 'react'
-const axios = require('axios')
+import axios from 'axios';
 import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/js';
 
 
@@ -63,6 +63,7 @@ export const SoapGallery: FC = () => {
         return soaps
     }
 
+    // Update nft data in view when nftList or currentPage state gets updated
     useEffect(() => {
         if (!nftList) {
             return;
@@ -128,9 +129,9 @@ export const SoapGallery: FC = () => {
 
     return (
         <>
-            <div className="flex justify-center pb-2">
+            {/* <div className="flex justify-center pb-2">
                 <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl'>{walletAddress ? `Wallet: ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "Please log in to see your soaps."}</p>
-            </div>
+            </div> */}
             {walletAddress && currentView && (
                 <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
                     <div>

@@ -7,7 +7,7 @@ export default function Hero() {
                 <div className="max-w-3xl lg:pl-32 font-phenomenaRegular">
                     <div className="pt-6 py-6">
                         <div className="text-4xl lg:text-6xl md:text-4xl font-bold">
-                            The smoothest way to interact with your community on-chain.
+                            The next-gen token dispenser, built on Solana.
                         </div>
                     </div>
                     <div className="py-2 text-xl">
