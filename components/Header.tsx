@@ -24,14 +24,14 @@ export default function Header() {
 
     return (
         <>
-            <nav className="py-3 mb-2 flex justify-between">
+            <nav className="pt-3 pb-2 flex justify-between">
                 <Link href="/">
                     <h1 className='text-6xl font-phenomenaBlack h-12 leading-8 cursor-pointer'> soap</h1>
                 </Link>
                 <ul className="flex items-center font-neueHaasUnicaRegular">
                     <Link href="/mobile">
-                        <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 w-40 rounded w-auto h-12">
-                        {walletAddress ? ` ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "WALLET"}
+                        <button className="bg-black hover:drop-shadow-md text-white font-bold py-2 w-40 rounded h-12">
+                        {walletAddress ? `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "WALLET"}
                         </button>
                     </Link>
                     {/* <li className="pl-6">

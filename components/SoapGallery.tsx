@@ -3,6 +3,7 @@ import { Connection, PublicKey } from '@solana/web3.js'
 import { FC, useEffect, useState } from 'react'
 import axios from 'axios';
 import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/js';
+import { useRouter } from 'next/router'
 
 
 
@@ -23,6 +24,7 @@ const buildHeliusUrl = (path: string, address: string, genre: string, params: UR
 
 export const SoapGallery: FC = () => {
     console.log(mxconnection.rpcEndpoint)
+    const router = useRouter()
 
     const [balance, setBalance] = useState(0)
     const { connection } = useConnection()
@@ -35,7 +37,7 @@ export const SoapGallery: FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentView, setCurrentView] = useState(null);
     const [userHasSoap, setUserHasSoap] = useState(true)
-    const perPage = 1;
+    const perPage = 30;
 
     // Fetch all NFTs held by wallet
     const fetchNFTs = async () => {
@@ -49,6 +51,15 @@ export const SoapGallery: FC = () => {
             console.error(e);
         }
     };
+
+    const goToLoginPage = async () => {
+        await sleep(2000)
+        router.push('mobile')
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     // Filter only for authentic soaps from all nfts held by wallet
     const soapList = (list: FindNftsByOwnerOutput) => {
@@ -119,6 +130,7 @@ export const SoapGallery: FC = () => {
                 setWalletAddress(localStorage.getItem('userPublicKey'))
             } else {
                 console.log("you got no userPublicKey in your local storage ser")
+                goToLoginPage()
                 return
             }
         }
@@ -129,52 +141,68 @@ export const SoapGallery: FC = () => {
 
     return (
         <>
-            {/* <div className="flex justify-center pb-2">
-                <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl'>{walletAddress ? `Wallet: ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "Please log in to see your soaps."}</p>
-            </div> */}
-            {walletAddress && currentView && (
-                <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
-                    <div>
-                        {loading ? ( // false by default
-                            <div className='flex justify-center'>
-                                <img className="" src="/loading.svg" />
-                            </div>
-                        ) : (
-                            currentView &&
-                            currentView.map((nft, index) => (
-                                <div key={index} className="w-full fle-col p-2">
-                                    <h1 className="font-bold font-phenomenaBlack flex pb-2 text-2xl justify-center pb-8">{nft.name}</h1>
-                                    <img
-                                        className="flex items-center justify-center w-auto h-auto rounded-lg"
-                                        src={nft?.json?.image || '/fallbackImage.jpg'}
-                                        alt="The downloaded illustration of the provided NFT address."
-                                    />
-                                </div>
-                            ))
-                        )}
+            <div>
+                <p className='font-bold font-phenomenaRegular text-4xl text-center flex justify-center text-black px-2 py-2 rounded-lg'>{walletAddress ? null : `Please log in to see your soaps.`}</p>
+            </div>
+
+            {(walletAddress && currentView) ? (
+                <>
+                    <div className=' text-white bg-gradient-to-tr from-black to-black px-8 py-4 mb-4 rounded-lg'>
+                        <p className='font-bold font-phenomenaRegular flex pb-4 text-4xl text-center'>
+                            Welcome to your soap collection
+                        </p>
+                        <p className='font-phenomenaRegular text-xl text-center'>
+                            These are all the 🧼 you've collected into your wallet. Busy life huh!
+                        </p>
                     </div>
-                    <div>
+                    <div className="flex-col text-white bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right px-8 pt-2 mb-4 rounded-lg min-h-full">
+                        <div>
+                            {loading ? ( // false by default
+                                <div className='flex justify-center'>
+                                    <img className="" src="/loading.svg" />
+                                </div>
+                            ) : (
+                                currentView &&
+                                currentView.map((nft, index) => (
+                                    <div key={index} className="w-full flex-col p-2">
+                                        <h1 className="font-bold font-phenomenaBlack flex pb-2 pt-2 text-3xl justify-center shadow-lg">{nft.name}</h1>
+                                        <img
+                                            className="flex items-center justify-center w-auto h-auto rounded-lg mb-6 shadow-xl"
+                                            src={nft?.json?.image || '/fallbackImage.jpg'}
+                                            alt="The downloaded illustration of the provided NFT address."
+                                        />
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                        {/* <div>
                         {currentView && ( // null by default
                             <div className="pt-6 flex justify-center">
                                 <button
                                     disabled={currentPage === 1}
-                                    className="bg-RBGradient-Blue-Right hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg uppercase font-neueHaasUnicaBlack w-28 h-20 m-2 text-xl"
+                                    className="bg-RBGradient-Blue-Right hover:drop-shadow-md text-white font-bold py-3 rounded-lg uppercase font-neueHaasUnicaBlack w-64 h-18 m-2 text-xl disabled:bg-gray-800"
                                     onClick={() => changeCurrentPage('prev')}
                                 >
                                     Prev
                                 </button>
                                 <button
                                     disabled={nftList && nftList.length / perPage === currentPage}
-                                    className="bg-RBGradient-Blue-Right hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg uppercase font-neueHaasUnicaBlack w-28 m-2 text-xl"
+                                    className="bg-RBGradient-Blue-Right hover:drop-shadow-md text-white font-bold py-3 px-4 rounded-lg uppercase font-neueHaasUnicaBlack w-64 h-18 m-2 text-xl disabled:bg-gray-800"
                                     onClick={() => changeCurrentPage('next')}
                                 >
                                     Next
                                 </button>
                             </div>
                         )}
+                    </div> */}
                     </div>
+                </>
+            ) : (
+                <div className='flex justify-center'>
+                    <img className="" src="/loading.svg" />
                 </div>
             )}
+
             {!currentView && walletAddress && !userHasSoap && (
                 <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
                     <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You aint got no soap, smelly mfer</p>

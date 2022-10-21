@@ -15,6 +15,7 @@ module.exports = {
       colors: {
         'RBGradient-Red-Left': '#D00E0E',
         'RBGradient-Blue-Right': '#3D05DD',
+        'phantomPurple': '#4C44CE'
       },
     },
   },

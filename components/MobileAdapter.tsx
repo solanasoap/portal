@@ -131,22 +131,22 @@ export default function MobileAdapter() {
                     </button>
                 </Link>
             </div> */}
-            <div>
-                <h1 className="flex text-3xl justify-start pt-4 pb-2 font-bold">
-                    {walletAddress ? `Logged in: ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "Not logged in"}
-                </h1>
+
+            <div className="py-2 justify-end flex ">
+                {!walletAddress && (
+                    <Link href={`${connect("phantom.app")}`}>
+                        <button className="bg-phantomPurple hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16">
+                            Connect with Phantom
+                        </button>
+                    </Link>
+                )}
             </div>
-            <div className="py-2 justify-start flex ">
-                <Link href={`${connect("phantom.app")}`}>
-                    <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-64 h-16">
-                        Deeplink in Phantom
+            <div className="py-2 justify-end flex ">
+                {walletAddress && (
+                    <button onClick={disconnect} className="bg-black hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16">
+                        Disconnect
                     </button>
-                </Link>
-            </div>
-            <div className="py-2 justify-start flex ">
-                <button onClick={disconnect} className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-64 h-16">
-                    Disconnect
-                </button>
+                )}
             </div>
 
 
@@ -176,6 +176,13 @@ export default function MobileAdapter() {
                     <WalletMultiButton className='bg-black ' />
                 </li>
             </ul> */}
+
+            {/* Display wallet address easily */}
+            {/* <div>
+                <h1 className="flex text-3xl justify-start pt-4 pb-2 font-bold">
+                    {walletAddress ? `Logged in: ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "Not logged in"}
+                </h1>
+            </div> */}
         </>
     )
 
