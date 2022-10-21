@@ -29,7 +29,7 @@ const Collection: NextPage = (props) => {
             <div className="float-left max-w-3xl lg:pl-32 font-neueHaasUnicaRegular">
               <div className="pt-6 py-6">
                 <div className="text-3xl lg:text-6xl md:text-4xl font-bold">
-                  We're mobile first.
+                  We&#39;re mobile first.
                 </div>
               </div>
               <div className="py-2 text-xl">
