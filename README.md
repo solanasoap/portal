@@ -8,11 +8,7 @@ This portal has a one of soap's core innovations implemented already. It lets yo
 
 
 ## MVP Roadmap
-[X] **Gallery**: See all the soaps you own in one place.
-
-[] **Dealer**: A way of distributing soaps. Eg. a QR code or link that people get a soap with.
-
-[] **Maker**: A tool for anyone to create soaps permissionlessly and set up a soap dealer in a self-service way. 
+See [ROADMAP.md](/ROADMAP.md) 
 
 
 
