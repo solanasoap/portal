@@ -6,7 +6,7 @@ import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/
 import { useRouter } from 'next/router'
 
 
-const mxconnection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/"); // FIXME REPLACE THIS
+const mxconnection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
 const mx = Metaplex.make(mxconnection);
 const soapCollectionId = new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV")
 
@@ -33,6 +33,7 @@ export const SoapGallery: FC = () => {
         try {
             setLoading(true);
             setCurrentView(null);
+            // FIXME: This doesn't return SFT soaps if the user has more than 1 in their wallet
             const list: FindNftsByOwnerOutput = await mx.nfts().findAllByOwner({ owner: new PublicKey(walletAddress) });
             setNftList(soapList(list));
             setCurrentPage(1);
