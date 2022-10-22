@@ -1,3 +1,23 @@
+# SOAP🧼
+Soap is a next generation token dispenser, built on Solana. It lets you create and distribute digital collectibles to anyone easily. Give attendance tokens to your event's visitors, airdrop them the aftermovie, and send them an invitation for the next occasion. If you're a Spaces kind of dude, let your listeners get soaps for each space, and reward your biggest fans through airdrops and exclusive content.
+
+## Mobile first
+This portal has a one of soap's core innovations implemented already. It lets you connect your wallet in a mobile browser. Open Safari on your iPhone, and sign in with your Phantom or Solflare wallet seamlessly.
+
+![deeplink_demo](/static/deeplink_demo.gif)
+
+
+## MVP Roadmap
+[X] **Gallery**: See all the soaps you own in one place.
+
+[] **Dealer**: A way of distributing soaps. Eg. a QR code or link that people get a soap with.
+
+[] **Maker**: A tool for anyone to create soaps permissionlessly and set up a soap dealer in a self-service way. 
+
+
+
+# Next.JS Original docs
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
