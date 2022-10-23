@@ -9,7 +9,7 @@ const soapAddress: NextPage = (props) => {
     return (
         <div className="px-5">
             <Head>
-                <title>SOAP</title>
+                <title>SOAP Dealer</title>
                 <meta name="description" content="SOAP" />
                 <link rel="icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" href="/favicon.ico" />

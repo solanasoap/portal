@@ -11,17 +11,17 @@ import { useWalletContext } from "../../context/MobileWalletContext";
 import nacl, { BoxKeyPair } from 'tweetnacl';
 import { decryptPayload } from '../../utils/decryptPayload';
 
-// TO BE DEPRECATED
-// This onConnect servers the Soap Gallery.
-// onConnectV2 serves the Soap Dealer and Mintooor.
-// Soap Gallery should be migrated to onConnectV2 asap
-// then clear tech debt V2 -> default
+// onConnectV2 servers Soap Dealer & Mintooor.
+// It uses cookies and saves the full dappKeyPair
+// It can also forward to a page by using "target" url query param
 
 const OnConnect: NextPage = (props) => {
+    console.log("OnConnectV2")
+    
     // Get Query Params from Phantom deeplink redirect
     const router = useRouter()
     const queryParams = router.query
-    // console.log("query params: ", queryParams)
+    console.log("query params: ", queryParams)
 
     // const [walletState, setWalletState] = useWalletContext();
     // setWalletState(queryParams)
@@ -39,6 +39,8 @@ const OnConnect: NextPage = (props) => {
 
         var shouldDappKeyPair2;
 
+        // TODO: FIXME:
+        // Dealer saves the dappKeyPair as a whole in a cookie called "dappKeyPair"
         if (localStorage.getItem('dappKeyPairSecretKey')) {
             console.log("Reusing keypair in local storage.")
 
