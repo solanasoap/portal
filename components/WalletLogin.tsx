@@ -1,8 +1,3 @@
-// this component fetches all the soaps from the user's wallet after
-// they authenticated to the dapp through their wallet.
-
-// Connect to phantom on phone
-
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from 'next/link'
 import bs58 from "bs58";
@@ -22,9 +17,6 @@ import { TextEncoder } from "util";
 import base from "base-x";
 import router from "next/router";
 
-export const BASE_URL = "https://phantom.app/ul/v1/";
-const NETWORK = clusterApiUrl("mainnet-beta");
-
 /// redirect link from connect is /onConnect/ on our end
 /// it should receive all the wallet info and store it in state
 /// then it should redirect to wherever it was coming from
@@ -42,16 +34,7 @@ export default function WalletLogin() {
     const onConnectRedirectLink = `https://${base_url}/phantom/onConnect`
     console.log("URL", base_url)
 
-    const [deepLink, setDeepLink] = useState<string>("");
-    const [logs, setLogs] = useState<string[]>([]);
-    const connection = new Connection(NETWORK);
-    const addLog = useCallback((log: string) => setLogs((logs) => [...logs, "> " + log]), []);
-    const scrollViewRef = useRef<any>(null);
     const [dappKeyPair, setDappKeyPair] = useState(nacl.box.keyPair());
-
-    const [sharedSecret, setSharedSecret] = useState<Uint8Array>();
-    const [session, setSession] = useState<string>();
-    const [phantomWalletPublicKey, setPhantomWalletPublicKey] = useState<PublicKey>();
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
 
     const connect = (walletEndpoint: string) => {

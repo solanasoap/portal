@@ -28,6 +28,10 @@ const Homes: NextPage = (props) => {
           </Link>
         </div> */}
         <Hero></Hero>
+        <Link href="/dispenser/HKPcjAi699egocGNqMVEEkPqYAwPZ12oqFWKfzVcCudV">
+          go to disenser example
+        </Link>
+        {/* <button ref="/dispenser/HKPcjAi699egocGNqMVEEkPqYAwPZ12oqFWKfzVcCudV">Go to Dispneser example</button> */}
       </main>
     </div>
 

@@ -87,7 +87,7 @@ const OnConnect: NextPage = (props) => {
             // Save public key of wallet in Local Storage
             localStorage.setItem('userPublicKey', connectData.public_key.toString())
             // Direct to soaps
-            router.push("/soaps")
+            router.push("/soaps") // FIXME Make this dynamically read from the URL query param "target" || /soaps
         } else {
             // Direct to auth if not called from deeplink redirect
             router.push("/mobile")

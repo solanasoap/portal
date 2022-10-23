@@ -13,6 +13,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'helius.xyz',
       },
+      {
+        protocol: 'https',
+        hostname: 'nftstorage.link',
+      },
     ],
   },
 }
