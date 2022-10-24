@@ -1,8 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import * as fs from "fs"
-import { bundlrStorage, keypairIdentity, Metaplex, KeypairSigner, SendTokensInput, findMetadataPda, token } from '@metaplex-foundation/js';
-import { Keypair, clusterApiUrl, Connection, PublicKey, LAMPORTS_PER_SOL, SystemProgram, Transaction, VersionedTransaction, sendAndConfirmTransaction } from '@solana/web3.js';
-import { createAssociatedTokenAccountInstruction, getAccount, createMint, createMintToInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptMint, getOrCreateAssociatedTokenAccount, mintTo, transfer } from '@solana/spl-token'
+import { keypairIdentity, Metaplex, KeypairSigner } from '@metaplex-foundation/js';
+import { Keypair, Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { createAssociatedTokenAccountInstruction, getAccount, createMintToInstruction, getAssociatedTokenAddress } from '@solana/spl-token'
 
 
 // get params from query, to whom and which soap
@@ -51,9 +50,9 @@ export default async function handler(req, res) {
         const tokenAccount = await getAccount(connection, tokenATA, 'finalized');
         console.log("Token Account exists: ", tokenAccount.address.toBase58())
         // FIXME: This hardcodes to 1 soap per wallet of unique type. It's pretty effective defense, but also pretty shit
-        if (false) {
+        if (true) {
             console.log("Not minting, one unique soap per wallet.")
-            res.status(405).json({ error: 'Error: You already have this soap.' })
+            res.status(403).json({ error: 'Error: You already have this soap.' })
             return
         }
     } catch (error) {
@@ -103,13 +102,3 @@ type soapObject = {
     soapAddress: PublicKey,
     mintAuthority: KeypairSigner,
 }
-
-// solanasoap.lol/api/dispense?
-//      & toPublicKey=9uBX3ASjxWvNBAD1xjbVaKA74mWGZys3RGSF7DdeDD3F
-//      & soapAddress=HKPcjAi699egocGNqMVEEkPqYAwPZ12oqFWKfzVcCudV
-
-
-
-
-// solanasoap.lol/dispenser/<soapAddress>
-// solanasoap.lol/dispenser/HKPcjAi699egocGNqMVEEkPqYAwPZ12oqFWKfzVcCudV

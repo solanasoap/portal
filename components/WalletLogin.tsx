@@ -1,20 +1,7 @@
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from 'next/link'
 import bs58 from "bs58";
-import axios from 'axios';
-import {
-    clusterApiUrl,
-    Connection,
-    Keypair,
-    PublicKey,
-    SystemProgram,
-    Transaction,
-} from "@solana/web3.js";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import nacl from "tweetnacl";
-import { useLocalStorage } from "@solana/wallet-adapter-react";
-import { TextEncoder } from "util";
-import base from "base-x";
 import router from "next/router";
 import Cookies from "js-cookie";
 
@@ -74,7 +61,6 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
             console.log("Using dapp keypair in local storage.")
 
             const dappKeyPairSecretKeyCookies = JSON.parse(Cookies.get('dappKeyPair')).secretKey
-            console.log("dappKeyPairSecretKeyCookies: ", dappKeyPairSecretKeyCookies)
 
             // Create array from JSON secret key
             var secretKeyArray = [];

@@ -1,17 +1,13 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Header from '../../components/Header'
-import Hero from '../../components/Hero'
 import React, { useEffect, useState } from 'react';
-import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { BalanceDisplay } from '../../components/BalanceDisplay';
-import WalletLogin from '../../components/WalletLogin';
-import { SoapGallery } from '../../components/SoapGallery';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { Metaplex } from '@metaplex-foundation/js';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
 const metaplex = new Metaplex(connection);
@@ -27,7 +23,7 @@ const metaplex = new Metaplex(connection);
 // track confirmation and animate display based on that
 // user receives soap
 
-const Dispenser: NextPage<{soapDetails: soapDetails}> = ({ soapDetails }) => {
+const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
     const [walletAddress, setWalletAddress] = useState<string | null>(null);
     const [txSignature, setTxSignature] = useState<string | null>(null);
 
@@ -42,10 +38,13 @@ const Dispenser: NextPage<{soapDetails: soapDetails}> = ({ soapDetails }) => {
             secret: "verySmooth"
         }
 
+        const minted = Cookies.get(apiMintRequest.soapAddress)
+        console.log(minted)
+
         // console.log("API Mint Request", apiMintRequest)
 
         // We should really check if we minted this or not
-        // Otherwise it'll mint on every refresh lmao
+        // Otherwise it'll mint on every refresh lmao 
         if (walletAddress && soapDetails.Address) {
             axios
                 .post('/api/dispense', {
@@ -59,6 +58,10 @@ const Dispenser: NextPage<{soapDetails: soapDetails}> = ({ soapDetails }) => {
                     setTxSignature(res.data['tx'])
                 })
                 .catch(err => {
+                    if (err.response.status == 403) {
+                        console.log("Forbidden: Wallet already has this soap.")
+                        setTxSignature("403")
+                    }
                     console.log('error in request', err);
                 });
         }
@@ -67,7 +70,8 @@ const Dispenser: NextPage<{soapDetails: soapDetails}> = ({ soapDetails }) => {
     }, [walletAddress])
 
     useEffect(() => {
-
+        Cookies.set(soapDetails.Address, 'minted')
+        console.log("txSignature", txSignature)
     }, [txSignature])
 
     return (
@@ -79,11 +83,21 @@ const Dispenser: NextPage<{soapDetails: soapDetails}> = ({ soapDetails }) => {
             </Head>
             <main >
                 <Header></Header>
-                <div className=" py-6" >
-                    <div className="inline text-6xl font-phenomenaBlack h-12">
-                        <h1>
-                            Minting your soap...
-                        </h1>
+                <div className="py-6" >
+                    <div className="inline text-7xl font-phenomenaBlack text-center">
+                        {/* FIXME: add here a lot nicer animation that follows the actual confirmations until finalized */}
+                        {txSignature ? (
+                            <p>Mint Done!</p>
+                        ) : (
+                            <>
+                                <p className="text-5xl mb-2">
+                                    Minting {`${soapDetails.Name}`} to:
+                                </p>
+                                <p className="text-5xl">
+                                {walletAddress && `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`}
+                                </p>
+                            </>
+                        )}
                     </div>
                 </div>
                 <div className="flex py-2 w-full items-center justify-center drop-shadow-xl">
@@ -91,11 +105,32 @@ const Dispenser: NextPage<{soapDetails: soapDetails}> = ({ soapDetails }) => {
                         <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
                     </div>
                 </div>
-                <p>Signature:</p>
                 {txSignature ? (
-                    <div>
-                        We minted your soap! Check it out on <a href={`https://solscan.io/tx/${txSignature}`} target="_blank" rel="noreferrer">Solscan</a>
-                    </div>
+                    <>
+                        {(txSignature == "403") ? (
+                            <div>
+                                <div className="text-3xl font-phenomenaBlack py-4 text-center justify-center px-12">
+                                    Looks like you already minted this one!
+                                    {/* FIXME: This path doesn't exist yet */}
+                                    <Link href={`/examiner/${soapDetails.Address}`}>
+                                        <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 mt-4 rounded w-64 h-18 text-lg">
+                                            Check it out in the gallery
+                                        </button>
+                                    </Link>
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                <div className="py-8 justify-center items-center flex">
+                                    <Link href={`https://solscan.io/tx/${txSignature}`}>
+                                        <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-64 h-16">
+                                            Check it out on Solscan
+                                        </button>
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div className='flex justify-center'>
                         <img className="" src="/loading.svg" />

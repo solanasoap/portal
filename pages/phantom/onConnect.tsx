@@ -1,13 +1,11 @@
 import type { NextPage } from 'next'
 import bs58 from "bs58";
-import { useLocalStorage } from "@solana/wallet-adapter-react";
 import { useState, useEffect } from "react";
 import Head from 'next/head';
 import Header from '../../components/Header';
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from "next";
 import { PublicKey } from '@solana/web3.js';
-import { useWalletContext } from "../../context/MobileWalletContext";
 import nacl, { BoxKeyPair } from 'tweetnacl';
 import { decryptPayload } from '../../utils/decryptPayload';
 import Cookies from 'js-cookie';
@@ -44,7 +42,6 @@ const OnConnect: NextPage = (props) => {
             console.log("Reusing keypair in local storage.")
 
             const dappKeyPairSecretKeyCookies = JSON.parse(Cookies.get('dappKeyPair')).secretKey
-            console.log("dappKeyPairSecretKeyCookies: ", dappKeyPairSecretKeyCookies)
 
             // Create array from JSON secret key
             var secretKeyArray = [];
