@@ -27,7 +27,7 @@ const metaplex = new Metaplex(connection);
 // track confirmation and animate display based on that
 // user receives soap
 
-const Dispenser: NextPage = ({ soapDetails }) => {
+const Dispenser: NextPage<{soapDetails: soapDetails}> = ({ soapDetails }) => {
     const [walletAddress, setWalletAddress] = useState<string | null>(null);
     const [txSignature, setTxSignature] = useState<string | null>(null);
 
@@ -128,7 +128,7 @@ export async function getServerSideProps(context) {
     }
 }
 
-type soapDetails = {
+interface soapDetails {
     Address: string,
     Image: string,
     Name: string
