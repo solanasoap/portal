@@ -21,7 +21,11 @@ const Collection: NextPage = (props) => {
       <main >
         <Header></Header>
         <div className="lg:invisible">
-          <WalletLogin></WalletLogin>
+          <WalletLogin
+            target={`/soaps`}
+            walletAction="Connect" 
+            forceReconnect={false}
+            />
         </div>
 
         <div className="invisible lg:visible ">
