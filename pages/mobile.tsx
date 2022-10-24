@@ -3,8 +3,6 @@ import Head from 'next/head'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
 import React, { } from 'react';
-import { WalletDisconnectButton, WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { BalanceDisplay } from '../components/BalanceDisplay';
 import WalletLogin from '../components/WalletLogin';
 import QRCode from 'react-qr-code'
 
@@ -47,9 +45,6 @@ const Collection: NextPage = (props) => {
             </div>
           </div>
         </div>
-
-        {/* <BalanceDisplay></BalanceDisplay> */}
-
       </main>
     </div>
 
