@@ -12,8 +12,7 @@ import { createAssociatedTokenAccountInstruction, getAccount, createMint, create
 
 
 // Load a local keypair.
-const keypairFile = fs.readFileSync(process.env.SOAP_KEYPAIR_PATH);
-const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(keypairFile.toString())));
+const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
 
 // Set up foundation
 const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
