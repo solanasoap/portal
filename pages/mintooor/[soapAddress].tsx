@@ -94,7 +94,7 @@ const Dispenser: NextPage = ({ soapDetails }) => {
                 <p>Signature:</p>
                 {txSignature ? (
                     <div>
-                        We minted your soap! Check it out on <a href={`https://solscan.io/tx/${txSignature}`} target="_blank">Solscan</a>
+                        We minted your soap! Check it out on <a href={`https://solscan.io/tx/${txSignature}`} target="_blank" rel="noreferrer">Solscan</a>
                     </div>
                 ) : (
                     <div className='flex justify-center'>
