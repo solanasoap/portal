@@ -4,6 +4,7 @@ import { FC, useEffect, useState } from 'react'
 import axios from 'axios';
 import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/js';
 import { useRouter } from 'next/router'
+import Cookies from 'js-cookie';
 
 
 const mxconnection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
@@ -12,15 +13,9 @@ const soapCollectionId = new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4
 
 
 export const SoapGallery: FC = () => {
-    console.log(mxconnection.rpcEndpoint)
     const router = useRouter()
 
-    const [balance, setBalance] = useState(0)
-    const { connection } = useConnection()
-    const { publicKey } = useWallet()
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
-    const [address, setAddress] = useState();
-
     const [nftList, setNftList] = useState(null);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -116,11 +111,11 @@ export const SoapGallery: FC = () => {
     useEffect(() => {
 
         if (!walletAddress) {
-            if (localStorage.getItem('userPublicKey')) {
-                console.log("We found a public key of a user, we'll continue with that: ", localStorage.getItem('userPublicKey'))
-                setWalletAddress(localStorage.getItem('userPublicKey'))
+            if (Cookies.get('walletAddress')) {
+                console.log("We found a public key of a user, we'll continue with that: ", Cookies.get('walletAddress'))
+                setWalletAddress(Cookies.get('walletAddress'))
             } else {
-                console.log("you got no userPublicKey in your local storage ser")
+                console.log("you got no wallet address in your local storage ser")
                 goToLoginPage()
                 return
             }
@@ -163,26 +158,6 @@ export const SoapGallery: FC = () => {
                                 ))
                             )}
                         </div>
-                        {/* <div>
-                        {currentView && ( // null by default
-                            <div className="pt-6 flex justify-center">
-                                <button
-                                    disabled={currentPage === 1}
-                                    className="bg-RBGradient-Blue-Right hover:drop-shadow-md text-white font-bold py-3 rounded-lg uppercase font-neueHaasUnicaBlack w-64 h-18 m-2 text-xl disabled:bg-gray-800"
-                                    onClick={() => changeCurrentPage('prev')}
-                                >
-                                    Prev
-                                </button>
-                                <button
-                                    disabled={nftList && nftList.length / perPage === currentPage}
-                                    className="bg-RBGradient-Blue-Right hover:drop-shadow-md text-white font-bold py-3 px-4 rounded-lg uppercase font-neueHaasUnicaBlack w-64 h-18 m-2 text-xl disabled:bg-gray-800"
-                                    onClick={() => changeCurrentPage('next')}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        )}
-                    </div> */}
                     </div>
                 </>
             ) : (loading && (

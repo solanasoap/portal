@@ -16,6 +16,7 @@ import { useLocalStorage } from "@solana/wallet-adapter-react";
 import { TextEncoder } from "util";
 import base from "base-x";
 import router from "next/router";
+import Cookies from "js-cookie";
 
 /// redirect link from connect is /onConnect/ on our end
 /// it should receive all the wallet info and store it in state
@@ -28,11 +29,10 @@ import router from "next/router";
 const buildUrl = (walletEndpoint: string, path: string, params: URLSearchParams) =>
     `https://${walletEndpoint}/ul/v1/${path}?${params.toString()}`;
 
-export default function WalletLogin() {
+export default function WalletLogin({ walletAction, target, forceReconnect }) {
 
     const base_url = process.env.NEXT_PUBLIC_BASE_URL
-    const onConnectRedirectLink = `https://${base_url}/phantom/onConnect`
-    console.log("URL", base_url)
+    const onConnectRedirectLink = `https://${base_url}/phantom/onConnect?target=${target}`
 
     const [dappKeyPair, setDappKeyPair] = useState(nacl.box.keyPair());
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
@@ -53,73 +53,62 @@ export default function WalletLogin() {
         console.log("Clearing local storage of wallet info. Disconnecting...")
         // localStorage.removeItem('dappKeyPairSecretKey') // not remove yet...
         localStorage.removeItem('userPublicKey')
+        Cookies.remove('walletAddress')
         alert("Wallet disconnected!")
-        // router.push("/mobile")
-        router.push('/')
+        router.reload()
     }
 
     useEffect(() => {
-        //console.log(nacl.box.keyPair())
-
-        // store dappKeyPair, sharedSecret, session and account SECURELY on device
-        // to avoid having to reconnect users.
-        // FIXME: Add local persistance safely // fix to one custom keypair (pubkey)
-
         // check if localstorage exists for local keypair
         // load if yes, create and save if no
-        if (!walletAddress) {
-            if (localStorage.getItem('userPublicKey')) {
-                console.log("We found a public key of a user, we'll continue with that: ", localStorage.getItem('userPublicKey'))
-                setWalletAddress(localStorage.getItem('userPublicKey'))
+        if (!walletAddress && !forceReconnect) {
+            if (Cookies.get('walletAddress')) {
+                console.log("We found a public key of a user, we'll continue with that: ", Cookies.get('walletAddress'))
+                setWalletAddress(Cookies.get('walletAddress'))
             } else {
                 console.log("WalletLogin: you got no userPublicKey in your local storage ser")
             }
         }
 
-        if (localStorage.getItem('dappKeyPairSecretKey')) {
-            console.log("Reusing keypair in local storage.")
+        if (Cookies.get('dappKeyPair')) {
+            console.log("Using dapp keypair in local storage.")
 
-            // Get "dappKeyPairSecretKey" from local storage
-            const dappKeyPairSecretKeyLocalStorage = JSON.parse(localStorage.getItem('dappKeyPairSecretKey'))
-            console.log("dappkeypairsecretkeylocalstorage: ", dappKeyPairSecretKeyLocalStorage)
+            const dappKeyPairSecretKeyCookies = JSON.parse(Cookies.get('dappKeyPair')).secretKey
+            console.log("dappKeyPairSecretKeyCookies: ", dappKeyPairSecretKeyCookies)
 
             // Create array from JSON secret key
             var secretKeyArray = [];
-            for (var i in dappKeyPairSecretKeyLocalStorage)
-                secretKeyArray.push(dappKeyPairSecretKeyLocalStorage[i]);
+            for (var i in dappKeyPairSecretKeyCookies)
+                secretKeyArray.push(dappKeyPairSecretKeyCookies[i]);
 
             // Create Uint8Array for secret key to be used in keypair
             const secretKeyUint8 = Uint8Array.from(secretKeyArray)
             const shouldDappKeyPair = nacl.box.keyPair.fromSecretKey(secretKeyUint8)
-            console.log("ShouldDappKeyPair: ", shouldDappKeyPair)
 
             setDappKeyPair(shouldDappKeyPair)
-            console.log("dappKeyPair: ", dappKeyPair)
         } else {
-            console.log("No dApp keypair for deeplinking in local storage. Generating.")
-            //setDappKeyPair(nacl.box.keyPair())
-            localStorage.setItem('dappKeyPairSecretKey', JSON.stringify(dappKeyPair.secretKey))
-            console.log("dApp keypair saved to local storage")
+            console.log("No dApp keypair for deeplinking. Generating.")
+            // localStorage.setItem('dappKeyPairSecretKey', JSON.stringify(dappKeyPair.secretKey))
+            Cookies.set('dappKeyPair', JSON.stringify(dappKeyPair), { sameSite: 'strict' })
         }
     }, [])
 
     return (
         <>
-            {/* <div className="py-2 justify-center flex ">
-                <Link href="https://phantom.app/ul/browse/https%3A%2F%2Fe%2Fsoaps?ref=<%20https%3A%2F%2Feportal-solsoap.vercel.app/">
-                    <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-48 h-12">
-                        Open in Phantom
-                    </button>
-                </Link>
-            </div> */}
-
-            <div className="py-2 justify-end flex ">
+            <div className="">
                 {!walletAddress && (
-                    <Link href={`${connect("phantom.app")}`}>
-                        <button className="bg-phantomPurple hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16">
-                            Connect with Phantom
-                        </button>
-                    </Link>
+                    <div className="">
+                        <Link href={`${connect("phantom.app")}`}>
+                            <button className="bg-phantomPurple hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2">
+                                {`${walletAction} with Phantom`}
+                            </button>
+                        </Link>
+                        <Link href={`${connect("solflare.com")}`}>
+                            <button className="bg-orange-700 hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2">
+                                {`${walletAction} with Solflare`}
+                            </button>
+                        </Link>
+                    </div>
                 )}
             </div>
             <div className="py-2 justify-end flex ">
@@ -129,42 +118,6 @@ export default function WalletLogin() {
                     </button>
                 )}
             </div>
-
-
-            {/* <div className="py-2 justify-center flex ">
-                <Link href="https://solflare.com/ul/browse/https%3A%2F%2Fe175-213-220-159-212.eu.ngrok.io%2Fsoaps?ref=<%20https%3A%2F%2Fe175-213-220-159-212.eu.ngrok.io">
-                    <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-48 h-12">
-                        Open in Solflare
-                    </button>
-                </Link>
-            </div>
-            <div className="py-2 justify-center flex ">
-                <Link href={`${connect("solflare.com")}`}>
-                    <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-48 h-12">
-                        Deeplink in Solflare
-                    </button>
-                </Link>
-            </div> */}
-
-
-            {/* <div>
-                { dappKeyPair.publicKey.toString() }
-            </div> */}
-
-
-            {/* <ul className="flex items-center font-neueHaasUnicaRegular py-2 justify-center">
-                <li className="pl-6">
-                    <WalletMultiButton className='bg-black ' />
-                </li>
-            </ul> */}
-
-            {/* Display wallet address easily */}
-            {/* <div>
-                <h1 className="flex text-3xl justify-start pt-4 pb-2 font-bold">
-                    {walletAddress ? `Logged in: ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "Not logged in"}
-                </h1>
-            </div> */}
         </>
     )
-
 }

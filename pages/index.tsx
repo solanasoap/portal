@@ -28,9 +28,13 @@ const Homes: NextPage = (props) => {
           </Link>
         </div> */}
         <Hero></Hero>
-        <Link href="/dispenser/HKPcjAi699egocGNqMVEEkPqYAwPZ12oqFWKfzVcCudV">
-          go to disenser example
-        </Link>
+        <div className="py-8">
+          <Link href="/dealer/HKPcjAi699egocGNqMVEEkPqYAwPZ12oqFWKfzVcCudV">
+            <button className=" bg-RBGradient-Blue-Right hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-64 h-16">
+              go to dealer
+            </button>
+          </Link>
+        </div>
         {/* <button ref="/dispenser/HKPcjAi699egocGNqMVEEkPqYAwPZ12oqFWKfzVcCudV">Go to Dispneser example</button> */}
       </main>
     </div>

@@ -10,18 +10,17 @@ import { PublicKey } from '@solana/web3.js';
 import { useWalletContext } from "../../context/MobileWalletContext";
 import nacl, { BoxKeyPair } from 'tweetnacl';
 import { decryptPayload } from '../../utils/decryptPayload';
+import Cookies from 'js-cookie';
 
-// TO BE DEPRECATED
-// This onConnect servers the Soap Gallery.
-// onConnectV2 serves the Soap Dealer and Mintooor.
-// Soap Gallery should be migrated to onConnectV2 asap
-// then clear tech debt V2 -> default
+// onConnectV2 servers Soap Dealer & Mintooor.
+// It uses cookies and saves the full dappKeyPair
+// It can also forward to a page by using "target" url query param
 
 const OnConnect: NextPage = (props) => {
+    
     // Get Query Params from Phantom deeplink redirect
     const router = useRouter()
     const queryParams = router.query
-    // console.log("query params: ", queryParams)
 
     // const [walletState, setWalletState] = useWalletContext();
     // setWalletState(queryParams)
@@ -39,26 +38,25 @@ const OnConnect: NextPage = (props) => {
 
         var shouldDappKeyPair2;
 
-        if (localStorage.getItem('dappKeyPairSecretKey')) {
+        // TODO: FIXME:
+        // Dealer saves the dappKeyPair as a whole in a cookie called "dappKeyPair"
+        if (Cookies.get('dappKeyPair')) {
             console.log("Reusing keypair in local storage.")
 
-            // Get "dappKeyPairSecretKey" from local storage
-            const dappKeyPairSecretKeyLocalStorage = JSON.parse(localStorage.getItem('dappKeyPairSecretKey'))
-            // console.log("dappkeypairsecretkeylocalstorage: ", dappKeyPairSecretKeyLocalStorage)
+            const dappKeyPairSecretKeyCookies = JSON.parse(Cookies.get('dappKeyPair')).secretKey
+            console.log("dappKeyPairSecretKeyCookies: ", dappKeyPairSecretKeyCookies)
 
             // Create array from JSON secret key
             var secretKeyArray = [];
-            for (var i in dappKeyPairSecretKeyLocalStorage)
-                secretKeyArray.push(dappKeyPairSecretKeyLocalStorage[i]);
+            for (var i in dappKeyPairSecretKeyCookies)
+                secretKeyArray.push(dappKeyPairSecretKeyCookies[i]);
 
             // Create Uint8Array for secret key to be used in keypair
             const secretKeyUint8 = Uint8Array.from(secretKeyArray)
             const shouldDappKeyPair = nacl.box.keyPair.fromSecretKey(secretKeyUint8)
-            // console.log("ShouldDappKeyPair: ", shouldDappKeyPair)
 
             setDappKeyPair(shouldDappKeyPair)
             shouldDappKeyPair2 = shouldDappKeyPair
-            // console.log("dappKeyPair: ", dappKeyPair)
 
         }
 
@@ -81,7 +79,7 @@ const OnConnect: NextPage = (props) => {
 
             // FIXME: Redirects to auth page in case payload can't be decrypted
             // eg. Going from in-view browser to full safari, local storage doesn't transfer
-            // todo: make it nicer
+            // todo: make it nicer, this is a blocker from link based dealing
             if (!connectData) { router.push("/mobile"); return }
             
             // setSharedSecret(sharedSecretDapp);
@@ -90,9 +88,12 @@ const OnConnect: NextPage = (props) => {
             console.log(`connected to ${connectData.public_key.toString()}`);
 
             // Save public key of wallet in Local Storage
-            localStorage.setItem('userPublicKey', connectData.public_key.toString())
+            // localStorage.setItem('userPublicKey', connectData.public_key.toString())
+
+            // Save dappKeyPair in cookie
+            Cookies.set('walletAddress', connectData.public_key.toString())
             // Direct to soaps
-            router.push("/soaps") // FIXME Make this dynamically read from the URL query param "target" || /soaps
+            router.push(queryParams.target.toString() || "/soaps") // FIXME Make this dynamically read from the URL query param "target" || /soaps
         } else {
             // Direct to auth if not called from deeplink redirect
             router.push("/mobile")

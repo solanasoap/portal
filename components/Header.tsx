@@ -1,6 +1,7 @@
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from 'next/link'
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export default function Header() {
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
@@ -10,16 +11,12 @@ export default function Header() {
     useEffect(() => {
 
         if (!walletAddress) {
-            if (localStorage.getItem('userPublicKey')) {
-                // console.log("We found a public key of a user, we'll continue with that: ", localStorage.getItem('userPublicKey'))
-                setWalletAddress(localStorage.getItem('userPublicKey'))
+            if (Cookies.get('walletAddress')) {
+                setWalletAddress(Cookies.get('walletAddress'))
             } else {
                 return
             }
         }
-
-        // TODO:
-        // Display all of them in a nice card system
     }, [])
 
     return (

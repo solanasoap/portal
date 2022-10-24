@@ -25,8 +25,8 @@ console.log("Public key of keypair being used: ", keypair.publicKey.toBase58())
 export default async function handler(req, res) {
     const start = Date.now();
 
-    if (req.method !== 'POST' || req.body.secret !== process.env.API_SECRET) {
-        res.status(418).json({ message: 'THIS AINT NO POST, STOP SENDING ME SHIT' })
+    if (req.method !== 'POST' || req.body.secret !== process.env.NEXT_PUBLIC_API_SECRET) {
+        res.status(418).json({ body: 'THIS AINT NO POST, STOP SENDING ME SHIT' })
         return
     }
 
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     const toPublicKey: PublicKey = new PublicKey(soapMintDetails.toPublicKey)
     const soapAddress: PublicKey = new PublicKey(soapMintDetails.soapAddress)
 
-    console.log("Sending soap " + soapAddress + " to " + toPublicKey + "\n")
+    // console.log("Sending soap " + soapAddress.toBase58() + " to " + toPublicKey.toBase58() + "\n")
 
     // Create keypair from metaplex identity
     const soapKeyPair = Keypair.fromSecretKey(metaplex.identity().secretKey)
@@ -54,11 +54,12 @@ export default async function handler(req, res) {
         // FIXME: This hardcodes to 1 soap per wallet of unique type. It's pretty effective defense, but also pretty shit
         if (false) {
             console.log("Not minting, one unique soap per wallet.")
-            res.status(418).json({ message: 'Error: You already have this soap.' })
+            res.status(405).json({ error: 'Error: You already have this soap.' })
             return
         }
     } catch (error) {
         console.log("ATA " + tokenATA + " doesn't exist yet. Adding create to instruction.")
+        // FIXME: Create seperate payer wallet to seperate responsibilities from BCN...
         soapMintTransaction.add(
             createAssociatedTokenAccountInstruction(
                 metaplex.identity().publicKey, //Payer 
@@ -81,6 +82,7 @@ export default async function handler(req, res) {
 
     // console.log("Soap mint transaction: ", soapMintTransaction)
 
+    // FIXME: sendTransaction is deprecated, replace
     const transactionId =  await connection.sendTransaction(soapMintTransaction, [soapKeyPair]);
 
     const end = Date.now();
