@@ -15,10 +15,17 @@ export default function Hero() {
                     </div>
                     <div className="py-8">
                         <Link href="/soaps">
-                        <button className=" bg-RBGradient-Blue-Right hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-64 h-16">
-                            see your soaps
-                        </button>
+                            <button className=" bg-RBGradient-Blue-Right hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-64 h-16">
+                                see your soaps
+                            </button>
                         </Link>
+                        <div className="py-8">
+                            <Link href="/dealer/HKPcjAi699egocGNqMVEEkPqYAwPZ12oqFWKfzVcCudV">
+                                <button className=" bg-RBGradient-Blue-Right hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-64 h-16">
+                                    Test dealer
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

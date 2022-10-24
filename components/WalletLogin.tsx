@@ -90,7 +90,7 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
                             </button>
                         </Link>
                         <Link href={`${connect("solflare.com")}`}>
-                            <button className="bg-orange-700 hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2">
+                            <button disabled className="bg-orange-700 hover:shadow-md text-white disabled:text-gray-600 font-bold py-2 px-4 rounded w-64 h-16 my-2 disabled:bg-gray-800">
                                 {`${walletAction} with Solflare`}
                             </button>
                         </Link>

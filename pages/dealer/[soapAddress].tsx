@@ -7,6 +7,7 @@ import Image from "next/image";
 import WalletLogin from "../../components/WalletLogin";
 import { useState } from "react";
 import nacl from "tweetnacl";
+import QRCode from "react-qr-code";
 
 const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
 const metaplex = new Metaplex(connection);
@@ -42,7 +43,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
             <main>
-                <div className="px-5 pt-6" >
+                <div className="flex-col px-5 pt-6">
                     <div className="inline text-6xl font-phenomenaBlack h-12">
                         <h1>
                             Hey, you got a soap!
@@ -57,12 +58,33 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                         <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
                     </div>
                 </div>
-                <div className="py-2 px-24 justify-center flex items-center">
-                    <WalletLogin
-                        target={`/mintooor/${soapDetails.Address}`}
-                        walletAction="Mint"
-                        forceReconnect={true}
-                    />
+                <div className="lg:invisible">
+                    <div className="py-2 px-24 justify-center flex items-center">
+                        <WalletLogin
+                            target={`/mintooor/${soapDetails.Address}`}
+                            walletAction="Mint"
+                            forceReconnect={true}
+                        />
+                    </div>
+                </div>
+                <div className="invisible lg:visible ">
+                    <div className="flow-root text-white bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 mb-3 rounded-lg">
+                        <div className="float-left max-w-3xl lg:pl-32 font-neueHaasUnicaRegular">
+                            <div className="pt-6 py-6">
+                                <div className="text-3xl lg:text-6xl md:text-4xl font-bold">
+                                    We&#39;re mobile first.
+                                </div>
+                            </div>
+                            <div className="py-2 text-xl">
+                                <p>Apologies, we plan to create a cross-platform experience in the future. For now, open this page on your phone by using the QR code. </p>
+                            </div>
+                        </div>
+                        <div className="float-right font-neueHaasUnicaRegular bg-white rounded-lg mx-32">
+                            <div className=" p-4">
+                                <QRCode value={`https://${process.env.NEXT_PUBLIC_BASE_URL}/dealer/${soapDetails.Address}`} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>

@@ -5,9 +5,10 @@ import axios from 'axios';
 import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/js';
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
+import Link from 'next/link';
 
 
-const mxconnection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
+const mxconnection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/", 'confirmed');
 const mx = Metaplex.make(mxconnection);
 const soapCollectionId = new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV")
 
@@ -149,11 +150,13 @@ export const SoapGallery: FC = () => {
                                 currentView.map((nft, index) => (
                                     <div key={index} className="w-full flex-col p-2">
                                         <h1 className="font-bold font-phenomenaBlack flex pb-2 pt-2 text-3xl justify-center shadow-lg">{nft.name}</h1>
-                                        <img
-                                            className="flex items-center justify-center w-auto h-auto rounded-lg mb-6 shadow-xl"
-                                            src={nft?.json?.image || '/fallbackImage.jpg'}
-                                            alt="The downloaded illustration of the provided NFT address."
-                                        />
+                                        <Link href={`/examiner/${nft.address.toBase58()}`}>
+                                            <img
+                                                className="flex items-center justify-center w-auto h-auto rounded-lg mb-6 shadow-xl hover:shadow-md cursor-pointer"
+                                                src={nft?.json?.image || '/fallbackImage.jpg'}
+                                                alt="The downloaded illustration of the provided NFT address."
+                                            />
+                                        </Link>
                                     </div>
                                 ))
                             )}

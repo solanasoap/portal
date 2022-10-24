@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['arweave.net'],
+    domains: ['arweave.net', 'seekpng.com', 'dweb.link',],
     remotePatterns: [
       {
         protocol: 'https',
@@ -16,6 +16,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'nftstorage.link',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.dweb.link',
       },
     ],
   },

@@ -121,7 +121,12 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                             </div>
                         ) : (
                             <div>
-                                <div className="py-8 justify-center items-center flex">
+                                <div className="py-8 justify-center items-center flex-col">
+                                <Link href={`/examiner/${soapDetails.Address}`}>
+                                        <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 mt-4 rounded w-64 h-18 text-lg">
+                                            Check it out in the gallery
+                                        </button>
+                                    </Link>
                                     <Link href={`https://solscan.io/tx/${txSignature}`}>
                                         <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-64 h-16">
                                             Check it out on Solscan
