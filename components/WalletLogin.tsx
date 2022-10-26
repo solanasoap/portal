@@ -83,18 +83,20 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
         <>
             <div className="">
                 {!walletAddress && (
-                    <div className="">
-                        <Link href={`${connect("phantom.app")}`}>
-                            <button className="bg-phantomPurple hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2">
-                                {`${walletAction} with Phantom`}
-                            </button>
-                        </Link>
-                        <Link href={`${connect("solflare.com")}`}>
-                            <button disabled className="bg-orange-700 hover:shadow-md text-white disabled:text-gray-600 font-bold py-2 px-4 rounded w-64 h-16 my-2 disabled:bg-gray-800">
-                                {`${walletAction} with Solflare`}
-                            </button>
-                        </Link>
-                    </div>
+                    <>
+                        <div className="flex-col">
+                            <Link href={`${connect("phantom.app")}`}>
+                                <button className="bg-gradient-to-tr from-phantomBottomLeft to-phantomTopRight hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2 block">
+                                    {`${walletAction} with Phantom`}
+                                </button>
+                            </Link>
+                            <Link href={`${connect("solflare.com")}`}>
+                                <button disabled className="bg-orange-700 hover:shadow-md text-white disabled:text-gray-600 font-bold py-2 px-4 rounded w-64 h-16 my-2 block disabled:bg-gray-800">
+                                    {`${walletAction} with Solflare`}
+                                </button>
+                            </Link>
+                        </div>
+                    </>
                 )}
             </div>
             <div className="py-2 justify-end flex ">

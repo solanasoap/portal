@@ -17,7 +17,7 @@ const metaplex = new Metaplex(connection);
 const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
 
     return (
-        <div className="px-5">
+        <div className="px-4">
             <Head>
                 <title>SOAP | Examiner</title>
                 <meta name="description" content="SOAP" />
@@ -25,20 +25,19 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
             <main>
-                <Header></Header>
-                <div className="flex-col py-6">
+                <div className="inline-block py-2 w-full drop-shadow-xl">
+                    <div className="relative">
+                        <Image src={soapDetails.Image} width="2024" height="2024" className="rounded-lg relative" />
+                    </div>
+                </div>
+                <div className="flex-col py-2">
                     <div className="inline text-6xl font-phenomenaBlack h-12">
                         <h1>
                             {soapDetails.Name}
                         </h1>
                     </div>
                 </div>
-                <div className="flex py-2 w-full items-start justify-start drop-shadow-xl">
-                    <div className="relative w-80 h-80 ">
-                        <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
-                    </div>
-                </div>
-                <div className="flex-col py-6">
+                <div className="flex-col pt-2 pb-6">
                     <div className="inline text-2xl font-phenomenaRegular h-12">
                         <h1>
                             {soapDetails.Description}

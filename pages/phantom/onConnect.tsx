@@ -108,7 +108,6 @@ const OnConnect: NextPage = (props) => {
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
                 <main >
-                    <Header></Header>
                     {/* <p>Wallet pubkey: {phantomWalletPublicKey.toString()}</p>
                     <div >
                         <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl'>Wallet: {phantomWalletPublicKey.toString() ? `${phantomWalletPublicKey.toString().slice(0, 4)}...${phantomWalletPublicKey.toString().slice(-4)}` : "Not logged in"}</p>

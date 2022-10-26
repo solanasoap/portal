@@ -43,8 +43,8 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
             <main>
-                <div className="flex-col px-5 pt-6">
-                    <div className="inline text-6xl font-phenomenaBlack h-12">
+                <div className="flex-col pt-4">
+                    <div className="inline text-[13.4vw] font-phenomenaBlack h-12">
                         <h1>
                             Hey, you got a soap!
                         </h1>

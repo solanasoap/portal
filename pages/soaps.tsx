@@ -14,7 +14,6 @@ const Collection: NextPage = (props) => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main >
-          <Header></Header>
           <SoapGallery></SoapGallery>
 
         </main>

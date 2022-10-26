@@ -82,7 +82,6 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main >
-                <Header></Header>
                 <div className="py-6" >
                     <div className="inline text-7xl font-phenomenaBlack text-center">
                         {/* FIXME: add here a lot nicer animation that follows the actual confirmations until finalized */}
@@ -94,7 +93,7 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                                     Minting {`${soapDetails.Name}`} to:
                                 </p>
                                 <p className="text-5xl">
-                                {walletAddress && `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`}
+                                    {walletAddress && `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`}
                                 </p>
                             </>
                         )}
@@ -109,27 +108,27 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                     <>
                         {(txSignature == "403") ? (
                             <div>
-                                <div className="text-3xl font-phenomenaBlack py-4 text-center justify-center px-12">
-                                    Looks like you already minted this one!
+                                <div className="text-4xl font-phenomenaBlack py-4 text-center justify-center px-12 items-center">
+                                    You already have this soap!
                                     {/* FIXME: This path doesn't exist yet */}
                                     <Link href={`/examiner/${soapDetails.Address}`}>
                                         <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 mt-4 rounded w-64 h-18 text-lg">
-                                            Check it out in the gallery
+                                            Check it out in your wallet
                                         </button>
                                     </Link>
                                 </div>
                             </div>
                         ) : (
                             <div>
-                                <div className="py-8 justify-center items-center flex-col">
-                                <Link href={`/examiner/${soapDetails.Address}`}>
+                                <div className="flex py-8 justify-center flex-col items-center">
+                                    <Link href={`/examiner/${soapDetails.Address}`}>
                                         <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 m-4 rounded w-64 h-18 text-lg">
-                                            Check it out in the gallery
+                                            See it in your wallet
                                         </button>
                                     </Link>
                                     <Link href={`https://solscan.io/tx/${txSignature}`}>
                                         <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-64 h-16 m-4">
-                                            Check it out on Solscan
+                                            See transaction
                                         </button>
                                     </Link>
                                 </div>
@@ -158,9 +157,9 @@ export async function getServerSideProps(context) {
     // TODO: Maybe filter if it is a soap and send back a "not soap mfer" pic if not
     const soap = await metaplex.nfts().findByMint({ mintAddress });
     const soapDetails: soapDetails = {
-        Address: soapAddress,
-        Image: soap.json.image,
-        Name: soap.json.name || "error"
+        Address: soapAddress || 'address.none',
+        Image: soap.json.image || 'https://cdn2.vectorstock.com/i/1000x1000/09/11/problem-flat-red-color-icon-vector-6080911.jpg',
+        Name: soap.json.name || "name.none"
     }
 
     return {

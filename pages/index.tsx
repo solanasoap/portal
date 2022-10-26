@@ -10,15 +10,14 @@ const Homes: NextPage = (props) => {
 
   return (
 
-    <div className="px-5">
+    <div className="flex px-4 max-w-7xl justify-center items-center m-auto">
       <Head>
         <title>SOAP</title>
         <meta name="description" content="SOAP" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
       </Head>
-      <main >
-        <Header></Header>
+      <main>
         {/* <div className="py-2 justify-center flex ">
           <Link href="/mobile">
             <button className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-4 rounded w-96 h-12">
