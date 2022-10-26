@@ -42,6 +42,7 @@ const OnConnect: NextPage = (props) => {
             console.log("Reusing keypair in local storage.")
 
             const dappKeyPairSecretKeyCookies = JSON.parse(Cookies.get('dappKeyPair')).secretKey
+            // console.log(dappKeyPairSecretKeyCookies)
 
             // Create array from JSON secret key
             var secretKeyArray = [];
