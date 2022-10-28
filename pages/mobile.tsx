@@ -30,9 +30,9 @@ const Collection: NextPage = (props) => {
           </div>
         </div>
 
-        <div className="invisible lg:visible lg:max-w-7xl max-w-xl">
+        <div className="invisible lg:visible lg:max-w-7xl">
           <div className=" text-white bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right px-4 py-8 mt-4 mb-3 rounded-lg">
-            <div className='grid grid-cols-2'>
+            <div className='lg:grid lg:grid-cols-2'>
 
               <div className="pl-8">
                 <div className="pb-2">

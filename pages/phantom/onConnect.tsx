@@ -2,7 +2,6 @@ import type { NextPage } from 'next'
 import bs58 from "bs58";
 import { useState, useEffect } from "react";
 import Head from 'next/head';
-import Header from '../../components/Header';
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from "next";
 import { PublicKey } from '@solana/web3.js';
@@ -15,6 +14,7 @@ import Cookies from 'js-cookie';
 // It can also forward to a page by using "target" url query param
 
 const OnConnect: NextPage = (props) => {
+    const [errorMessage, setErrorMessage] = useState(null)
 
     // Get Query Params from Phantom deeplink redirect
     const router = useRouter()
@@ -25,7 +25,7 @@ const OnConnect: NextPage = (props) => {
 
     const [dappKeyPair, setDappKeyPair] = useState<BoxKeyPair>();
     const [phantomWalletPublicKey, setPhantomWalletPublicKey] =
-        useState<PublicKey | string>("");
+        useState<PublicKey | boolean>(null);
 
 
     useEffect(() => {
@@ -53,45 +53,58 @@ const OnConnect: NextPage = (props) => {
                 // console.log(router.query.data.toString())
                 // console.log(router.query.nonce.toString())
 
-                const sharedSecretDapp = nacl.box.before(
-                    bs58.decode(router.query.phantom_encryption_public_key.toString()),
-                    shouldDappKeyPair.secretKey // THIS FAILS IN PRIVATE TAB
-                );
+                try {
+                    const sharedSecretDapp = nacl.box.before(
+                        bs58.decode(router.query.phantom_encryption_public_key.toString()),
+                        shouldDappKeyPair.secretKey // THIS FAILS IN PRIVATE TAB
+                    );
 
-                const connectData = decryptPayload(
-                    router.query.data.toString(),
-                    router.query.nonce.toString(),
-                    sharedSecretDapp
-                )
+                    const connectData = decryptPayload(
+                        router.query.data.toString(),
+                        router.query.nonce.toString(),
+                        sharedSecretDapp
+                    )
 
-                // FIXME: Redirects to auth page in case payload can't be decrypted
-                // eg. Going from in-view browser to full safari, local storage doesn't transfer
-                // todo: make it nicer, this is a blocker from link based dealing
-                if (!connectData) { router.push("/mobile"); return }
+                    setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
+                    console.log(`connected to ${connectData.public_key.toString()}`);
 
-                // setSharedSecret(sharedSecretDapp);
-                // setSession(connectData.session);
-                setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
-                console.log(`connected to ${connectData.public_key.toString()}`);
-
-                // Save public key of wallet in Local Storage
-                // localStorage.setItem('userPublicKey', connectData.public_key.toString())
-
-                // Save dappKeyPair in cookie
-                Cookies.set('walletAddress', connectData.public_key.toString())
-                // Direct to soaps
-                router.push(queryParams.target.toString() || "/soaps") // FIXME Make this dynamically read from the URL query param "target" || /soaps
+                    // Save dappKeyPair in cookie
+                    Cookies.set('walletAddress', connectData.public_key.toString())
+                    // Direct to soaps
+                    router.push(queryParams.target.toString() || "/")
+                } catch (error) {
+                    console.log("There was an error decrypting the connection data: ", error)
+                    // if it's going to mintooor, redirect to dealer
+                    const target: string = queryParams.target.toString()
+                    if (target.indexOf('mintooor')) {
+                        console.log("it was going to mintooor")
+                        const targetSoap = target.substring(target.lastIndexOf('/') + 1);
+                        setErrorMessage(true)
+                        router.push(`/dealer/${targetSoap}`)
+                    }
+                }
             } else {
                 // Direct to auth if not called from deeplink redirect
                 router.push("/mobile")
             }
         } else {
+            // Can't find dapp keypair but has target, likely coming from in-app browser
             console.log("Couldn't find dappKeyPair in local cookie.")
-            // IF PRIVATE OR IN-APP BROWSER: dappKeyPair doesn't get shared between browser windows
+            // if it's going to mintooor, redirect to dealer.
+            // TODO: Make this more dynamic?
+            const target: string = queryParams.target.toString()
+            if (target.indexOf('mintooor')) {
+                console.log("it was going to mintooor")
+                const targetSoap = target.substring(target.lastIndexOf('/') + 1);
+                setErrorMessage(true)
+                router.push(`/dealer/${targetSoap}`)
+            } else {
+                // If all else fails
+                router.push('/')
+            }
         }
 
     }, []);
-
 
     return (
         <>
@@ -103,12 +116,11 @@ const OnConnect: NextPage = (props) => {
                     <link rel="apple-touch-icon" href="/favicon.ico" />
                 </Head>
                 <main >
-                    {/* <p>Wallet pubkey: {phantomWalletPublicKey.toString()}</p>
-                    <div >
-                        <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl'>Wallet: {phantomWalletPublicKey.toString() ? `${phantomWalletPublicKey.toString().slice(0, 4)}...${phantomWalletPublicKey.toString().slice(-4)}` : "Not logged in"}</p>
-                    </div> */}
-                    {/* {{props}} */}
-
+                    <div>
+                        {errorMessage && (
+                            <h4 className="text-center font-bold text-2xl leading-6">Opps, let&#39;s try again...</h4>
+                        )}
+                    </div>
                 </main>
             </div>
         </>
