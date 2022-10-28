@@ -47,6 +47,7 @@ export default async function handler(req, res) {
     let soapMintTransaction = new Transaction()
     
     try {
+        console.log("Finding ATA for account: ", toPublicKey.toBase58())
         const tokenAccount = await getAccount(connection, tokenATA, 'finalized');
         console.log("Token Account exists: ", tokenAccount.address.toBase58())
         // FIXME: This hardcodes to 1 soap per wallet of unique type. It's pretty effective defense, but also pretty shit

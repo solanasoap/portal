@@ -9,6 +9,8 @@ import { useState } from "react";
 import nacl from "tweetnacl";
 import QRCode from "react-qr-code";
 
+import { useEffect } from "react";
+
 const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
 const metaplex = new Metaplex(connection);
 
@@ -59,7 +61,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                     </div>
                 </div>
                 <div className="lg:invisible">
-                    <div className="py-2 px-24 justify-center flex items-center">
+                    <div className="py-2 px-12 justify-center flex items-center">
                         <WalletLogin
                             target={`/mintooor/${soapDetails.Address}`}
                             walletAction="Mint"

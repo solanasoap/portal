@@ -15,6 +15,7 @@ const Collection: NextPage = (props) => {
         <title>New mobile adapter</title>
         <meta name="description" content="Connect to mobile" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
       </Head>
       <main className=''>
         <div className="lg:invisible">

@@ -15,7 +15,7 @@ import Cookies from 'js-cookie';
 // It can also forward to a page by using "target" url query param
 
 const OnConnect: NextPage = (props) => {
-    
+
     // Get Query Params from Phantom deeplink redirect
     const router = useRouter()
     const queryParams = router.query
@@ -30,19 +30,10 @@ const OnConnect: NextPage = (props) => {
 
     useEffect(() => {
 
-        // TODO:
-        // Get all NFTs that belong to the 9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV collection from user's wallet
-        // Display all of them in a nice card system
-
-        var shouldDappKeyPair2;
-
-        // TODO: FIXME:
-        // Dealer saves the dappKeyPair as a whole in a cookie called "dappKeyPair"
         if (Cookies.get('dappKeyPair')) {
             console.log("Reusing keypair in local storage.")
 
             const dappKeyPairSecretKeyCookies = JSON.parse(Cookies.get('dappKeyPair')).secretKey
-            // console.log(dappKeyPairSecretKeyCookies)
 
             // Create array from JSON secret key
             var secretKeyArray = [];
@@ -54,47 +45,49 @@ const OnConnect: NextPage = (props) => {
             const shouldDappKeyPair = nacl.box.keyPair.fromSecretKey(secretKeyUint8)
 
             setDappKeyPair(shouldDappKeyPair)
-            shouldDappKeyPair2 = shouldDappKeyPair
 
-        }
 
-        if (router.query.data) {
+            if (router.query.data) {
 
-            // console.log(router.query.phantom_encryption_public_key.toString())
-            // console.log(router.query.data.toString())
-            // console.log(router.query.nonce.toString())
+                // console.log(router.query.phantom_encryption_public_key.toString())
+                // console.log(router.query.data.toString())
+                // console.log(router.query.nonce.toString())
 
-            const sharedSecretDapp = nacl.box.before(
-                bs58.decode(router.query.phantom_encryption_public_key.toString()),
-                shouldDappKeyPair2.secretKey
-            );
+                const sharedSecretDapp = nacl.box.before(
+                    bs58.decode(router.query.phantom_encryption_public_key.toString()),
+                    shouldDappKeyPair.secretKey // THIS FAILS IN PRIVATE TAB
+                );
 
-            const connectData = decryptPayload(
-                router.query.data.toString(),
-                router.query.nonce.toString(),
-                sharedSecretDapp
-            )
+                const connectData = decryptPayload(
+                    router.query.data.toString(),
+                    router.query.nonce.toString(),
+                    sharedSecretDapp
+                )
 
-            // FIXME: Redirects to auth page in case payload can't be decrypted
-            // eg. Going from in-view browser to full safari, local storage doesn't transfer
-            // todo: make it nicer, this is a blocker from link based dealing
-            if (!connectData) { router.push("/mobile"); return }
-            
-            // setSharedSecret(sharedSecretDapp);
-            // setSession(connectData.session);
-            setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
-            console.log(`connected to ${connectData.public_key.toString()}`);
+                // FIXME: Redirects to auth page in case payload can't be decrypted
+                // eg. Going from in-view browser to full safari, local storage doesn't transfer
+                // todo: make it nicer, this is a blocker from link based dealing
+                if (!connectData) { router.push("/mobile"); return }
 
-            // Save public key of wallet in Local Storage
-            // localStorage.setItem('userPublicKey', connectData.public_key.toString())
+                // setSharedSecret(sharedSecretDapp);
+                // setSession(connectData.session);
+                setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
+                console.log(`connected to ${connectData.public_key.toString()}`);
 
-            // Save dappKeyPair in cookie
-            Cookies.set('walletAddress', connectData.public_key.toString())
-            // Direct to soaps
-            router.push(queryParams.target.toString() || "/soaps") // FIXME Make this dynamically read from the URL query param "target" || /soaps
+                // Save public key of wallet in Local Storage
+                // localStorage.setItem('userPublicKey', connectData.public_key.toString())
+
+                // Save dappKeyPair in cookie
+                Cookies.set('walletAddress', connectData.public_key.toString())
+                // Direct to soaps
+                router.push(queryParams.target.toString() || "/soaps") // FIXME Make this dynamically read from the URL query param "target" || /soaps
+            } else {
+                // Direct to auth if not called from deeplink redirect
+                router.push("/mobile")
+            }
         } else {
-            // Direct to auth if not called from deeplink redirect
-            router.push("/mobile")
+            console.log("Couldn't find dappKeyPair in local cookie.")
+            // IF PRIVATE OR IN-APP BROWSER: dappKeyPair doesn't get shared between browser windows
         }
 
     }, []);
@@ -105,8 +98,9 @@ const OnConnect: NextPage = (props) => {
             <div className="px-5">
                 <Head>
                     <title>Connecting...</title>
-                    <meta name="description" content="See your collection of soaps." />
+                    <meta name="description" content="Connecting to your wallet" />
                     <link rel="icon" href="/favicon.ico" />
+                    <link rel="apple-touch-icon" href="/favicon.ico" />
                 </Head>
                 <main >
                     {/* <p>Wallet pubkey: {phantomWalletPublicKey.toString()}</p>
