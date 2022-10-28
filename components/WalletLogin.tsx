@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import nacl from "tweetnacl";
 import router from "next/router";
 import Cookies from "js-cookie";
+import { detectIncognito } from "detectincognitojs";
 
 /// redirect link from connect is /onConnect/ on our end
 /// it should receive all the wallet info and store it in state
@@ -17,6 +18,13 @@ const buildUrl = (walletEndpoint: string, path: string, params: URLSearchParams)
     `https://${walletEndpoint}/ul/v1/${path}?${params.toString()}`;
 
 export default function WalletLogin({ walletAction, target, forceReconnect }) {
+    const [incognito, setIncognito] = useState(null)
+
+    useEffect(() => {
+        detectIncognito().then((result) => {
+            setIncognito(result.isPrivate)
+        });
+    }, []);
 
     const base_url = process.env.NEXT_PUBLIC_BASE_URL
     const onConnectRedirectLink = `https://${base_url}/phantom/onConnect?target=${target}`
@@ -82,19 +90,26 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
     return (
         <>
             <div className="">
-                {!walletAddress && (
-                    <div className="">
-                        <Link href={`${connect("phantom.app")}`}>
-                            <button className="bg-phantomPurple hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2">
-                                {`${walletAction} with Phantom`}
-                            </button>
-                        </Link>
-                        <Link href={`${connect("solflare.com")}`}>
-                            <button disabled className="bg-orange-700 hover:shadow-md text-white disabled:text-gray-600 font-bold py-2 px-4 rounded w-64 h-16 my-2 disabled:bg-gray-800">
-                                {`${walletAction} with Solflare`}
-                            </button>
-                        </Link>
-                    </div>
+                {(!walletAddress && !incognito) && (
+                    <>
+                        <div className="flex-col">
+                            <Link href={`${connect("phantom.app")}`}>
+                                <button className="bg-gradient-to-tr from-phantomBottomLeft to-phantomTopRight hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2 block">
+                                    {`${walletAction} with Phantom`}
+                                </button>
+                            </Link>
+                            <Link href={`${connect("solflare.com")}`}>
+                                <button disabled className="bg-orange-700 hover:shadow-md text-white disabled:text-gray-600 font-bold py-2 px-4 rounded w-64 h-16 my-2 block disabled:bg-gray-800">
+                                    {`${walletAction} with Solflare`}
+                                </button>
+                            </Link>
+                        </div>
+                    </>
+                )}
+                {(incognito == true) && (
+                    <h4 className="text-center font-bold text-2xl leading-6">
+                         {`You're currently in a private window. Open this page in your normal browser to ${walletAction.toLowerCase()}.`}
+                    </h4>
                 )}
             </div>
             <div className="py-2 justify-end flex ">

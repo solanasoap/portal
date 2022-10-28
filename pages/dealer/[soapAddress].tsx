@@ -9,6 +9,8 @@ import { useState } from "react";
 import nacl from "tweetnacl";
 import QRCode from "react-qr-code";
 
+import { useEffect } from "react";
+
 const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
 const metaplex = new Metaplex(connection);
 
@@ -43,8 +45,8 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
             <main>
-                <div className="flex-col px-5 pt-6">
-                    <div className="inline text-6xl font-phenomenaBlack h-12">
+                <div className="flex-col pt-4">
+                    <div className="inline text-[13.4vw] font-phenomenaBlack h-12">
                         <h1>
                             Hey, you got a soap!
                         </h1>
@@ -59,7 +61,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                     </div>
                 </div>
                 <div className="lg:invisible">
-                    <div className="py-2 px-24 justify-center flex items-center">
+                    <div className="py-2 px-12 justify-center flex items-center">
                         <WalletLogin
                             target={`/mintooor/${soapDetails.Address}`}
                             walletAction="Mint"

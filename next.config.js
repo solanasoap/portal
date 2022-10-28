@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['arweave.net', 'seekpng.com', 'dweb.link',],
+    domains: ['arweave.net', 'seekpng.com', 'dweb.link', 'cdn2.vectorstock.com'],
     remotePatterns: [
       {
         protocol: 'https',

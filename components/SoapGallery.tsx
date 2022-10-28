@@ -52,7 +52,7 @@ export const SoapGallery: FC = () => {
     const soapList = (list: FindNftsByOwnerOutput) => {
         let soaps = []
         list.map(nft => {
-            if (nft.collection != null) {
+            if (nft.collection != null && nft.collection.verified == true) {
                 if (nft.collection.address.toBase58() == soapCollectionId.toBase58()) {
                     soaps.push(nft)
                 }

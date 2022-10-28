@@ -12,9 +12,9 @@ const Collection: NextPage = (props) => {
           <title>Your soap collection</title>
           <meta name="description" content="See your collection of soaps." />
           <link rel="icon" href="/favicon.ico" />
+          <link rel="apple-touch-icon" href="/favicon.ico" />
         </Head>
         <main >
-          <Header></Header>
           <SoapGallery></SoapGallery>
 
         </main>

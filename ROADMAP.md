@@ -12,10 +12,29 @@ Glow should be supported as well through whatever method in the browser.
 ## Blast Control - 4
 Currently everything runs on BCN..., which is a huge security hazard to say the least.
 Implement a system where BCN... is not needed anymore, or rarely
+### Seperate Fee Payer - 4
+Use a seperate fee payer than BCN...
+### Different mint authority - 2/3
+So that live server does not need BCN... keypair but can use the mint authority.
+either one keypair for all (easier), or unique keypair mint authority for each (difficult).
 
 ## Token Creator - 3
 A part of the portal where anybody can create soaps
 and it directs them through until they get a soap dealer
+
+## Observability - 3
+Add logging (axiom) to frontend to monitor errors, vitals and app activity
+
+## Dealer only works between specified time - 1
+Creator can set when a dealer should be working, eg. from - to.
+
+## Dealer can be turned on and off - 4
+Creator must be able to turn on and off dealer.
+This will most likely need stored in a db.
+
+## Examiner & Gallery look beautiful
+cus they look and feel like shit now lol no shade
+
 
 # DONE
 ## Gallery - 4
