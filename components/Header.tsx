@@ -27,6 +27,7 @@ export default function Header() {
                     </Link>
                     <div className="font-neueHaasUnicaRegular">
                         <Link href="/mobile">
+
                             <button className="bg-white hover:drop-shadow-md text-black font-bold py-2 w-40 rounded h-12 lg:invisible ">
                                 {walletAddress ? `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "WALLET"}
                             </button>

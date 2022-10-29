@@ -15,6 +15,10 @@ import { OwnSoap } from "../../components/OwnSoap";
 // Like a secret code or location to a party (see StripDAO party)
 // Only stored on our backend, not on-chain. Only visible if person authenticates ownership of soap.
 
+// TODO: Add the ability to have secrets on this page when you own the soap
+// Like a secret code or location to a party (see StripDAO party)
+// Only stored on our backend, not on-chain. Only visible if person authenticates ownership of soap.
+
 const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
 const metaplex = new Metaplex(connection);
 

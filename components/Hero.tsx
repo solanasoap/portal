@@ -35,7 +35,6 @@ export default function Hero() {
                                 <BsLink45Deg className="text-greenTopRight" />
                             </div>
                         </Link>
-
                     </div>
                 </div>
             </div>
