@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { keypairIdentity, Metaplex, KeypairSigner } from '@metaplex-foundation/js';
-import { Keypair, Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { Keypair, Connection, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
 import { createAssociatedTokenAccountInstruction, getAccount, createMintToInstruction, getAssociatedTokenAddress } from '@solana/spl-token'
 
 
@@ -14,7 +14,7 @@ import { createAssociatedTokenAccountInstruction, getAccount, createMintToInstru
 const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
 
 // Set up foundation
-const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
+const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/", 'finalized');
 const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(keypair))
 console.log("Public key of keypair being used: ", keypair.publicKey.toBase58())
@@ -51,9 +51,12 @@ export default async function handler(req, res) {
         const tokenAccount = await getAccount(connection, tokenATA, 'finalized');
         console.log("Token Account exists: ", tokenAccount.address.toBase58())
         // FIXME: This hardcodes to 1 soap per wallet of unique type. It's pretty effective defense, but also pretty shit
-        if (true) {
+        const limitToOne = true
+        if (limitToOne) {
             console.log("Not minting, one unique soap per wallet.")
             res.status(403).json({ error: 'Error: You already have this soap.' })
+            const current = Date.now();
+            console.log(`Execution time: ${current - start} ms\n`);
             return
         }
     } catch (error) {
@@ -80,9 +83,7 @@ export default async function handler(req, res) {
     )
 
     // console.log("Soap mint transaction: ", soapMintTransaction)
-
-    // FIXME: sendTransaction is deprecated, replace
-    const transactionId =  await connection.sendTransaction(soapMintTransaction, [soapKeyPair]);
+    const transactionId =  await sendAndConfirmTransaction(connection, soapMintTransaction, [soapKeyPair], {commitment: 'confirmed'});
 
     const end = Date.now();
     console.log("Mint tx: ", transactionId)

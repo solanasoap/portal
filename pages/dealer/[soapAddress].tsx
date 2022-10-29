@@ -45,19 +45,28 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
             <main>
-                <div className="flex-col pt-4">
+                <div className="flex-col">
                     <div className="inline text-[13.4vw] font-phenomenaBlack h-12">
                         <h1>
                             Hey, you got a soap!
                         </h1>
                     </div>
                 </div>
-                <h4 className="text-2xl font-phenomenaRegular text-center pt-4 drop-shadow-xl">
+                <h4 className="text-3xl font-phenomenaRegular text-center py-2 drop-shadow-xl">
                     {soapDetails.Name}
                 </h4>
                 <div className="flex py-2 w-full items-center justify-center drop-shadow-xl">
                     <div className="relative w-64 h-64 ">
-                        <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
+                    <div className="flex items-center justify-center w-auto h-64">
+                    <div className="relative flex h-64 w-64">
+                        <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
+                            <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
+                        </div>
+                        <div className="absolute w-full h-full bg-conic-gradient filter blur-xl"></div>
+                        <div className="absolute w-full h-full bg-conic-gradient filter blur-3xl opacity-60 animate-pulse"></div>
+                        <div className="absolute -inset-0.5 rounded-sm bg-conic-gradient"></div>
+                    </div>
+                </div>
                     </div>
                 </div>
                 <div className="lg:invisible">
