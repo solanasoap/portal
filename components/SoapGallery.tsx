@@ -1,7 +1,5 @@
-import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { FC, useEffect, useState } from 'react'
-import axios from 'axios';
 import { FindNftsByOwnerOutput, Metaplex, Nft, Sft } from '@metaplex-foundation/js';
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
@@ -126,7 +124,14 @@ export const SoapGallery: FC = () => {
     return (
         <>
             <div>
-                <p className='font-bold font-phenomenaRegular text-4xl text-center flex justify-center text-black px-2 py-2 rounded-lg'>{walletAddress ? null : `Please log in to see your soaps.`}</p>
+                <p className='font-bold font-phenomenaRegular text-4xl text-center flex-col flex justify-center text-white px-2 py-2 rounded-lg'>{walletAddress ? null : (
+                    <>
+                        <p>Please log in to see your soaps.</p>
+                        <div className='flex justify-center'>
+                            <img className="" src="/loading.svg" />
+                        </div>
+                    </>
+                )}</p>
             </div>
 
             {(walletAddress && currentView) ? (
@@ -172,7 +177,7 @@ export const SoapGallery: FC = () => {
 
             {!currentView && walletAddress && !userHasSoap && (
                 <div className="flex-col text-white mb-3 bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 rounded-b-lg rounded-t-lg h-auto">
-                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>You ain&#39;t got no soap, we can smell.</p>
+                    <p className='font-bold font-phenomenaRegular flex pb-2 text-4xl text-center'>Can't find any soaps here!</p>
                 </div>
             )}
         </>

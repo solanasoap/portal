@@ -8,8 +8,12 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Sign } from 'crypto';
+import Script from 'next/script'
 
-const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
+const RPCURL = "https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/"
+// const RPCURL = "https://api.mainnet-beta.solana.com"
+const connection = new Connection(RPCURL);
 const metaplex = new Metaplex(connection);
 
 // We get to this page from /wallet/onConnectV2
@@ -40,8 +44,6 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
 
         const minted = Cookies.get(apiMintRequest.soapAddress)
         console.log(minted)
-
-        // console.log("API Mint Request", apiMintRequest)
 
         // We should really check if we minted this or not
         // Otherwise it'll mint on every refresh lmao 
@@ -82,63 +84,91 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main >
-                <div className="py-6" >
-                    <div className="inline text-7xl font-phenomenaBlack text-center">
-                        {/* FIXME: add here a lot nicer animation that follows the actual confirmations until finalized */}
-                        {txSignature ? (
-                            <p>Mint Done!</p>
-                        ) : (
+                <div className="flex items-center justify-center w-auto h-80 py-6 pt-12 pb-12 mb-12">
+                    <div className="relative flex h-72 w-72">
+                        <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
+                            <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
+                        </div>
+                        <div className="absolute w-full h-full bg-conic-gradient filter blur-xl"></div>
+                        <div className="absolute w-full h-full bg-conic-gradient filter blur-3xl opacity-60 animate-pulse"></div>
+                        <div className="absolute -inset-0.5 rounded-sm bg-conic-gradient"></div>
+                    </div>
+                </div>
+                {!txSignature && (
+                    <div className="py-6" >
+                        <div className="inline ">
                             <>
-                                <p className="text-5xl mb-2">
-                                    Minting {`${soapDetails.Name}`} to:
-                                </p>
-                                <p className="text-5xl">
-                                    {walletAddress && `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`}
-                                </p>
+                                <div className="flex-col text-center font-neueHaasUnicaBlack pb-3">
+                                    <p className="text-2xl font-bold mb-2">
+                                        {`${soapDetails.Name}`}
+                                    </p>
+                                    <p className="text-xl font-neueHaasUnicaRegular">
+                                        {/* TODO: Auto-resolve .sol address of wallet */}
+                                        Minting to {walletAddress && `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`}
+                                    </p>
+                                </div>
+                                <div className='flex justify-center'>
+                                    <img className="" src="/loading.svg" />
+                                </div>
                             </>
-                        )}
+                        </div>
                     </div>
-                </div>
-                <div className="flex py-2 w-full items-center justify-center drop-shadow-xl">
-                    <div className="relative w-64 h-64 ">
-                        <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
-                    </div>
-                </div>
-                {txSignature ? (
+                )}
+                {txSignature && (
                     <>
                         {(txSignature == "403") ? (
-                            <div>
-                                <div className="text-4xl font-phenomenaBlack py-4 text-center justify-center px-12 items-center">
-                                    You already have this soap!
-                                    {/* FIXME: This path doesn't exist yet */}
-                                    <Link href={`/examiner/${soapDetails.Address}`}>
-                                        <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 mt-4 rounded w-64 h-18 text-lg">
-                                            Check it out in your wallet
-                                        </button>
-                                    </Link>
+                            <>
+                                <p className="text-4xl font-phenomenaBlack pb-2 px-12 text-center items-center bg-transparent">
+                                    You already have the {soapDetails.Name}
+                                </p>
+                                <div>
+                                    <div className="text-4xl font-phenomenaBlack py-2 text-center justify-center px-12 items-center">
+                                        <Link href={`/examiner/${soapDetails.Address}`}>
+                                            <div className="relative group">
+                                                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                                                <button className="relative px-7 py-4 bg-black rounded text-lg mt-4 font-bold leading-none flex items-center uppercase font-neueHaasUnicaBlack">
+                                                    See in my Collection
+
+                                                </button>
+                                            </div>
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
+                            </>
                         ) : (
-                            <div>
-                                <div className="flex py-8 justify-center flex-col items-center">
-                                    <Link href={`/examiner/${soapDetails.Address}`}>
-                                        <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 m-4 rounded w-64 h-18 text-lg">
-                                            See it in your wallet
-                                        </button>
-                                    </Link>
-                                    <Link href={`https://solscan.io/tx/${txSignature}`}>
-                                        <button className=" bg-black hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-64 h-16 m-4">
-                                            See transaction
-                                        </button>
-                                    </Link>
+                            <>
+                                <div>
+                                    <div className="flex justify-center flex-row items-center mt-2 pt-2 gap-4">
+                                        <Link href={`https://solscan.io/tx/${txSignature}`}>
+                                            <div className="relative group">
+                                                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                                                <button className="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center uppercase font-neueHaasUnicaBlack">
+                                                    Blockchain proof
+                                                </button>
+                                            </div>
+                                        </Link>
+                                        <Link href={`/examiner/${soapDetails.Address}`}>
+                                            <div className="relative group">
+                                                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                                                <button className="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center uppercase font-neueHaasUnicaBlack">
+                                                    See in my Collection
+
+                                                </button>
+                                            </div>
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
+                                <div className='pt-4'>
+                                    <p className="text-5xl font-phenomenaBlack text-center py-2 px-12 items-center text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight">
+                                        You just minted
+                                    </p>
+                                    <p className="text-4xl font-phenomenaBlack text-center px-12 items-center text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight">
+                                        {soapDetails.Name}
+                                    </p>
+                                </div>
+                            </>
                         )}
                     </>
-                ) : (
-                    <div className='flex justify-center'>
-                        <img className="" src="/loading.svg" />
-                    </div>
                 )}
             </main>
         </div>

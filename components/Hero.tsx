@@ -7,11 +7,11 @@ export default function Hero() {
                 <div className="lg:px-6 font-neueHaasUnicaRegular">
                     <div className="pt-6 py-6">
                         <div className="text-3xl lg:text-6xl md:text-4xl font-bold lg:w-5/6">
-                            The next-gen token dispenser, built on Solana.
+                            Soap lets you create digital collectibles and helps you distribute them.
                         </div>
                     </div>
                     <div className="py-2 text-xl lg:w-5/6">
-                        <p> Give out soaps as rewards, communicate with holders, and engage your tribe. With soap, people can prove their actions and get immersed in an on-chain world. </p>
+                        <p> Reward people for completing challenges, participating in spaces, or attending events. Be it a virtual or real life experience, soap offers tools to engage with your community on-chain. </p>
                     </div>
                     <div className="py-8">
                         <Link href="/soaps">
