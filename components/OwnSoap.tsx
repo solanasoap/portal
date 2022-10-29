@@ -75,7 +75,7 @@ export const OwnSoap: FC<soapAddressInterface> = ({ soapAddress }) => {
                         
                         ) : (
                             <p className='text-gray-600'>
-                                You don't have this soap
+                                You don&#39;t have this soap
                             </p>
                         )}
                     </>
