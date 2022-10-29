@@ -14,14 +14,14 @@ export default function Hero() {
                     <div className="py-2 text-lg lg:w-5/6">
                         <p> Soap lets you create digital collectibles and helps you distribute them. Be it a virtual or real life experience, soap offers tools to engage with your community on-chain. </p>
                     </div>
-                    <div className="py-8 flex-row flex gap-4">
+                    <div className="py-8 flex-row flex gap-4 lg:justify-start ">
                         <Link href="/soaps">
-                            <button className="bg-gradient-to-tr from-[#e10b00] to-RBGradient-Red-Left hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-auto h-16 drop-shadow-lg m-auto">
+                            <button className="bg-gradient-to-tr from-[#e10b00] to-RBGradient-Red-Left hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-auto h-16 drop-shadow-lg m-auto lg:m-0">
                                 see your soaps
                             </button>
                         </Link>
                         <Link href="/dealer/YngRrzzvjvdAhWTCyNMgvyrmeJ8jt4hL7NUqaK4derF">
-                            <button className="bg-gradient-to-tr from-phantomTopRight to-justPurple hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-auto h-16 drop-shadow-lg m-auto">
+                            <button className="bg-gradient-to-tr from-phantomTopRight to-justPurple hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-auto h-16 drop-shadow-lg m-auto lg:m-0">
                                 try dispenser
                             </button>
                         </Link>
