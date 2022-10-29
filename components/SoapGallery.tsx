@@ -91,15 +91,6 @@ export const SoapGallery: FC = () => {
         return Promise.all(promises);
     };
 
-    const changeCurrentPage = (operation) => {
-        setLoading(true);
-        if (operation === 'next') {
-            setCurrentPage((prevValue) => prevValue + 1);
-        } else {
-            setCurrentPage((prevValue) => (prevValue > 1 ? prevValue - 1 : 1));
-        }
-    };
-
     useEffect(() => {
         if (walletAddress) {
             fetchNFTs()
@@ -136,15 +127,12 @@ export const SoapGallery: FC = () => {
 
             {(walletAddress && currentView) ? (
                 <>
-                    <div className=' text-white bg-gradient-to-tr from-black to-black px-8 py-4 mb-4 rounded-lg'>
-                        <p className='font-bold font-phenomenaRegular flex pb-4 text-4xl text-center'>
-                            Welcome to your soap collection
-                        </p>
-                        <p className='font-phenomenaRegular text-xl text-center'>
-                            These are all the 🧼 you&#39;ve collected into your wallet. Busy life huh!
-                        </p>
+                    <div>
+                        <h1 className='text-6xl font-phenomenaBlack mt-[-20pt] pb-6'>
+                            your collection
+                        </h1>
                     </div>
-                    <div className="flex-col text-white bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right px-8 pt-2 mb-4 rounded-lg min-h-full">
+                    <div className="flex text-white px-0 pt-2 mb-4 rounded-lg">
                         <div>
                             {loading ? ( // false by default
                                 <div className='flex justify-center'>
@@ -153,11 +141,11 @@ export const SoapGallery: FC = () => {
                             ) : (
                                 currentView &&
                                 currentView.map((nft, index) => (
-                                    <div key={index} className="w-full flex-col p-2">
-                                        <h1 className="font-bold font-phenomenaBlack flex pb-2 pt-2 text-3xl justify-center shadow-lg">{nft.name}</h1>
+                                    <div key={index} className="w-full flex px-4 flex-col rounded-xl mb-4 bg-gradient-to-tr from-[#e10b00] to-RBGradient-Red-Left shadow-md">
+                                        <h1 className="font-bold font-phenomenaBlack flex py-3 pt-2 text-3xl justify-start">{nft.name}</h1>
                                         <Link href={`/examiner/${nft.address.toBase58()}`}>
                                             <img
-                                                className="flex items-center justify-center w-auto h-auto rounded-lg mb-6 shadow-xl hover:shadow-md cursor-pointer"
+                                                className="flex items-center justify-center w-auto h-auto rounded-lg mb-6 shadow-lg hover:shadow-md cursor-pointer"
                                                 src={nft?.json?.image || '/fallbackImage.jpg'}
                                                 alt="The downloaded illustration of the provided NFT address."
                                             />
