@@ -105,6 +105,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
 export default soapAddress
 
 export async function getServerSideProps(context) {
+    console.log("context.query from dealer getserversideprops: ", context.query)
     const soapAddress: string = context.query.soapAddress;
     const mintAddress = new PublicKey(soapAddress);
 
