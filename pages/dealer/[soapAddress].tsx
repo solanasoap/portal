@@ -1,12 +1,9 @@
 import { NextPage } from "next"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { Metaplex } from "@metaplex-foundation/js";
-import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import Image from "next/image";
 import WalletLogin from "../../components/WalletLogin";
-import { useState } from "react";
-import nacl from "tweetnacl";
 import QRCode from "react-qr-code";
 
 import { useEffect } from "react";
@@ -60,7 +57,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                     <div className="flex items-center justify-center w-auto h-64">
                     <div className="relative flex h-64 w-64">
                         <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
-                            <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
+                            <Image src={soapDetails.Image} layout="fill" />
                         </div>
                         <div className="absolute w-full h-full bg-conic-gradient filter blur-xl"></div>
                         <div className="absolute w-full h-full bg-conic-gradient filter blur-3xl opacity-60 animate-pulse"></div>
