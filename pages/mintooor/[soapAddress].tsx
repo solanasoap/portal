@@ -87,7 +87,7 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                 <div className="flex items-center justify-center w-auto h-80 py-6 pt-12 pb-12 mb-12">
                     <div className="relative flex h-72 w-72">
                         <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
-                            <Image src={soapDetails.Image} layout="fill" className="rounded-xl" />
+                            <Image src={soapDetails.Image} layout="fill" />
                         </div>
                         <div className="absolute w-full h-full bg-conic-gradient filter blur-xl"></div>
                         <div className="absolute w-full h-full bg-conic-gradient filter blur-3xl opacity-60 animate-pulse"></div>
@@ -118,8 +118,11 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                     <>
                         {(txSignature == "403") ? (
                             <>
-                                <p className="text-4xl font-phenomenaBlack pb-2 px-12 text-center items-center bg-transparent">
-                                    You already have the {soapDetails.Name}
+                                <p className="text-4xl font-phenomenaBlack pb-2 text-center items-center bg-transparent text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight">
+                                    You already have this soap
+                                </p>
+                                <p className="text-3xl font-phenomenaBlack pb-2 px-12 text-center items-center bg-transparent">
+                                    {soapDetails.Name}
                                 </p>
                                 <div>
                                     <div className="text-4xl font-phenomenaBlack py-2 text-center justify-center px-12 items-center">
