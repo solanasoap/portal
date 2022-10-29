@@ -24,7 +24,7 @@ const Link: NextPage<{ linkDetails: linkDetails }> = ({ linkDetails }) => {
     }, [targetSoap])
 
     return (
-        <h4 className="text-center font-bold text-2xl leading-6 py-6 font-neueHaasUnicaRegular">Connecting...</h4>
+        <h4 className="text-center font-bold text-2xl leading-6 py-6 font-neueHaasUnicaRegular">Redirecting...</h4>
     )
 }
 
