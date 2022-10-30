@@ -41,21 +41,21 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 <link rel="icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
-            <main>
-                <div className="flex-col">
-                    <div className="inline text-[13.4vw] font-phenomenaBlack h-12">
+            <main className="lg:max-w-7xl lg:justify-center lg:m-auto">
+                <div className="flex-col lg:py-6 py-3">
+                    <div className="inline text-5xl lg:text-5xl text-center font-phenomenaBlack h-12">
                         <h1>
                             Hey, you got a soap!
                         </h1>
                     </div>
                 </div>
-                <h4 className="text-3xl font-phenomenaRegular text-center py-2 drop-shadow-xl">
+                <h4 className="text-3xl font-phenomenaRegular text-center py-2 drop-shadow-xl lg:pb-4">
                     {soapDetails.Name}
                 </h4>
                 <div className="flex py-2 w-full items-center justify-center drop-shadow-xl">
-                    <div className="relative w-64 h-64 ">
-                    <div className="flex items-center justify-center w-auto h-64">
-                    <div className="relative flex h-64 w-64">
+                    <div className="relative w-64 h-64 lg:w-96 lg:h96">
+                    <div className="flex items-center justify-center w-auto h-64 lg:h-96">
+                    <div className="relative flex h-64 w-64 lg:w-96 lg:h-96">
                         <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
                             <Image src={soapDetails.Image} layout="fill" />
                         </div>

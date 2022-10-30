@@ -10,7 +10,7 @@ const Link: NextPage<{ linkDetails: linkDetails }> = ({ linkDetails }) => {
     const queryParams = router.query
 
     const links = {
-        StripDAOxUnlocParty: "HLk9BKFHszaXu1PYj1T6fVbFkXFeCYJeWCYH6pXoQhWa"
+        StripDAOxUnlocParty: "5bFo8fyrqxYejgAK5bvLUeHnaAP57jnymCpzXNytPUg5"
     }
 
     useEffect(() => {
@@ -33,7 +33,7 @@ export default Link
 export async function getServerSideProps(context) {
     const links = [
         {
-            "StripDAOxUnlocParty": "HLk9BKFHszaXu1PYj1T6fVbFkXFeCYJeWCYH6pXoQhWa"
+            "StripDAOxUnlocParty": "DmJkS5j6ycbtUCxZJFbnQQoMQY7Q6pyBR3KxGQEByJ3q"
         }
     ]
     const linkName: string = context.query.linkName

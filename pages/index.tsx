@@ -10,6 +10,9 @@ const Homes: NextPage = (props) => {
 
   return (
 
+    // TODO: Make this look nicer
+    // https://www.kindacode.com/snippet/how-to-create-frosted-glass-effect-in-tailwind-css/
+    
     <div className="flex px-4 max-w-7xl justify-center items-center m-auto">
       <Head>
         <title>SOAP</title>
