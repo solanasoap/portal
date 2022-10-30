@@ -33,7 +33,7 @@ export default Link
 export async function getServerSideProps(context) {
     const links = [
         {
-            "StripDAOxUnlocParty": "HLk9BKFHszaXu1PYj1T6fVbFkXFeCYJeWCYH6pXoQhWa"
+            "StripDAOxUnlocParty": "DmJkS5j6ycbtUCxZJFbnQQoMQY7Q6pyBR3KxGQEByJ3q"
         }
     ]
     const linkName: string = context.query.linkName
