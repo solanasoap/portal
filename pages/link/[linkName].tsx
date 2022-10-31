@@ -10,7 +10,7 @@ const Link: NextPage<{ linkDetails: linkDetails }> = ({ linkDetails }) => {
     const queryParams = router.query
 
     const links = {
-        StripDAOxUnlocParty: "5bFo8fyrqxYejgAK5bvLUeHnaAP57jnymCpzXNytPUg5"
+        StripDAOxUnlocParty: "4UMhYMjSQE3Q8vWtA4nD1CrkcQMbg7zfgiy4UBm24xTx"
     }
 
     useEffect(() => {
