@@ -1,12 +1,19 @@
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from 'next/link'
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from 'next/router'
 
 export default function Header() {
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
+    let displayWalletBtn = true
 
-    // First load only
+    const router = useRouter()
+    const pathName = router.pathname
+
+    if (pathName.includes("dealer") || pathName.includes("mintooor") || pathName.includes("link")) {
+        displayWalletBtn = false
+    }
+
     useEffect(() => {
 
         if (!walletAddress) {
@@ -25,26 +32,18 @@ export default function Header() {
                     <Link href="/">
                         <h1 className='text-6xl font-phenomenaBlack h-12 leading-6 cursor-pointer'>soap</h1>
                     </Link>
-                    <div className="font-neueHaasUnicaRegular">
-                        <Link href="/mobile">
-
-                            <button className="bg-white hover:drop-shadow-md text-black font-bold py-2 w-40 rounded h-12 lg:invisible ">
-                                {walletAddress ? `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "WALLET"}
-                            </button>
-                        </Link>
-                        {/* <li className="pl-6">
-                        <WalletMultiButton className='bg-black leading-none text-xl'>
-                        
-                        </WalletMultiButton>
-                    </li> */}
-                    </div>
+                    {displayWalletBtn && (
+                        <div className="font-neueHaasUnicaRegular">
+                            <Link href="/mobile">
+                                <button className="bg-white hover:drop-shadow-md text-black font-bold py-2 w-40 rounded h-12 lg:invisible">
+                                    {walletAddress ? `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}` : "WALLET"}
+                                </button>
+                            </Link>
+                        </div>
+                    )}
                 </header>
             </div>
         </>
     )
 
 }
-
-// h-12 mb-12 leading-8 font-phenomenaBlack
-
-// font-neueHaasUnicaRegular text-sm

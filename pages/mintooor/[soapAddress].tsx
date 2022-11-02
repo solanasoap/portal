@@ -84,7 +84,7 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main >
-                <div className="flex items-center justify-center w-auto h-80 py-6 pt-12 pb-12 mb-12">
+                <div className="flex items-center justify-center w-auto h-80 py-6 pt-12 pb-12 mb-8">
                     <div className="relative flex h-72 w-72">
                         <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
                             <Image src={soapDetails.Image} layout="fill" />
@@ -95,16 +95,17 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                     </div>
                 </div>
                 {!txSignature && (
-                    <div className="py-6" >
+                    <div className="py-2" >
                         <div className="inline ">
                             <>
                                 <div className="flex-col text-center font-neueHaasUnicaBlack pb-3">
                                     <p className="text-2xl font-bold mb-2">
                                         {`${soapDetails.Name}`}
                                     </p>
-                                    <p className="text-xl font-neueHaasUnicaRegular">
+                                    <p className="text-2xl font-neueHaasUnicaRegular">
                                         {/* TODO: Auto-resolve .sol address of wallet */}
-                                        Minting to {walletAddress && `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`}
+                                        Minting to: <br />
+                                        {walletAddress && `🔗 ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`}
                                     </p>
                                 </div>
                                 <div className='flex justify-center'>
