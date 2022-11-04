@@ -2,7 +2,8 @@ import { NextPage } from "next"
 import { useRouter } from "next/router"
 
 const links = {
-    StripDAOxUnlocParty: ""
+    StripDAOxUnlocParty: "",
+    SoapLisbon: "3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH"
 }
 
 const Link: NextPage = () => {

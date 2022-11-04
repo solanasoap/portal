@@ -5,13 +5,16 @@ import { useRouter } from 'next/router'
 
 export default function Header() {
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
-    let displayWalletBtn = true
+    let displayWalletBtn = false
 
     const router = useRouter()
     const pathName = router.pathname
 
+    // FIXME: this is not gud, do better, just for MVP
     if (pathName.includes("dealer") || pathName.includes("mintooor") || pathName.includes("link")) {
         displayWalletBtn = false
+    } else if (pathName.includes("examiner") || pathName.includes("soaps") || pathName === "/") {
+        displayWalletBtn = true
     }
 
     useEffect(() => {

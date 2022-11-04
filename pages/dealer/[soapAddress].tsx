@@ -54,16 +54,16 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 </h4>
                 <div className="flex py-2 w-full items-center justify-center drop-shadow-xl">
                     <div className="relative w-64 h-64 lg:w-96 lg:h96">
-                    <div className="flex items-center justify-center w-auto h-64 lg:h-96">
-                    <div className="relative flex h-64 w-64 lg:w-96 lg:h-96">
-                        <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
-                            <Image src={soapDetails.Image} layout="fill" />
+                        <div className="flex items-center justify-center w-auto h-64 lg:h-96">
+                            <div className="relative flex h-64 w-64 lg:w-96 lg:h-96">
+                                <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
+                                    <Image src={soapDetails.Image} layout="fill" />
+                                </div>
+                                <div className="absolute w-full h-full bg-conic-gradient filter blur-xl"></div>
+                                <div className="absolute w-full h-full bg-conic-gradient filter blur-3xl opacity-60 animate-pulse"></div>
+                                <div className="absolute -inset-0.5 rounded-sm bg-conic-gradient"></div>
+                            </div>
                         </div>
-                        <div className="absolute w-full h-full bg-conic-gradient filter blur-xl"></div>
-                        <div className="absolute w-full h-full bg-conic-gradient filter blur-3xl opacity-60 animate-pulse"></div>
-                        <div className="absolute -inset-0.5 rounded-sm bg-conic-gradient"></div>
-                    </div>
-                </div>
                     </div>
                 </div>
                 <div className="lg:invisible">
@@ -101,8 +101,9 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
 
 export default soapAddress
 
-export async function getServerSideProps(context) {
-    const soapAddress: string = context.query.soapAddress;
+export async function getStaticProps(context) {
+    const soapAddress: string = context.params.soapAddress;
+    console.log("soapAddress", soapAddress);
     const mintAddress = new PublicKey(soapAddress);
 
     // TODO: Maybe filter if it is a soap and send back a "not soap mfer" pic if not
@@ -115,6 +116,17 @@ export async function getServerSideProps(context) {
 
     return {
         props: { soapDetails }, // will be passed to the page component as props
+    }
+}
+
+
+export async function getStaticPaths() {
+    return {
+        paths: [
+            { params: { soapAddress: 'YngRrzzvjvdAhWTCyNMgvyrmeJ8jt4hL7NUqaK4derF' } },
+            { params: { soapAddress: '3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH' } }
+        ],
+        fallback: false, // can also be true or 'blocking'
     }
 }
 
