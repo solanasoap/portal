@@ -3,7 +3,9 @@ import { useRouter } from "next/router"
 
 const links = {
     StripDAOxUnlocParty: "",
-    SoapLisbon: "3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH"
+    SoapLisbon: "3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH",
+    Unloc: "8TmfqtbvH58aHL2NcRGXA9SS3s39j2gseCVBdyyk8En",
+    BluntDAO: "Ha2Cvs4YqdTY4f7is9E8v3G6BXNMHhE2jHVmQgeRweft"
 }
 
 const Link: NextPage = () => {

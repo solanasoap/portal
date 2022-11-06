@@ -117,7 +117,7 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
                                 <>
                                     <a href={solanaPayUrl} target="_blank" rel="noreferrer">
                                         <button className="bg-gradient-to-tr from-[#9945FF] to-[#14F195] hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2 block opacity-90">
-                                            {`${walletAction} with Solana Pay`}
+                                            {`${walletAction} with Other`}
                                         </button>
                                     </a>
                                 </>

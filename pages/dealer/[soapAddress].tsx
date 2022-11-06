@@ -75,7 +75,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                         />
                     </div>
                 </div>
-                <div className="invisible lg:visible ">
+                {/* <div className="invisible lg:visible ">
                     <div className="flow-root text-white bg-gradient-to-tr from-RBGradient-Red-Left to-RBGradient-Blue-Right p-8 mb-3 rounded-lg">
                         <div className="float-left max-w-3xl lg:pl-32 font-neueHaasUnicaRegular">
                             <div className="pt-6 py-6">
@@ -93,7 +93,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </main>
         </div>
     )
@@ -123,8 +123,10 @@ export async function getStaticProps(context) {
 export async function getStaticPaths() {
     return {
         paths: [
-            { params: { soapAddress: 'YngRrzzvjvdAhWTCyNMgvyrmeJ8jt4hL7NUqaK4derF' } },
-            { params: { soapAddress: '3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH' } }
+            { params: { soapAddress: 'YngRrzzvjvdAhWTCyNMgvyrmeJ8jt4hL7NUqaK4derF' } }, // early testooor
+            { params: { soapAddress: '3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH' } }, // soap lisbon
+            { params: { soapAddress: '8TmfqtbvH58aHL2NcRGXA9SS3s39j2gseCVBdyyk8En' } }, // unloc rally
+            { params: { soapAddress: 'Ha2Cvs4YqdTY4f7is9E8v3G6BXNMHhE2jHVmQgeRweft' } }, // BluntDAO proof of sesh v2.6
         ],
         fallback: false, // can also be true or 'blocking'
     }
