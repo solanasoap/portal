@@ -127,8 +127,9 @@ export async function getStaticPaths() {
             { params: { soapAddress: '3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH' } }, // soap lisbon
             { params: { soapAddress: '8TmfqtbvH58aHL2NcRGXA9SS3s39j2gseCVBdyyk8En' } }, // unloc rally
             { params: { soapAddress: 'Ha2Cvs4YqdTY4f7is9E8v3G6BXNMHhE2jHVmQgeRweft' } }, // BluntDAO proof of sesh v2.6
+            { params: { soapAddress: 'EKoubfYoTcfdj6uML7dnUPFFwMHkRTWZM5cMpNDrzxku' } }, // SpliffDAO proof of sesh v2.6
         ],
-        fallback: true,
+        fallback: false, // can also be true or 'blocking'
     }
 }
 
