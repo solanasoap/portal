@@ -4,9 +4,6 @@ import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
 import Image from "next/image";
 import WalletLogin from "../../components/WalletLogin";
-import QRCode from "react-qr-code";
-
-import { useEffect } from "react";
 
 const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
 const metaplex = new Metaplex(connection);
@@ -101,25 +98,6 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
 
 export default soapAddress
 
-export async function getStaticProps(context) {
-    const soapAddress: string = context.params.soapAddress;
-    console.log("soapAddress", soapAddress);
-    const mintAddress = new PublicKey(soapAddress);
-
-    // TODO: Maybe filter if it is a soap and send back a "not soap mfer" pic if not
-    const soap = await metaplex.nfts().findByMint({ mintAddress });
-    const soapDetails: soapDetails = {
-        Address: soapAddress,
-        Image: soap.json.image || "https://www.seekpng.com/png/full/251-2514375_free-high-quality-error-youtube-icon-png-2018.png", // FIXME: lol random error pic
-        Name: soap.json.name || "error"
-    }
-
-    return {
-        props: { soapDetails }, // will be passed to the page component as props
-    }
-}
-
-
 export async function getStaticPaths() {
     return {
         paths: [
@@ -130,7 +108,24 @@ export async function getStaticPaths() {
             { params: { soapAddress: 'EKoubfYoTcfdj6uML7dnUPFFwMHkRTWZM5cMpNDrzxku' } }, // SpliffDAO proof of sesh v2.6
             { params: { soapAddress: 'HvegCrU6Vc9UvSwJaPZeULWZN6u3fnWPdx5sefH85Fei' } }, // HackaTUM
         ],
-        fallback: false, // can also be true or 'blocking'
+        fallback: 'blocking', // can also be true or 'blocking'
+    }
+}
+
+export async function getStaticProps(context) {
+    const soapAddress: string = context.params.soapAddress;
+    const mintAddress = new PublicKey(soapAddress);
+
+    // TODO: Maybe filter if it is a soap and send back a "not soap mfer" pic if not
+    const soap = await metaplex.nfts().findByMint({ mintAddress });
+    const soapDetails: soapDetails = {
+        Address: soapAddress || "soapAddressNotFound",
+        Image: soap.json.image || "https://www.seekpng.com/png/full/251-2514375_free-high-quality-error-youtube-icon-png-2018.png", // FIXME: lol random error pic
+        Name: soap.json.name || "soapNameNotFound"
+    }
+
+    return {
+        props: { soapDetails }, // will be passed to the page component as props
     }
 }
 

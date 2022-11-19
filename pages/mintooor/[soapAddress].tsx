@@ -8,8 +8,6 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Sign } from 'crypto';
-import Script from 'next/script'
 
 const RPCURL = "https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/"
 // const RPCURL = "https://api.mainnet-beta.solana.com"
@@ -183,20 +181,34 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
 
 export default Dispenser
 
-export async function getServerSideProps(context) {
-    const soapAddress: string = context.query.soapAddress;
+export async function getStaticPaths() {
+    return {
+        paths: [
+            { params: { soapAddress: 'YngRrzzvjvdAhWTCyNMgvyrmeJ8jt4hL7NUqaK4derF' } }, // early testooor
+            { params: { soapAddress: '3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH' } }, // soap lisbon
+            { params: { soapAddress: '8TmfqtbvH58aHL2NcRGXA9SS3s39j2gseCVBdyyk8En' } }, // unloc rally
+            { params: { soapAddress: 'Ha2Cvs4YqdTY4f7is9E8v3G6BXNMHhE2jHVmQgeRweft' } }, // BluntDAO proof of sesh v2.6
+            { params: { soapAddress: 'EKoubfYoTcfdj6uML7dnUPFFwMHkRTWZM5cMpNDrzxku' } }, // SpliffDAO proof of sesh v2.6
+            { params: { soapAddress: 'HvegCrU6Vc9UvSwJaPZeULWZN6u3fnWPdx5sefH85Fei' } }, // HackaTUM
+        ],
+        fallback: 'blocking',
+    }
+}
+
+export async function getStaticProps(context) {
+    const soapAddress: string = context.params.soapAddress;
     const mintAddress = new PublicKey(soapAddress);
 
     // TODO: Maybe filter if it is a soap and send back a "not soap mfer" pic if not
     const soap = await metaplex.nfts().findByMint({ mintAddress });
     const soapDetails: soapDetails = {
-        Address: soapAddress || 'address.none',
-        Image: soap.json.image || 'https://cdn2.vectorstock.com/i/1000x1000/09/11/problem-flat-red-color-icon-vector-6080911.jpg',
-        Name: soap.json.name || "name.none"
+        Address: soapAddress || "soapAddressNotFound",
+        Image: soap.json.image || "https://www.seekpng.com/png/full/251-2514375_free-high-quality-error-youtube-icon-png-2018.png", // FIXME: lol random error pic
+        Name: soap.json.name || "soapNameNotFound"
     }
 
     return {
-        props: { soapDetails }, // will be passed to the page component as props
+        props: { soapDetails },
     }
 }
 
