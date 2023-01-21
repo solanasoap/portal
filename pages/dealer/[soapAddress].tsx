@@ -39,14 +39,14 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
             <main className="lg:max-w-7xl lg:justify-center lg:m-auto">
-                <div className="flex-col lg:py-6 py-3">
+                {/* <div className="flex-col lg:py-6 py-3">
                     <div className="inline text-5xl lg:text-5xl text-center font-phenomenaBlack h-12">
                         <h1>
                             Hey, you got a soap!
                         </h1>
                     </div>
-                </div>
-                <h4 className="text-3xl font-phenomenaRegular text-center py-2 drop-shadow-xl lg:pb-4">
+                </div> */}
+                <h4 className="text-4xl font-phenomenaBlack text-center py-4 drop-shadow-xl lg:pb-4 lg:py-6">
                     {soapDetails.Name}
                 </h4>
                 <div className="flex py-2 w-full items-center justify-center drop-shadow-xl">

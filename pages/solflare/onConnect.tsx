@@ -16,7 +16,7 @@ import Cookies from 'js-cookie';
 const OnConnect: NextPage = (props) => {
     const [errorMessage, setErrorMessage] = useState(null)
 
-    // Get Query Params from Phantom deeplink redirect
+    // Get Query Params from solflare deeplink redirect
     const router = useRouter()
     const queryParams = router.query
 
@@ -24,7 +24,7 @@ const OnConnect: NextPage = (props) => {
     // setWalletState(queryParams)
 
     const [dappKeyPair, setDappKeyPair] = useState<BoxKeyPair>();
-    const [phantomWalletPublicKey, setPhantomWalletPublicKey] =
+    const [solflareWalletPublicKey, setSolflareWalletPublicKey] =
         useState<PublicKey | boolean>(null);
 
 
@@ -49,13 +49,14 @@ const OnConnect: NextPage = (props) => {
 
             if (router.query.data) {
 
-                // console.log(router.query.phantom_encryption_public_key.toString())
+                // console.log(router.query.solflare_encryption_public_key.toString())
                 // console.log(router.query.data.toString())
                 // console.log(router.query.nonce.toString())
+                console.log(router.query)
 
                 try {
                     const sharedSecretDapp = nacl.box.before(
-                        bs58.decode(router.query.phantom_encryption_public_key.toString()),
+                        bs58.decode(router.query["solflare_encryption_public_key"].toString()),
                         shouldDappKeyPair.secretKey // THIS FAILS IN PRIVATE TAB
                     );
 
@@ -65,7 +66,7 @@ const OnConnect: NextPage = (props) => {
                         sharedSecretDapp
                     )
 
-                    setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
+                    setSolflareWalletPublicKey(new PublicKey(connectData.public_key));
                     console.log(`connected to ${connectData.public_key.toString()}`);
 
                     // Save dappKeyPair in cookie
@@ -92,6 +93,8 @@ const OnConnect: NextPage = (props) => {
             console.log("Couldn't find dappKeyPair in local cookie.")
             // if it's going to mintooor, redirect to dealer.
             // TODO: Make this more dynamic?
+            console.log(router.query)
+            window.open(`/dealer/${router.query.soapAddress}`)
             const target: string = queryParams.target.toString()
             if (target.indexOf('mintooor')) {
                 console.log("it was going to mintooor")
@@ -131,14 +134,15 @@ const OnConnect: NextPage = (props) => {
 export default OnConnect
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    // console.log("Solfalre onconnect getServerSideProps context.query: ", context.query)
     if (context.query["data"]) {
 
-        var id = context.query["phantom_encryption_public_key"];
+        var query = context.query
 
         // Return the ID to the component
         return {
             props: {
-                id,
+                query,
             },
         };
     } else {

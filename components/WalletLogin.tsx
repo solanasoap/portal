@@ -22,21 +22,23 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
     const [solanaPayUrl, setSolanaPayUrl] = useState(null)
 
     const base_url = process.env.NEXT_PUBLIC_BASE_URL
-    const onConnectRedirectLink = `https://${base_url}/phantom/onConnect?target=${target}`
+    const extraQueryParams = `?target=${target}&`
     const soapAddress = target.split('/').pop();
 
     const [dappKeyPair, setDappKeyPair] = useState(nacl.box.keyPair());
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
 
     const connect = (walletEndpoint: string) => {
+        const onConnectRedirectLink = `https://${base_url}/${walletEndpoint.split('.')[0]}/onConnect`
         const params = new URLSearchParams({
             dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
             cluster: "mainnet-beta",
             app_url: `https://${base_url}`,
-            redirect_link: onConnectRedirectLink,
+            redirect_link: (onConnectRedirectLink + extraQueryParams ),
         });
 
         const url = buildUrl(walletEndpoint, "connect", params);
+        console.log("URL of deeplink request: ", url)
         return url
     };
 
@@ -108,16 +110,16 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
                                     {`${walletAction} with Phantom`}
                                 </button>
                             </Link>
-                            {/* <Link href={`${connect("solflare.com")}`}>
-                                <button disabled className="bg-orange-700 hover:shadow-md text-white disabled:text-gray-600 font-bold py-2 px-4 rounded w-64 h-16 my-2 block disabled:bg-gray-800">
+                            <Link href={`${connect("solflare.com")}`}>
+                            <button className="bg-gradient-to-tr from-[#fc4d2e] to-[#fe9820] hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2 block">
                                     {`${walletAction} with Solflare`}
                                 </button>
-                            </Link> */}
+                            </Link>
                             {(walletAction == 'Mint') && (
                                 <>
                                     <a href={solanaPayUrl} target="_blank" rel="noreferrer">
-                                        <button className="bg-gradient-to-tr from-[#9945FF] to-[#14F195] hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2 block opacity-90">
-                                            {`${walletAction} with Other`}
+                                        <button className="bg-gradient-to-tr from-[#8504fa] to-[#e96dfd] hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2 block opacity-90">
+                                            {`${walletAction} with Glow`}
                                         </button>
                                     </a>
                                 </>
