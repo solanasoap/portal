@@ -1,17 +1,16 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { keypairIdentity, Metaplex, KeypairSigner } from '@metaplex-foundation/js';
+import { keypairIdentity, Metaplex, KeypairSigner, CreateSftInput, CreatorInput, JsonMetadata, MetaplexFile, toMetaplexFile } from '@metaplex-foundation/js';
 import { Keypair, Connection, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
-import { createAssociatedTokenAccountInstruction, getAccount, createMintToInstruction, getAssociatedTokenAddress } from '@solana/spl-token'
+import axios from 'axios';
 
-
-// FIXME: DUMMY ENDPOINT FOR NOW
+const clusterString = "mainnet-beta"
 
 
 // Load a local keypair.
 const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
 
 // Set up foundation
-const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/", 'finalized');
+const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
 const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(keypair))
 console.log("Public key of keypair being used: ", keypair.publicKey.toBase58())
@@ -25,68 +24,100 @@ export default async function handler(req, res) {
         return
     }
 
-    // console.log("\nMINTING SFT\n")
+    console.log("\CREATING SFT\n")
 
-    // // Extract soap request details
-    // // let soapCreateDetails: soapCreateRequest = req.body
-    // // const toPublicKey: PublicKey = new PublicKey(soapCreateDetails.toPublicKey)
-    // // const soapAddress: PublicKey = new PublicKey(soapCreateDetails.soapAddress)
+    // Create keypair to add as first verified creator
+    const randomCreatorKeypair = Keypair.generate()
+    const randomCreatorKeypairSigner: KeypairSigner = {
+        publicKey: randomCreatorKeypair.publicKey,
+        secretKey: randomCreatorKeypair.secretKey
+    }
 
-    // // console.log("Sending soap " + soapAddress.toBase58() + " to " + toPublicKey.toBase58() + "\n")
+    // Assemble verified creators object
+    const soapCreator: CreatorInput[] = [
+        {
+            // main soap creator
+            address: metaplex.identity().publicKey,
+            share: 100,
+        }
+    ]
 
-    // // Create keypair from metaplex identity
-    // const soapKeyPair = Keypair.fromSecretKey(metaplex.identity().secretKey)
-    
-    // //get associated token account address for target wallet
-    // const tokenATA = await getAssociatedTokenAddress(soapAddress, toPublicKey);
-    
-    // // Create new transaction object
-    // let soapMintTransaction = new Transaction()
-    
-    // try {
-    //     console.log("Finding ATA for account: ", toPublicKey.toBase58())
-    //     const tokenAccount = await getAccount(connection, tokenATA, 'finalized');
-    //     console.log("Token Account exists: ", tokenAccount.address.toBase58())
-    //     // FIXME: This hardcodes to 1 soap per wallet of unique type. It's pretty effective defense, but also pretty shit
-    //     const limitToOne = true
-    //     if (limitToOne) {
-    //         console.log("Not minting, one unique soap per wallet.")
-    //         res.status(403).json({ error: 'Error: You already have this soap.' })
-    //         const current = Date.now();
-    //         console.log(`Execution time: ${current - start} ms\n`);
-    //         return
-    //     }
-    // } catch (error) {
-    //     console.log("ATA " + tokenATA + " doesn't exist yet. Adding create to instruction.")
-    //     // FIXME: Create seperate payer wallet to seperate responsibilities from BCN...
-    //     // soapMintTransaction.add(
-    //     //     createAssociatedTokenAccountInstruction(
-    //     //         metaplex.identity().publicKey, //Payer 
-    //     //         tokenATA, //Associated token account 
-    //     //         toPublicKey, //Token account owner
-    //     //         soapAddress, //Mint
-    //     //       )
-    //     // )
-    // }
+    // Create collection signer object
+    const collectionSigner: KeypairSigner = {
+        publicKey: metaplex.identity().publicKey,
+        secretKey: metaplex.identity().secretKey
+    }
+
+    // Get from URL and upload jpeg to ARWeave
+    const response = await axios.get(req.body.imageUrl, { responseType: 'arraybuffer' })
+    const buffer = Buffer.from(response.data, null)
+
+    const imageFile: MetaplexFile = toMetaplexFile(buffer, 'soap.jpg');
+    const imageUrl: string = await metaplex.storage().upload(imageFile)
+    console.log("Image URL on ARweave: ", imageUrl)
 
 
-    // soapMintTransaction.add(
-    //       createMintToInstruction(
-    //         soapAddress, //Mint
-    //         tokenATA, //Destination Token Account
-    //         metaplex.identity().publicKey, //Authority
-    //         1,//number of tokens
-    //       )
-    // )
+    // NFT Metadata
+    const jsonMetadata: JsonMetadata = { //FIXME Get data from json request
+        name: req.body.name,
+        symbol: "SOAP",
+        description: req.body.description,
+        seller_fee_basis_points: 10000,
+        image: imageUrl,
+        external_url: req.body.external_url,
+        attributes: req.body.attributes,
+        properties: {
+            creators: [
+                {
+                    // main soap creator
+                    address: metaplex.identity().publicKey.toBase58(),
+                    share: 100,
+                }
+            ],
+            category: "image"
+        },
+        collection: {
+            name: "SOAP",
+            family: "SOAP"
+        }
+    }
 
-    // console.log("Soap mint transaction: ", soapMintTransaction)
-    // const transactionId =  await sendAndConfirmTransaction(connection, soapMintTransaction, [soapKeyPair], {commitment: 'confirmed'});
+    const { uri } = await metaplex
+        .nfts()
+        .uploadMetadata(jsonMetadata)
+
+    console.log("URI of SFT metadata", uri)
+
+    // Create CreateSftInput object
+    const createSftInput: CreateSftInput = {
+        tokenOwner: metaplex.identity().publicKey,
+        // tokenAmount: ({basisPoints: 10, currency: null}),
+        uri: uri,
+        name: jsonMetadata.name,
+        sellerFeeBasisPoints: jsonMetadata.seller_fee_basis_points,
+        symbol: jsonMetadata.symbol,
+        creators: soapCreator,
+        isCollection: true,
+        collection: new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV"),
+        collectionAuthority: collectionSigner,
+        collectionIsSized: false
+    }
+
+    // Create SFT
+
+    const sft = await metaplex.nfts().createSft(createSftInput)
+    console.log("SFT Mint Address: ", sft.mintAddress.toBase58())
+    const tx_url = "SFT Mint: " + "https://solscan.io/token/" + sft.mintAddress.toBase58() + "?cluster=" + clusterString
+    console.log("TX URL: ", tx_url)
 
     const end = Date.now();
-    // console.log("Mint tx: ", transactionId)
     console.log(`Execution time: ${end - start} ms\n`);
 
-    res.status(200).json({ "result": 'created' })
+    res.status(200).json({ 
+        "result": "created", 
+        "sft_address": sft.mintAddress.toBase58(),
+        "tx": tx_url
+    })
 }
 
 

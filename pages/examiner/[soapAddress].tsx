@@ -19,7 +19,7 @@ import { OwnSoap } from "../../components/OwnSoap";
 // Like a secret code or location to a party (see StripDAO party)
 // Only stored on our backend, not on-chain. Only visible if person authenticates ownership of soap.
 
-const connection = new Connection("https://broken-green-forest.solana-mainnet.discover.quiknode.pro/" + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/");
+const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY);
 const metaplex = new Metaplex(connection);
 
 

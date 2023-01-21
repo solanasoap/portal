@@ -9,7 +9,7 @@ import Link from 'next/link';
 // check if ATA exists
 // return checkmark if yes, no if no
 
-const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_QUICKNODE_API_KEY + "/", 'processed');
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'processed');
 
 export const OwnSoap: FC<soapAddressInterface> = ({ soapAddress }) => {
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
