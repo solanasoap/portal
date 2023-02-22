@@ -54,7 +54,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                         <div className="flex items-center justify-center w-auto h-64 lg:h-96">
                             <div className="relative flex h-64 w-64 lg:w-96 lg:h-96">
                                 <div className="z-10 absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-gray-900 to-black">
-                                    <Image src={soapDetails.Image} layout="fill" />
+                                    <Image src={soapDetails.Image} layout="fill" className="object-cover" />
                                 </div>
                                 <div className="absolute w-full h-full bg-conic-gradient filter blur-xl"></div>
                                 <div className="absolute w-full h-full bg-conic-gradient filter blur-3xl opacity-60 animate-pulse"></div>
