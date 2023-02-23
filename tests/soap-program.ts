@@ -1,9 +1,10 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { SoapProgram } from "../target/types/soap_program";
-import { 
+import {
   PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID
 } from '@metaplex-foundation/mpl-token-metadata';
+import { getPot, getUserProfile } from "./utils";
 
 
 describe("soap-program", () => {
@@ -17,7 +18,7 @@ describe("soap-program", () => {
   const tokenUri = "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/spl-token.json";
 
   it("Create a Soap!", async () => {
-    
+
     const mintKeypair: anchor.web3.Keypair = anchor.web3.Keypair.generate();
 
     const metadataAddress = (anchor.web3.PublicKey.findProgramAddressSync(
@@ -29,12 +30,13 @@ describe("soap-program", () => {
       TOKEN_METADATA_PROGRAM_ID
     ))[0];
 
-    // NFT default = 0 decimals
-    //
-    const sx = await program.methods.create(
-      tokenTitle, tokenSymbol, tokenUri, 0
-    )
+    const pot = getPot(provider.publicKey, 0);
+    const userProfile = getUserProfile(provider.publicKey);
+
+    const tx = await program.methods.createSoap(tokenTitle, tokenSymbol, tokenUri)
       .accounts({
+        pot: pot,
+        userProfile: userProfile,
         metadataAccount: metadataAddress,
         mintAccount: mintKeypair.publicKey,
         mintAuthority: payer.publicKey,
@@ -42,13 +44,12 @@ describe("soap-program", () => {
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
         systemProgram: anchor.web3.SystemProgram.programId,
         tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
-        tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
       })
       .signers([mintKeypair, payer.payer])
       .rpc();
 
     console.log("Success!");
-        console.log(`   Mint Address: ${mintKeypair.publicKey}`);
-        console.log(`   Tx Signature: ${sx}`);
+    console.log(`   Mint Address: ${mintKeypair.publicKey}`);
+    console.log(`   Tx Signature: ${tx}`);
   });
 });

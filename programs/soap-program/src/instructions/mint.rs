@@ -10,7 +10,6 @@ use {
 pub fn mint_to(
     ctx: Context<MintTo>, 
 ) -> Result<()> {
-
     msg!("Minting token to token account...");
     msg!("Mint: {}", &ctx.accounts.mint_account.to_account_info().key());   
     msg!("Token Address: {}", &ctx.accounts.associated_token_account.key());     

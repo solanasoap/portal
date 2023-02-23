@@ -1,7 +1,12 @@
+use std::str::FromStr;
+
+use crate::states::{UserProfile, Pot};
+
 use {
+    crate::{constants::{POT_TAG,USER_PROFILE_TAG}},
     anchor_lang::{prelude::*, solana_program::program::invoke},
     anchor_spl::token,
-    mpl_token_metadata::instruction as mpl_instruction,
+    mpl_token_metadata::{instruction as mpl_instruction,state::{Creator, Collection}},
 };
 
 // The macros within the Account Context will create our
@@ -13,36 +18,64 @@ use {
     soap_title: String, 
     soap_symbol: String, 
     soap_uri: String,
-    token_decimals: u8,
 )]
-
 pub struct Create<'info> {
-    /// CHECK: We're about to create this with Metaplex
     #[account(mut)]
-    pub metadata_account: UncheckedAccount<'info>,
+    pub payer: Signer<'info>,
+
+    #[account(
+        init_if_needed,
+        payer = payer,
+        space = 8 + UserProfile::MAX_SIZE,
+        seeds = [
+            USER_PROFILE_TAG,
+            payer.key().as_ref(),
+        ],
+        bump,
+    )]
+    pub user_profile: Account<'info, UserProfile>,    
+    
     #[account(
         init,
         payer = payer,
-        mint::decimals = token_decimals,
+        space = 8 + Pot::MAX_SIZE,
+        seeds = [
+            POT_TAG,
+            user_profile.total_soaps_count.to_le_bytes().as_ref(),
+            payer.key().as_ref(),
+        ],
+        bump,
+    )]
+    pub pot: Account<'info, Pot>,
+
+    #[account(
+        init,
+        payer = payer,
+        mint::decimals = 0,
         mint::authority = mint_authority.key(),
     )]
     pub mint_account: Account<'info, token::Mint>,
-    pub mint_authority: SystemAccount<'info>,
+    
+    /// CHECK: We're about to create this with Metaplex
     #[account(mut)]
-    pub payer: Signer<'info>,
+    pub metadata_account: UncheckedAccount<'info>,
+
+    pub mint_authority: SystemAccount<'info>,    
+
     pub rent: Sysvar<'info, Rent>,
-    pub system_program: Program<'info, System>,
+
     pub token_program: Program<'info, token::Token>,
-    /// CHECK: Metaplex will check this
-    pub token_metadata_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
 }
+
+// pda needs to be the mint_authority for the soap
+// [payer]
 
 pub fn create(
     ctx: Context<Create>,
     soap_title: String,
     soap_symbol: String,
     soap_uri: String,
-    _token_decimals: u8,
 ) -> Result<()> {
     msg!("Creating metadata account...");
     msg!(
@@ -51,22 +84,33 @@ pub fn create(
     );
     invoke(
         &mpl_instruction::create_metadata_accounts_v3(
-            ctx.accounts.token_metadata_program.key(), // Program ID (the Token Metadata Program)
-            ctx.accounts.metadata_account.key(),       // Metadata account
-            ctx.accounts.mint_account.key(),           // Mint account
-            ctx.accounts.mint_authority.key(),         // Mint authority
-            ctx.accounts.payer.key(),                  // Payer
-            ctx.accounts.mint_authority.key(),         // Update authority
-            soap_title,                               // Name
-            soap_symbol,                              // Symbol
-            soap_uri,                                 // URI
-            None,                                      // Creators FIXME
-            10000,                                     // Seller fee basis points
-            true,                                      // Update authority is signer
-            true,                                      // Is mutable
-            None,                                      // Collection FIXME
-            None,                                      // Uses
-            None,                                      // Collection Details
+            mpl_token_metadata::ID, 
+            ctx.accounts.metadata_account.key(),
+            ctx.accounts.mint_account.key(),           
+            ctx.accounts.pot.key(), // Has to be the Pot
+            ctx.accounts.payer.key(),
+            ctx.accounts.payer.key(),
+            soap_title,                               
+            soap_symbol,                              
+            soap_uri,                                 
+           Some( vec![
+                Creator {
+                    address: ctx.accounts.payer.key(),
+                    verified: true,
+                    share: 100,
+                }
+            ]),
+            10000,                                     
+            true,                                      
+            true,                                      
+            Some(
+                Collection{
+                    key: Pubkey::from_str("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV").unwrap(),
+                    verified: true,
+                }
+            ),                                      
+            None,                                      
+           None,
         ),
         &[
             ctx.accounts.metadata_account.to_account_info(),
@@ -79,6 +123,16 @@ pub fn create(
     )?;
 
     msg!("Token mint created successfully.");
+
+    let user_profile = &mut ctx.accounts.user_profile;
+    let pot = &mut ctx.accounts.pot;
+
+    user_profile.authority = ctx.accounts.payer.key();
+    
+    pot.soap_addres =  ctx.accounts.mint_account.key();
+    pot.soap_count = user_profile.total_soaps_count;
+    
+    user_profile.total_soaps_count +=1 ;
 
     Ok(())
 }

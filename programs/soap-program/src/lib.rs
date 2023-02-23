@@ -1,12 +1,8 @@
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::sysvar;
-use anchor_spl::token::Token;
-use anchor_spl::token::{self, Mint, TokenAccount};
-use std::str::FromStr;
-use anchor_lang::solana_program::{program::invoke, system_instruction};
-use mpl_token_metadata::instruction as mpl_instruction;
 
+pub mod constants;
 pub mod instructions;
+pub mod states;
 
 use instructions::*;
 
@@ -16,34 +12,20 @@ declare_id!("6yf7B7cg2Ge8aeJQHa7YYfufDFQh9dvnvxT2wnuviRUN");
 pub mod soap_program {
     use super::*;
 
+    pub fn mint_to() -> Result<()> {
+        instructions::mint_to(ctx);
+    }
+
     pub fn create_soap(
-        ctx: Context<Create>, 
-        soap_title: String, // Comes from creator, unique for each soap
-        soap_symbol: String, // Always "SOAP"
-        soap_uri: String, // Shadow Drive, unique for each soap
+        ctx: Context<Create>,
+        soap_title: String,
+        soap_symbol: String,
+        soap_uri: String,
     ) -> Result<()> {
-
-        create::create(
-            ctx, 
-            soap_title, 
-            soap_symbol, 
-            soap_uri,
-            0,
-        )
+        instructions::create(ctx, soap_title, soap_symbol, soap_uri)
     }
 
-    pub fn mint_to(
-        ctx: Context<MintTo>, 
-        quantity: u64,
-    ) -> Result<()> {
-
-        mint::mint_to(
-            ctx, 
-            quantity,
-        )
+    pub fn fund_pot(ctx: Context<FundPot>, soap_count: u8, sol_lamports: u64) -> Result<()> {
+        instructions::fund_pot(ctx, soap_count, sol_lamports)
     }
-
 }
-
-
-
