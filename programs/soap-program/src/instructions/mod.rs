@@ -1,7 +1,9 @@
 pub mod create;
-pub mod mint;
 pub mod fund_pot;
+pub mod init_user_profile;
+pub mod mint;
 
 pub use create::*;
-pub use mint::*;
 pub use fund_pot::*;
+pub use init_user_profile::*;
+pub use mint::*;

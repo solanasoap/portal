@@ -1,13 +1,13 @@
 use {
-    crate::{
-        constants::POT_TAG,
-        states::Pot,
+    crate::{constants::POT_TAG, states::Pot},
+    anchor_lang::{
+        prelude::*,
+        system_program::{transfer, Transfer},
     },
-    anchor_lang::{prelude::*,system_program::{Transfer, transfer}},
 };
 
 #[derive(Accounts)]
-#[instruction(soap_count: u8)]
+#[instruction(soap_count: u16)]
 pub struct FundPot<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -26,7 +26,7 @@ pub struct FundPot<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn fund_pot(ctx: Context<FundPot>, soap_count: u8,sol_lamports: u64) -> Result<()> {
+pub fn handler(ctx: Context<FundPot>, soap_count: u16, sol_lamports: u64) -> Result<()> {
     let cpi_program = ctx.accounts.system_program.to_account_info();
     let cpi_accounts = Transfer {
         from: ctx.accounts.authority.to_account_info(),

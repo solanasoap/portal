@@ -1,18 +1,18 @@
 use {
     anchor_lang::prelude::*,
-    anchor_spl::{
-        token,
-        associated_token,
-    },
+    anchor_spl::{associated_token, token},
 };
 
-
-pub fn mint_to(
-    ctx: Context<MintTo>, 
-) -> Result<()> {
+pub fn handler(ctx: Context<MintTo>) -> Result<()> {
     msg!("Minting token to token account...");
-    msg!("Mint: {}", &ctx.accounts.mint_account.to_account_info().key());   
-    msg!("Token Address: {}", &ctx.accounts.associated_token_account.key());     
+    msg!(
+        "Mint: {}",
+        &ctx.accounts.mint_account.to_account_info().key()
+    );
+    msg!(
+        "Token Address: {}",
+        &ctx.accounts.associated_token_account.key()
+    );
     token::mint_to(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
@@ -29,7 +29,6 @@ pub fn mint_to(
 
     Ok(())
 }
-
 
 #[derive(Accounts)]
 pub struct MintTo<'info> {
