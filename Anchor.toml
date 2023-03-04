@@ -2,10 +2,10 @@
 seeds = false
 skip-lint = false
 [programs.devnet]
-soap_program = "4UMGtsE5ezGvj3nCJzg3icMuVmGkXHqmBniJHjfNaeBt"
+soap_program = "oJCUBLbGJUUjZcuKVyjLmhLUo6zpkdDFvt2UCR3HWru"
 
 [provider]
-cluster = "Devnet"
+cluster = "https://api.devnet.solana.com"
 wallet = "/Users/yusuf/.config/solana/id.json"
 # wallet = "/Users/nagy/.config/solana/id.json"
 

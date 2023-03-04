@@ -4,7 +4,7 @@ use {
     crate::{constants::{POT_TAG,USER_PROFILE_TAG}},
     anchor_lang::{prelude::*, solana_program::program::invoke_signed},
     anchor_spl::token,
-    mpl_token_metadata::{instruction as mpl_instruction,state::{Creator}},
+    mpl_token_metadata::{instruction as mpl_instruction,state::{Creator}, },
 };
 
 // The macros within the Account Context will create our
@@ -48,7 +48,7 @@ pub struct Create<'info> {
         init,
         payer = payer,
         mint::decimals = 0,
-        mint::authority = mint_authority.key(),
+        mint::authority = pot.key(),
     )]
     pub mint_account: Account<'info, token::Mint>,
     
@@ -56,11 +56,10 @@ pub struct Create<'info> {
     #[account(mut)]
     pub metadata_account: UncheckedAccount<'info>,
 
-    #[account(mut)]
-    pub mint_authority: SystemAccount<'info>,    
-
     pub rent: Sysvar<'info, Rent>,
 
+    /// CHECK: This is not dangerous because we don't read or write from this account
+    pub metadata_program: AccountInfo<'info>,
     pub token_program: Program<'info, token::Token>,
     pub system_program: Program<'info, System>,
 }
@@ -74,43 +73,41 @@ pub fn handler(
     soap_symbol: String,
     soap_uri: String,
 ) -> Result<()> {
-    msg!("Creating metadata account...");
-    msg!(
-        "Metadata account address: {}",
-        &ctx.accounts.metadata_account.key()
-    );
     let user_profile = &mut ctx.accounts.user_profile;
     let pot = &mut ctx.accounts.pot;
 
-    let binding = user_profile.key();
-    let user_profile_seeds = &[
-        USER_PROFILE_TAG.as_ref(),
-        binding.as_ref(),
-        &[*ctx.bumps.get("user_profile").unwrap()],
+    let payer_binding = ctx.accounts.payer.key();
+    let user_profile_binding = user_profile.total_soaps_count.to_le_bytes();
+    let pot_seeds = &[
+        POT_TAG.as_ref(),
+        user_profile_binding.as_ref(),
+        payer_binding.as_ref(),
+        &[*ctx.bumps.get("pot").unwrap()],
     ];
-    let user_profile_signer = &[&user_profile_seeds[..]];
+    let pot_signer = &[&pot_seeds[..]];
 
 
     invoke_signed(
         &mpl_instruction::create_metadata_accounts_v3(
-            mpl_token_metadata::ID, 
+            mpl_token_metadata::id(), 
             ctx.accounts.metadata_account.key(),
             ctx.accounts.mint_account.key(),           
-            pot.key(), // Has to be the Pot
+            pot.key(),
             ctx.accounts.payer.key(),
             ctx.accounts.payer.key(),
             soap_title,                               
             soap_symbol,                              
-            soap_uri,                                 
-            Some( vec![
-                Creator {
-                    address: ctx.accounts.payer.key(),
-                    verified: true,
-                    share: 100,
-                }
-            ]),
+            soap_uri,                                             
+None,
+// Some( vec![
+//     Creator {
+//         address: ctx.accounts.payer.key(),
+//         verified: false,
+//         share: 100,
+//     }
+// ]),
             10000,                                     
-            true,                                      
+            false,                                      
             true,       
             // FIXME The collection NFT's authority is BCN... keypair. Metaplex program won't be able to verify it because it's authority is not the program.                               
             // Some(
@@ -124,21 +121,24 @@ pub fn handler(
             None,
         ),
         &[
-            ctx.accounts.rent.to_account_info(),
+            ctx.accounts.metadata_program.to_account_info().clone(), 
             ctx.accounts.metadata_account.to_account_info(),
             ctx.accounts.mint_account.to_account_info(),
-            ctx.accounts.mint_authority.to_account_info(),
+            pot.to_account_info(),
             ctx.accounts.payer.to_account_info(),
-        ],
-        user_profile_signer
+            pot.to_account_info(),
+            ctx.accounts.system_program.to_account_info(),
+            ctx.accounts.rent.to_account_info(),
+            ],
+        pot_signer,
     )?;
 
     msg!("Token mint created successfully.");
-        
+
     pot.soap_addres =  ctx.accounts.mint_account.key();
     pot.soap_count = user_profile.total_soaps_count;
     
-    user_profile.total_soaps_count +=1 ;
+    user_profile.total_soaps_count +=1;
 
     Ok(())
 }
