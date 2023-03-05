@@ -7,7 +7,7 @@ import { clusterApiUrl, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { findMetadataPda } from "@metaplex-foundation/js";
 
 const PROGRAM_ID = new anchor.web3.PublicKey(
-  "oJCUBLbGJUUjZcuKVyjLmhLUo6zpkdDFvt2UCR3HWru"
+  "DanPXZb8u8P8MunvQx6UfUqjbRL3M9M9bAanfNaWpnt"
 );
 
 describe("soap-program", () => {
@@ -22,8 +22,7 @@ describe("soap-program", () => {
   );
   const payer = provider.wallet as anchor.Wallet;
 
-  console.log("GETPOT 1", getPot(payer.publicKey, 1));
-  console.log("GETPOT 2", getPot(payer.publicKey, 2).toBase58());
+  console.log("Pot Address", getPot(payer.publicKey, 2).toBase58());
 
   const tokenTitle = "Soap Program";
   const tokenSymbol = "SOAP";
@@ -38,11 +37,11 @@ describe("soap-program", () => {
       .initUserProfile()
       .accounts({
         userProfile: userProfile,
-        authority: payer.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
+        authority: payer.publicKey
       })
       .signers([payer.payer])
-      .rpc();
+      .rpc()
+      .catch(console.log);
 
     console.log("Tx Signature: ", tx);
   });
@@ -87,7 +86,8 @@ describe("soap-program", () => {
         metadataProgram: TOKEN_METADATA_PROGRAM_ID,
       })
       .signers([mintKeypair, payer.payer])
-      .rpc();
+      .rpc()
+      .catch(console.log);
 
     console.log(`Mint Address: ${mintKeypair.publicKey}`);
     console.log(`Tx Signature: ${tx}`);

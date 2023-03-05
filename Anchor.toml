@@ -1,13 +1,21 @@
 [features]
 seeds = false
 skip-lint = false
+
 [programs.devnet]
-soap_program = "oJCUBLbGJUUjZcuKVyjLmhLUo6zpkdDFvt2UCR3HWru"
+soap_program = "DanPXZb8u8P8MunvQx6UfUqjbRL3M9M9bAanfNaWpnt"
 
 [provider]
-cluster = "https://api.devnet.solana.com"
-wallet = "/Users/yusuf/.config/solana/id.json"
-# wallet = "/Users/nagy/.config/solana/id.json"
+cluster = "devnet"
+# wallet = "/Users/yusuf/.config/solana/id.json"
+wallet = "/Users/nagy/.config/solana/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+
+
+[test.validator]
+url = "https://api.mainnet-beta.solana.com"
+
+[[test.validator.clone]]
+address = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"

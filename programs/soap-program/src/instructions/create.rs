@@ -1,10 +1,12 @@
+use mpl_token_metadata::state::Creator;
+
 use crate::states::{UserProfile, Pot};
 
 use {
     crate::{constants::{POT_TAG,USER_PROFILE_TAG}},
     anchor_lang::{prelude::*, solana_program::program::invoke_signed},
     anchor_spl::token,
-    mpl_token_metadata::{instruction as mpl_instruction,state::{Creator}, },
+    mpl_token_metadata::{instruction as mpl_instruction },
 };
 
 // The macros within the Account Context will create our
@@ -29,7 +31,7 @@ pub struct Create<'info> {
         ],
         bump,
     )]
-    pub user_profile: Account<'info, UserProfile>,    
+    pub user_profile: Account<'info, UserProfile>,
     
     #[account(
         init,
@@ -38,7 +40,7 @@ pub struct Create<'info> {
         seeds = [
             POT_TAG,
             user_profile.total_soaps_count.to_le_bytes().as_ref(),
-            payer.key().as_ref(),
+            payer.key().as_ref(), // Soap Creator pubkey
         ],
         bump,
     )]
@@ -98,14 +100,14 @@ pub fn handler(
             soap_title,                               
             soap_symbol,                              
             soap_uri,                                             
-None,
-// Some( vec![
-//     Creator {
-//         address: ctx.accounts.payer.key(),
-//         verified: false,
-//         share: 100,
-//     }
-// ]),
+            // None,
+            Some(vec![
+                Creator {
+                    address: ctx.accounts.payer.key(),
+                    verified: false,
+                    share: 100,
+                }
+            ]),
             10000,                                     
             false,                                      
             true,       
@@ -137,6 +139,8 @@ None,
 
     pot.soap_addres =  ctx.accounts.mint_account.key();
     pot.soap_count = user_profile.total_soaps_count;
+    // pot.creator = ctx.accounts.payer.key();
+    // pot.bump_seed = *ctx.bumps.get("pot").unwrap();
     
     user_profile.total_soaps_count +=1;
 
