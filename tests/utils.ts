@@ -25,3 +25,14 @@ export const getPot = (authority: PublicKey, soap_count: number) => {
     program.programId
   )[0];
 };
+
+export const logDevnetSignature = (name: string, value) => console.log(`
+${name}
+https://solscan.io/tx/${value}?cluster=devnet
+`)
+
+
+export const logDevnetAccount = (name: string, value) => console.log(`
+${name}
+https://solscan.io/account/${value}?cluster=devnet
+`)

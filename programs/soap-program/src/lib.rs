@@ -40,4 +40,10 @@ pub mod soap_program {
     ) -> Result<()> {
         withdraw_pot::handler(ctx, soap_count, sol_lamports)
     }
+
+    pub fn mint_soap(
+        ctx: Context<MintSoap>
+    ) -> Result<()> {
+        mint::handler(ctx)
+    }
 }

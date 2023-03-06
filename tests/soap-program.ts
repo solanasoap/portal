@@ -2,17 +2,22 @@ import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { SoapProgram } from "../target/types/soap_program";
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
-import { getPot, getUserProfile } from "./utils";
-import { clusterApiUrl, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { findMetadataPda } from "@metaplex-foundation/js";
+import { getPot, getUserProfile, logDevnetAccount, logDevnetSignature } from "./utils";
+import { clusterApiUrl, Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { PublicKey, findMetadataPda, Metaplex } from "@metaplex-foundation/js";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 
 const PROGRAM_ID = new anchor.web3.PublicKey(
   "DanPXZb8u8P8MunvQx6UfUqjbRL3M9M9bAanfNaWpnt"
 );
 
+const destinationWallet = Keypair.generate().publicKey
+
 describe("soap-program", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
+  let latestSoap;
 
   // const program = anchor.workspace.SoapProgram as Program<SoapProgram>;
   const program = new anchor.Program<SoapProgram>(
@@ -138,4 +143,54 @@ describe("soap-program", () => {
       console.log("ERROR", e);
     }
   });
+
+  it("Mint to end user wallet", async () => {
+    try {
+      const creatorProfileAccount = getUserProfile(payer.publicKey);
+      
+      const creatorProfileData = await program.account.userProfile.fetch(
+        creatorProfileAccount
+        );
+        const soapCount = creatorProfileData.totalSoapsCount - 1;
+        
+        const potAddress = getPot(payer.publicKey, soapCount);
+        
+        const potData = await program.account.pot.fetch(potAddress)
+        
+        const soapMintAddress = potData.soapAddres
+      
+      const tokenMetadata =await Metaplex.make(provider.connection).nfts().findByMint({mintAddress: soapMintAddress})
+
+  const userAta = getAssociatedTokenAddressSync(soapMintAddress, Keypair.generate().publicKey)
+
+  logDevnetAccount("User ATA", userAta);
+  logDevnetAccount("Pot Address", potAddress)
+  logDevnetAccount("Destination Wallet", destinationWallet)
+  logDevnetAccount('Soap Mint', soapMintAddress)
+
+
+      const tx = await program.methods
+        .mintSoap()
+        .accounts({
+          mintAccount: soapMintAddress,
+          mintAuthority: potAddress,
+          userProfile: creatorProfileAccount,
+          associatedTokenAccount: userAta,
+          payer: provider.wallet.publicKey,
+          destinationWallet: destinationWallet,
+          creator: provider.wallet.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([payer.payer])
+        .rpc()
+        .catch(console.log);
+      logDevnetSignature("Mint: ", tx);
+    } catch (e) {
+      console.log("ERROR", e);
+    }
+  });
 });
+
+

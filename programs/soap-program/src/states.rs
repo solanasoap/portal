@@ -7,13 +7,15 @@ pub struct Pot {
     // mint authority of the SOAP
     pub soap_addres: Pubkey,
     pub soap_count: u16,
-    // pub creator: Pubkey, // on curve key, creator of the soap
-    // pub bump_seed: u8,
+    pub creator: Pubkey, // on curve key, creator of the soap
+    pub bump_seed: u8,
 }
 
 impl Pot {
     pub const MAX_SIZE: usize = 32 // soap_addres
-    + 2; // soap_count
+    + 2 // Soap Count (Which soap it is in reference to the creator)
+    + 32 // Creator
+    + 1; // Bump Seed
 }
 
 #[account]

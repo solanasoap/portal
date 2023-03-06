@@ -39,7 +39,7 @@ pub struct Create<'info> {
         space = 8 + Pot::MAX_SIZE,
         seeds = [
             POT_TAG,
-            user_profile.total_soaps_count.to_le_bytes().as_ref(),
+            user_profile.total_soaps_count.to_le_bytes().as_ref(), // Total soaps count created by user, it's always the next soap # to be created
             payer.key().as_ref(), // Soap Creator pubkey
         ],
         bump,
@@ -139,8 +139,8 @@ pub fn handler(
 
     pot.soap_addres =  ctx.accounts.mint_account.key();
     pot.soap_count = user_profile.total_soaps_count;
-    // pot.creator = ctx.accounts.payer.key();
-    // pot.bump_seed = *ctx.bumps.get("pot").unwrap();
+    pot.creator = ctx.accounts.payer.key();
+    pot.bump_seed = *ctx.bumps.get("pot").unwrap();
     
     user_profile.total_soaps_count +=1;
 
