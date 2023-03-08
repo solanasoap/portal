@@ -3,7 +3,7 @@ seeds = false
 skip-lint = false
 
 [programs.devnet]
-soap_program = "DanPXZb8u8P8MunvQx6UfUqjbRL3M9M9bAanfNaWpnt"
+soap_program = "4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq"
 
 [provider]
 cluster = "devnet"

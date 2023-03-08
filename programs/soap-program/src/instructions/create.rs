@@ -1,6 +1,6 @@
 use mpl_token_metadata::state::Creator;
 
-use crate::states::{UserProfile, Pot};
+use crate::states::{UserProfile};
 
 use {
     crate::{constants::{POT_TAG,USER_PROFILE_TAG}},
@@ -34,17 +34,14 @@ pub struct Create<'info> {
     pub user_profile: Account<'info, UserProfile>,
     
     #[account(
-        init,
-        payer = payer,
-        space = 8 + Pot::MAX_SIZE,
         seeds = [
             POT_TAG,
-            user_profile.total_soaps_count.to_le_bytes().as_ref(),
+            mint_account.key().as_ref(), // Soap pubkey
             payer.key().as_ref(), // Soap Creator pubkey
         ],
         bump,
     )]
-    pub pot: Account<'info, Pot>,
+    pub pot: SystemAccount<'info>,
 
     #[account(
         init,
@@ -79,14 +76,13 @@ pub fn handler(
     let pot = &mut ctx.accounts.pot;
 
     let payer_binding = ctx.accounts.payer.key();
-    let user_profile_binding = user_profile.total_soaps_count.to_le_bytes();
+    let mint_binding = ctx.accounts.mint_account.key();
     let pot_seeds = &[
-        POT_TAG.as_ref(),
-        user_profile_binding.as_ref(),
+        POT_TAG,
+        mint_binding.as_ref(),
         payer_binding.as_ref(),
         &[*ctx.bumps.get("pot").unwrap()],
     ];
-    let pot_signer = &[&pot_seeds[..]];
 
 
     invoke_signed(
@@ -104,7 +100,7 @@ pub fn handler(
             Some(vec![
                 Creator {
                     address: ctx.accounts.payer.key(),
-                    verified: false,
+                    verified: true,
                     share: 100,
                 }
             ]),
@@ -132,16 +128,11 @@ pub fn handler(
             ctx.accounts.system_program.to_account_info(),
             ctx.accounts.rent.to_account_info(),
             ],
-        pot_signer,
+            &[pot_seeds],
     )?;
 
     msg!("Token mint created successfully.");
 
-    pot.soap_addres =  ctx.accounts.mint_account.key();
-    pot.soap_count = user_profile.total_soaps_count;
-    // pot.creator = ctx.accounts.payer.key();
-    // pot.bump_seed = *ctx.bumps.get("pot").unwrap();
-    
     user_profile.total_soaps_count +=1;
 
     Ok(())

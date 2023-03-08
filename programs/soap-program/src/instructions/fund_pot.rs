@@ -1,5 +1,7 @@
+use anchor_spl::token;
+
 use {
-    crate::{constants::POT_TAG, states::Pot},
+    crate::constants::POT_TAG,
     anchor_lang::{
         prelude::*,
         system_program::{transfer, Transfer},
@@ -16,12 +18,14 @@ pub struct FundPot<'info> {
         mut,
         seeds = [
             POT_TAG,
-            soap_count.to_le_bytes().as_ref(),
-            authority.key().as_ref(),
+            mint_account.key().as_ref(), // Soap pubkey
+            authority.key().as_ref(), // Soap Creator pubkey
         ],
         bump,
     )]
-    pub pot: Account<'info, Pot>,
+    pub pot: SystemAccount<'info>,
+
+    pub mint_account: Account<'info, token::Mint>,
 
     pub system_program: Program<'info, System>,
 }

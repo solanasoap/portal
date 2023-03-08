@@ -6,7 +6,7 @@ pub mod errors;
 pub mod instructions;
 pub mod states;
 
-declare_id!("DanPXZb8u8P8MunvQx6UfUqjbRL3M9M9bAanfNaWpnt");
+declare_id!("4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq");
 
 #[program]
 pub mod soap_program {
@@ -39,5 +39,9 @@ pub mod soap_program {
         sol_lamports: u64,
     ) -> Result<()> {
         withdraw_pot::handler(ctx, soap_count, sol_lamports)
+    }
+
+    pub fn mint_soap(ctx: Context<MintSoap>) -> Result<()> {
+        mint::handler(ctx)
     }
 }
