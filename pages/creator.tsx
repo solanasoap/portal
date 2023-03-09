@@ -4,12 +4,12 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { useState } from "react";
 // import fetch, { FormData } from "node-fetch";
 import { ShadowFile, ShdwDrive } from "@shadow-drive/sdk";
-import { File } from "buffer";
+// import { File } from "buffer";
 
-// User fills out form to create a soap with Name & Description
-// User uploads image
-// Frontend sends file size and extension to backend
-// Backend generates unique ID
+// DONE User fills out form to create a soap with Name & Description
+// DONE User uploads image
+// DONE Frontend sends file size and extension to backend
+// DONE Backend generates unique ID
 // Backend signs message for both image (with extension) and .json metadata using the unique ID for both
 // Backend sends back signed Shadow Drive upload messages
 // Frontend uploads picture to Shadow Drive
@@ -32,48 +32,33 @@ type UploadResponse = {
 }
 
 async function uploadSoap(name: string, description: string, connection: Connection, imageFile: File) {
+    // Request to pre-sign message with the filename on the backend
     const shadowSigner = await fetch("/api/signShdw", {
         method: "POST",
         headers: {
             "content-type": "application/json"
         },
-        body: JSON.stringify({
+        body: JSON.stringify({ // Don't need this really
             fileName: imageFile.name
         })
     });
 
-    // const uploadResponse: UploadResponse = await response.json();
+    const signShdwJsonResponse = (await shadowSigner.json());
 
+    console.log("Frontend unique filename: ", signShdwJsonResponse.uniqueFileName)
+    const renamedFile = new File([imageFile], signShdwJsonResponse.uniqueFileName)
 
-    // PublicKey here is the public key of the bucket owner, eg BCN...
-    // const drive = await new ShdwDrive(connection, process.env.NEXT_PUBLIC_SOAP_PUBKEY).init();
-
-    const json = (await shadowSigner.json());
-
-    //     {error: "Unauthenticated"}
-    // error
-    // : 
-    // "Unauthenticated"
-
+    // Upload to ShadowDrive
     const formData = new FormData();
-    formData.append("file", imageFile);
-    console.log("🚀 ~ file: creator.tsx:66 ~ uploadSoap ~ json.fileName:", typeof (json.fileName))
-    formData.append("message", json.signedMessage as string);
+    formData.append("file", imageFile, signShdwJsonResponse.uniqueFileName);
+    formData.append("message", signShdwJsonResponse.signedMessage as string);
     formData.append("signer", process.env.NEXT_PUBLIC_SOAP_PUBKEY as string);
     formData.append("storage_account", process.env.NEXT_PUBLIC_SHDW_SOAP_BUCKET as string);
-    formData.append("fileNames", [imageFile.name].toString());
+    formData.append("fileNames", [signShdwJsonResponse.uniqueFileName].toString());
     const response = await fetch("https://shadow-storage.genesysgo.net/upload", {
         method: "POST",
         body: formData
     });
-
-
-    // setUploadUrl(upload.finalized_location)
-    // setTxnSig(upload.transaction_signature)
-
-
-
-
 
 
 }
