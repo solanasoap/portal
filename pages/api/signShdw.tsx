@@ -19,34 +19,51 @@ export default async function handler(req: NextRequest, res) {
     console.log("JSON Request Body SignShdw: ", jsonReqBody)
 
 
-    const fileName = jsonReqBody.fileName;
-    const fileExtension = fileName.split('.').pop();
+    // Sign image upload
+    const imageFileName = jsonReqBody.imageFileName;
+    const fileExtension = imageFileName.split('.').pop();
     console.log("File extension of incoming file: ", fileExtension)
 
-    const uniqueFileName = `${uniqueKeypair.publicKey}.${fileExtension}`
-    console.log("Backend unique filename: ", uniqueFileName)
+    const uniqueImageFileName = `${uniqueKeypair.publicKey}.${fileExtension}`
+    console.log("Backend unique Image filename: ", uniqueImageFileName)
 
+    const hashSumImage = crypto.createHash("sha256");
+    hashSumImage.update(uniqueImageFileName)
+    const imageFileNameHashed = hashSumImage.digest("hex")
 
-    const hashSum = crypto.createHash("sha256");
-    hashSum.update(uniqueFileName)
-    const fileNamesHashed = hashSum.digest("hex")
+    // Sign json upload
+    const uniqueJsonFileName = `${uniqueKeypair.publicKey}.json`
+    const hashSumJson = crypto.createHash("sha256");
+    hashSumJson.update(uniqueJsonFileName)
+    const jsonFileNamesHashed = hashSumJson.digest("hex")
 
 
     if (req.method == 'POST') {
 
 
-        let msg = `Shadow Drive Signed Message:\nStorage Account: ${process.env.NEXT_PUBLIC_SHDW_SOAP_BUCKET}\nUpload files with hash: ${fileNamesHashed}`;
+        let msgImage = `Shadow Drive Signed Message:\nStorage Account: ${process.env.NEXT_PUBLIC_SHDW_SOAP_BUCKET}\nUpload files with hash: ${imageFileNameHashed}`;
 
-        console.log("\nShadow Drive Message to be signed: ", msg)
-        const encodedMessage = new TextEncoder().encode(msg);
-        const signedMessage = nacl.sign.detached(encodedMessage, keypair.secretKey);
-        const signature = bs58.encode(signedMessage)
-        console.log("\nSignature of message: ", signature)
+        console.log("\nShadow Drive Message to be signed for IMAGE: ", msgImage)
+        const encodedMessageImage = new TextEncoder().encode(msgImage);
+        const signedMessageImage = nacl.sign.detached(encodedMessageImage, keypair.secretKey);
+        const signatureImage = bs58.encode(signedMessageImage)
+        console.log("\nSignatureImage of message: ", signatureImage)
+
+
+        let msgJson = `Shadow Drive Signed Message:\nStorage Account: ${process.env.NEXT_PUBLIC_SHDW_SOAP_BUCKET}\nUpload files with hash: ${jsonFileNamesHashed}`;
+
+        console.log("\nShadow Drive Message to be signed for JSON: ", msgJson)
+        const encodedMessage = new TextEncoder().encode(msgJson);
+        const signedMessageJson = nacl.sign.detached(encodedMessage, keypair.secretKey);
+        const signatureJson = bs58.encode(signedMessageJson)
+        console.log("\nSignature Json of message: ", signatureJson)
 
 
         res.status(200).json({
-            signedMessage: signature,
-            uniqueFileName: uniqueFileName
+            signedMessageImage: signatureImage,
+            uniqueFileNameImage: uniqueImageFileName,
+            signedMessageJson: signatureJson,
+            uniqueFileNameJson: uniqueJsonFileName,
         });
     }
 

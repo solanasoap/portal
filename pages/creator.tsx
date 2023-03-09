@@ -4,6 +4,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { useState } from "react";
 // import fetch, { FormData } from "node-fetch";
 import { ShadowFile, ShdwDrive } from "@shadow-drive/sdk";
+import { JsonMetadata } from "@metaplex-foundation/js";
 // import { File } from "buffer";
 
 // DONE User fills out form to create a soap with Name & Description
@@ -23,45 +24,92 @@ import { ShadowFile, ShdwDrive } from "@shadow-drive/sdk";
 
 // https://shdw-drive.genesysgo.net/EBK6SU7F3HmMoMuhYocd8b1bbbKnJnYBg72cM624K8a8/SOLANA%20BUILD%20STATION%2024.02.2023-4161.jpg
 
-const storageAcc = new PublicKey(process.env.NEXT_PUBLIC_SHDW_SOAP_BUCKET);
-
 type UploadResponse = {
     fileName: string,
     signatureImage: string,
     signatureMetadata: string
 }
 
-async function uploadSoap(name: string, description: string, connection: Connection, imageFile: File) {
+async function uploadSoap(soapName: string, soapDescription: string, imageFile: File) {
     // Request to pre-sign message with the filename on the backend
     const shadowSigner = await fetch("/api/signShdw", {
         method: "POST",
         headers: {
             "content-type": "application/json"
         },
-        body: JSON.stringify({ // Don't need this really
-            fileName: imageFile.name
+        body: JSON.stringify({ // We only need this for the file extension
+            imageFileName: imageFile.name
         })
     });
 
     const signShdwJsonResponse = (await shadowSigner.json());
 
-    console.log("Frontend unique filename: ", signShdwJsonResponse.uniqueFileName)
-    const renamedFile = new File([imageFile], signShdwJsonResponse.uniqueFileName)
-
-    // Upload to ShadowDrive
+    // Upload image to ShadowDrive
     const formData = new FormData();
-    formData.append("file", imageFile, signShdwJsonResponse.uniqueFileName);
-    formData.append("message", signShdwJsonResponse.signedMessage as string);
+    formData.append("file", imageFile, signShdwJsonResponse.uniqueFileNameImage);
+    formData.append("message", signShdwJsonResponse.signedMessageImage as string);
     formData.append("signer", process.env.NEXT_PUBLIC_SOAP_PUBKEY as string);
     formData.append("storage_account", process.env.NEXT_PUBLIC_SHDW_SOAP_BUCKET as string);
-    formData.append("fileNames", [signShdwJsonResponse.uniqueFileName].toString());
-    const response = await fetch("https://shadow-storage.genesysgo.net/upload", {
+    formData.append("fileNames", [signShdwJsonResponse.uniqueFileNameImage].toString());
+    const imageUploadResponse = await fetch("https://shadow-storage.genesysgo.net/upload", {
         method: "POST",
         body: formData
     });
 
+    const imageUri = (await imageUploadResponse.json()).finalized_locations[0];
+    console.log("Shadow Soap image URI: ", imageUri)
+
+    const soapMetadata = createMetadata(soapName, soapDescription, imageUri)
+    console.log("Soap metadata: ", soapMetadata)
+
+    const metadataFile = new File([JSON.stringify(soapMetadata)], signShdwJsonResponse.uniqueFileNameJson, { type: "text/plain" })
+
+    // Upload metadata to ShadowDrive
+    const formDataJson = new FormData();
+    formDataJson.append("file", metadataFile, signShdwJsonResponse.uniqueFileNameJson);
+    formDataJson.append("message", signShdwJsonResponse.signedMessageJson as string);
+    formDataJson.append("signer", process.env.NEXT_PUBLIC_SOAP_PUBKEY as string);
+    formDataJson.append("storage_account", process.env.NEXT_PUBLIC_SHDW_SOAP_BUCKET as string);
+    formDataJson.append("fileNames", [signShdwJsonResponse.uniqueFileNameJson].toString());
+    const JsonUploadResponse = await fetch("https://shadow-storage.genesysgo.net/upload", {
+        method: "POST",
+        body: formDataJson
+    });
+
+    const jsonUri = (await JsonUploadResponse.json()).finalized_locations[0];
+    console.log("Shadow Soap image URI: ", jsonUri)
 
 }
+
+function createMetadata(name: string, description: string, imageUri: string) {
+    // NFT Metadata
+    const jsonMetadata = { //FIXME Get data from json request
+        name: name,
+        symbol: "SOAP",
+        description: description,
+        seller_fee_basis_points: 10000,
+        image: imageUri,
+        // external_url: req.body.external_url,
+        // attributes: req.body.attributes,
+        properties: {
+            // creators: [
+            //     {
+            //         // main soap creator
+            //         address: metaplex.identity().publicKey.toBase58(),
+            //         share: 100,
+            //     }
+            // ],
+            category: "image"
+        },
+        collection: {
+            name: "SOAP",
+            family: "SOAP"
+        }
+    }
+
+    return jsonMetadata;
+}
+
 
 const Creator: NextPage = (props) => {
     const [name, setName] = useState('');
@@ -110,7 +158,7 @@ const Creator: NextPage = (props) => {
                         <input type="file" onChange={handleImageChange} />
                     </label>
                     <br />
-                    <button type="submit" onClick={() => uploadSoap("", "", new Connection("https://api.mainnet-beta.solana.com"), image)}>Submit</button>
+                    <button type="submit" onClick={() => uploadSoap(name, description, image)}>Submit</button>
                 </form>
             </main>
         </div>
