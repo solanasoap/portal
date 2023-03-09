@@ -9,14 +9,10 @@ use {
     mpl_token_metadata::{instruction as mpl_instruction },
 };
 
-// The macros within the Account Context will create our
-//      Mint account and initialize it as a Mint
-//      We just have to do the metadata
-//
 #[derive(Accounts)]
 #[instruction(
     soap_title: String, 
-    soap_symbol: String, 
+    soap_symbol: String, // FIXME THIS SHOULD BE HARDCODED
     soap_uri: String,
 )]
 pub struct Create<'info> {
@@ -94,7 +90,7 @@ pub fn handler(
             ctx.accounts.payer.key(),
             ctx.accounts.payer.key(),
             soap_title,                               
-            soap_symbol,                              
+            soap_symbol,  // FIXME THIS SHOULD BE HARDCODED                            
             soap_uri,                                             
             // None,
             Some(vec![
