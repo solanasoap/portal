@@ -13,9 +13,10 @@ console.log("🚀 ~ file: signShdw.tsx:9 ~ keypair:", keypair.publicKey)
 const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
 
 export default async function handler(req: NextRequest, res) {
-    const uniqueKeypair = Keypair.generate()
+    // const uniqueKeypair = Keypair.generate()
 
     const jsonReqBody = req.body;
+    const soapAddress = jsonReqBody.soapAddress;
     console.log("JSON Request Body SignShdw: ", jsonReqBody)
 
 
@@ -24,7 +25,7 @@ export default async function handler(req: NextRequest, res) {
     const fileExtension = imageFileName.split('.').pop();
     console.log("File extension of incoming file: ", fileExtension)
 
-    const uniqueImageFileName = `${uniqueKeypair.publicKey}.${fileExtension}`
+    const uniqueImageFileName = `${soapAddress}.${fileExtension}`
     console.log("Backend unique Image filename: ", uniqueImageFileName)
 
     const hashSumImage = crypto.createHash("sha256");
@@ -32,7 +33,7 @@ export default async function handler(req: NextRequest, res) {
     const imageFileNameHashed = hashSumImage.digest("hex")
 
     // Sign json upload
-    const uniqueJsonFileName = `${uniqueKeypair.publicKey}.json`
+    const uniqueJsonFileName = `${soapAddress}.json`
     const hashSumJson = crypto.createHash("sha256");
     hashSumJson.update(uniqueJsonFileName)
     const jsonFileNamesHashed = hashSumJson.digest("hex")
@@ -64,6 +65,7 @@ export default async function handler(req: NextRequest, res) {
             uniqueFileNameImage: uniqueImageFileName,
             signedMessageJson: signatureJson,
             uniqueFileNameJson: uniqueJsonFileName,
+            // uniqueSoapId: soapAddress,
         });
     }
 

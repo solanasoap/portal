@@ -1,9 +1,11 @@
-use mpl_token_metadata::state::Creator;
+use std::str::FromStr;
+
+use mpl_token_metadata::state::{Creator, Collection};
 
 use crate::states::{UserProfile};
 
 use {
-    crate::{constants::{POT_TAG,USER_PROFILE_TAG}},
+    crate::{constants::{POT_TAG}},
     anchor_lang::{prelude::*, solana_program::program::invoke_signed},
     anchor_spl::token,
     mpl_token_metadata::{instruction as mpl_instruction },
@@ -19,15 +21,15 @@ pub struct Create<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
 
-    #[account(
-        mut,
-        seeds = [
-            USER_PROFILE_TAG,
-            payer.key().as_ref(),
-        ],
-        bump,
-    )]
-    pub user_profile: Account<'info, UserProfile>,
+    // #[account(
+    //     mut,
+    //     seeds = [
+    //         USER_PROFILE_TAG,
+    //         payer.key().as_ref(),
+    //     ],
+    //     bump,
+    // )]
+    // pub user_profile: Account<'info, UserProfile>,
     
     #[account(
         seeds = [
@@ -68,7 +70,7 @@ pub fn handler(
     soap_symbol: String,
     soap_uri: String,
 ) -> Result<()> {
-    let user_profile = &mut ctx.accounts.user_profile;
+    // let user_profile = &mut ctx.accounts.user_profile;
     let pot = &mut ctx.accounts.pot;
 
     let payer_binding = ctx.accounts.payer.key();
@@ -103,7 +105,8 @@ pub fn handler(
             10000,                                     
             false,                                      
             true,       
-            // FIXME The collection NFT's authority is BCN... keypair. Metaplex program won't be able to verify it because it's authority is not the program.                               
+            // FIXME The collection NFT's authority is BCN... keypair. Metaplex program won't be able to verify it because it's authority is not the program.
+            // TODO: Create PDA that owns the collection NFT and sign each create tx with that as well                               
             // Some(
             //     Collection{
             //         key: Pubkey::from_str("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV").unwrap(),
@@ -127,9 +130,9 @@ pub fn handler(
             &[pot_seeds],
     )?;
 
-    msg!("Token mint created successfully.");
+    msg!("Soap created");
 
-    user_profile.total_soaps_count +=1;
+    // user_profile.total_soaps_count +=1;
 
     Ok(())
 }

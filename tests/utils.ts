@@ -21,12 +21,12 @@ export const getUserProfile = (authority: PublicKey) => {
   )[0];
 };
 
-export const getPot = (mint: PublicKey, authority: PublicKey, soap_count: number) => {
+export const getPot = (mint: PublicKey, authority: PublicKey) => {
   return findProgramAddressSync(
     [
       POT_TAG,
-      //mint.toBuffer(),
-      // authority.toBuffer()
+      mint.toBuffer(),
+      authority.toBuffer()
     ],
     PROGRAM_ID
   )[0];

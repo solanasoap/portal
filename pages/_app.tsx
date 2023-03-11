@@ -33,8 +33,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
             new GlowWalletAdapter(),
             new PhantomWalletAdapter(),
             new SolflareWalletAdapter(),
-            new LedgerWalletAdapter(),
-            new SolletExtensionWalletAdapter()
         ],
         [network]
     );
@@ -43,10 +41,10 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <WalletWrapper>
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets} autoConnect={true} localStorageKey="soapWalletAdapter">
-                        <WalletModalProvider>
-                            <Header/>
-                            <Component {...pageProps} />
-                        </WalletModalProvider>
+                    <WalletModalProvider>
+                        <Header />
+                        <Component {...pageProps} />
+                    </WalletModalProvider>
                 </WalletProvider>
             </ConnectionProvider>
         </WalletWrapper>

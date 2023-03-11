@@ -30,7 +30,7 @@ describe("soap-program", () => {
   const mintKeypair: anchor.web3.Keypair = anchor.web3.Keypair.generate();
   const pot = Pda.find(PROGRAM_ID, [POT_TAG, mintKeypair.publicKey.toBuffer(), payer.publicKey.toBuffer()]);
 
-  console.log("Pot Address", getPot(mintKeypair.publicKey, payer.publicKey, 2).toBase58());
+  console.log("Pot Address", getPot(mintKeypair.publicKey, payer.publicKey).toBase58());
 
   const tokenTitle = "Soap Program";
   const tokenSymbol = "SOAP";
@@ -73,19 +73,19 @@ describe("soap-program", () => {
     //   ],
     //   TOKEN_METADATA_PROGRAM_ID
     // )[0];
-    const userProfile = getUserProfile(payer.publicKey);
-    console.log(
-      "count HERE",
-      (await program.account.userProfile.fetch(userProfile)).totalSoapsCount
-    );
-    const userProfileData = await program.account.userProfile.fetch(
-      userProfile
-    );
+    // const userProfile = getUserProfile(payer.publicKey);
+    // console.log(
+    //   "count HERE",
+    //   (await program.account.userProfile.fetch(userProfile)).totalSoapsCount
+    // );
+    // const userProfileData = await program.account.userProfile.fetch(
+    //   userProfile
+    // );
 
     const tx = await program.methods
       .create(tokenTitle, tokenSymbol, tokenUri)
       .accounts({
-        userProfile: userProfile,
+        // userProfile: userProfile,
         metadataAccount: metadataAddress,
         mintAccount: mintKeypair.publicKey,
         payer: payer.publicKey,
