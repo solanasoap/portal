@@ -54,7 +54,8 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
     const submitFillUpPot = useCallback(async () => {
         if (!publicKey) throw new WalletNotConnectedError();
         if (amount < 1) {
-            alert("Please put in an amount higher than 0")
+            alert("Please put in an amount higher than 0");
+            return;
         }
 
         const amountToTransfer = new BN((LAMPORTS_PER_SOL * 0.0021) * amount)
@@ -99,9 +100,6 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
 
     const submitWithdrawPot = useCallback(async () => {
         if (!publicKey) throw new WalletNotConnectedError();
-        if (amount < 1) {
-            alert("Please put in an amount higher than 0")
-        }
 
         const potBalance = await connection.getBalance(new PublicKey(potAddress))
         console.log("Pot balance: ", potBalance)
