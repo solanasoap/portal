@@ -25,7 +25,6 @@ export const mintSoapStruct = new beet.BeetArgsStruct<{
  *
  * @property [_writable_] mintAccount
  * @property [_writable_] pot
- * @property [] userProfile
  * @property [_writable_] associatedTokenAccount
  * @property [_writable_, **signer**] payer
  * @property [] destinationWallet
@@ -38,7 +37,6 @@ export const mintSoapStruct = new beet.BeetArgsStruct<{
 export type MintSoapInstructionAccounts = {
   mintAccount: web3.PublicKey
   pot: web3.PublicKey
-  userProfile: web3.PublicKey
   associatedTokenAccount: web3.PublicKey
   payer: web3.PublicKey
   destinationWallet: web3.PublicKey
@@ -78,11 +76,6 @@ export function createMintSoapInstruction(
     {
       pubkey: accounts.pot,
       isWritable: true,
-      isSigner: false,
-    },
-    {
-      pubkey: accounts.userProfile,
-      isWritable: false,
       isSigner: false,
     },
     {

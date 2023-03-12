@@ -49,3 +49,6 @@ test-ledger
 
 # Solita
 .crates
+
+# Secret
+secret

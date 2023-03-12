@@ -5,10 +5,13 @@ skip-lint = false
 [programs.devnet]
 soap_program = "4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq"
 
+[programs.mainnet]
+soap_program = "soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN"
+
 [provider]
 cluster = "devnet"
-# wallet = "/Users/yusuf/.config/solana/id.json"
 wallet = "/Users/nagy/.config/solana/id.json"
+# wallet = "/Users/nagy/Desktop/Files/Dev3/SOAP/soap-portal/aquaZKhcuUU1KetKdzNzumpbzEvcyHMqbkyysnMjMWr.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

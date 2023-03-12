@@ -175,11 +175,6 @@
           "isSigner": false
         },
         {
-          "name": "userProfile",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "associatedTokenAccount",
           "isMut": true,
           "isSigner": false

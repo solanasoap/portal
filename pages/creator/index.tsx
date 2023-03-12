@@ -131,7 +131,14 @@ const Creator: NextPage = (props) => {
     };
 
     const handleImageChange = (event) => {
-        setImage(event.target.files[0]);
+        const MAX_FILE_SIZE = 3000; // 3MB
+        const fileSizeKiloBytes = event.target.files[0].size / 1024;
+        if (fileSizeKiloBytes > MAX_FILE_SIZE) {
+            alert("File size is greater than maximum limit of 3MB.");
+            return;
+        } else if (fileSizeKiloBytes < MAX_FILE_SIZE) {
+            setImage(event.target.files[0]);
+        }
     };
 
     const handleSubmit = (event) => {
@@ -206,8 +213,7 @@ const Creator: NextPage = (props) => {
         console.log("Soap minted. TX: ", signature)
         setSoap(soapAddress.toBase58())
 
-        // Navigate to soap fundpot page
-        // redirect(`${router.asPath}/fundPot?soapAddress=${soapAddress.toBase58()}`)
+        // Navigate to soap fundpot page. Justin wont like this lmao
         router.push(`${router.asPath}/fundPot?soapAddress=${soapAddress.toBase58()}`)
 
     }, [publicKey, sendTransaction, connection, image, name, description, soap]);
@@ -236,7 +242,7 @@ const Creator: NextPage = (props) => {
                     </label>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                         Image:
-                        <input type="file" onChange={handleImageChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                        <input type="file" accept="image/jpeg, image/png" onChange={handleImageChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                     </label>
                     <button onClick={submitSoapCreation} disabled={!publicKey && !name} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400">
                         Create Soap

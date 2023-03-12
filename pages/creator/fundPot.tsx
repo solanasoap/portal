@@ -14,6 +14,11 @@ import { FundPotInstructionAccounts, FundPotInstructionArgs, PROGRAM_ID, Withdra
 import { POT_TAG } from "../../lib/constants";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { BN } from "@project-serum/anchor";
+import {
+    createQR,
+} from '@solana/pay';
+import { useQRCode } from 'next-qrcode';
+
 
 const WalletMultiButtonDynamic = dynamic(
     async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
@@ -38,10 +43,13 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
     const [potAddress, setPotAddress] = useState('')
     const { connection } = useConnection();
     const { publicKey, sendTransaction } = useWallet();
+    const { Canvas } = useQRCode();
 
     useEffect(() => {
         setSoapAddress(soapDetails.Address)
         setPotAddress(soapDetails.PotAddress)
+        console.log("Soap Address: ", soapAddress);
+        console.log("Pot Address: ", potAddress);
     }, [])
 
     const handleInputChange = (event) => {
@@ -58,7 +66,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
             return;
         }
 
-        const amountToTransfer = new BN((LAMPORTS_PER_SOL * 0.0021) * amount)
+        const amountToTransfer = new BN((LAMPORTS_PER_SOL * 0.00204) * amount)
 
 
         const pot = Pda.find(PROGRAM_ID, [POT_TAG, new PublicKey(soapAddress).toBuffer(), publicKey.toBuffer()])
@@ -187,7 +195,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                         </div>
                         <div className="inline text-l font-neueHaasUnicaRegular h-12">
                             <h1>
-                                The pot has enough funds for {Math.round(soapDetails.PotBalance / LAMPORTS_PER_SOL / 0.0021)} Soap mints.
+                                The pot has enough funds for {Math.round(soapDetails.PotBalance / LAMPORTS_PER_SOL / 0.00204)} Soap mints.
                             </h1>
                         </div>
                         <div>
@@ -200,6 +208,19 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                         <button onClick={submitWithdrawPot} disabled={!publicKey && (amount > 0)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 mx-2">
                             Withdraw Pot
                         </button>
+                        <Canvas
+                            text={`https://${process.env.NEXT_PUBLIC_BASE_URL}/dealer/${soapAddress}`}
+                            options={{
+                                level: 'M',
+                                margin: 3,
+                                scale: 4,
+                                width: 200,
+                                color: {
+                                    dark: '#000000',
+                                    light: '#FFFFFF',
+                                },
+                            }}
+                        />
                     </div>
                 </div>
 
@@ -225,7 +246,6 @@ export async function getServerSideProps(context) {
 
     // TODO: Maybe filter if it is a soap and send back a "not soap mfer" pic if not
     const soap = await metaplex.nfts().findByMint({ mintAddress });
-    console.log("Soap details: ", soap)
     const potBalance = await connection.getBalance(soap.mint.mintAuthorityAddress)
 
     const soapDetails: soapDetails = {
@@ -245,6 +265,7 @@ export async function getServerSideProps(context) {
     }
 }
 
+// This should really be in my lib types, as it's used at multiple places
 type soapDetails = {
     Address: string,
     Image: string,

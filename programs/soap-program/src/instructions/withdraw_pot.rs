@@ -7,7 +7,7 @@ use {
 };
 
 #[derive(Accounts)]
-#[instruction(soap_count: u16)]
+#[instruction()]
 pub struct WithdrawPot<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,

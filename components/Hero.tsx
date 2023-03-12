@@ -25,6 +25,11 @@ export default function Hero() {
                                 try dispenser
                             </button>
                         </Link>
+                        <Link href="/creator">
+                            <button className="bg-gradient-to-tr from-green-600 to-green-500 hover:shadow-md uppercase font-neueHaasUnicaBlack text-white font-bold py-2 px-4 rounded w-auto h-16 drop-shadow-lg m-auto lg:m-0">
+                                Create Soap
+                            </button>
+                        </Link>
                     </div>
                     <div className="text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight overflow-hidden whitespace-nowrap">
                         <Link href={`https://t.me/oyacaro`}>

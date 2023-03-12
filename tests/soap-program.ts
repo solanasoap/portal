@@ -37,25 +37,6 @@ describe("soap-program", () => {
   const tokenUri =
     "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/spl-token.json";
 
-  it("Initialize User Profile", async () => {
-    console.log("\n\n\n WE INITIALIZE USER PROFILE HERE EYYY")
-
-    const userProfile = getUserProfile(payer.publicKey);
-    console.log("userProfile", userProfile.toBase58());
-
-    const tx = await program.methods
-      .initUserProfile()
-      .accounts({
-        userProfile: userProfile,
-        authority: payer.publicKey
-      })
-      .signers([payer.payer])
-      .rpc()
-      .catch(console.log);
-
-    console.log("Tx Signature: ", tx);
-  });
-
   it("Create a Soap!", async () => {
 
     console.log("\n\n\n WE CREATING A SOAP HERE EYYY")
@@ -114,7 +95,7 @@ describe("soap-program", () => {
     const soapCount = userProfileData.totalSoapsCount - 1;
 
     const tx = await program.methods
-      .fundPot(soapCount, new anchor.BN(LAMPORTS_PER_SOL * 0.2))
+      .fundPot(new anchor.BN(LAMPORTS_PER_SOL * 0.2))
       .accounts({
         authority: payer.publicKey,
         mintAccount: mintKeypair.publicKey,
@@ -151,7 +132,6 @@ describe("soap-program", () => {
         .accounts({
           mintAccount: mintKeypair.publicKey,
           pot,
-          userProfile: creatorProfileAccount,
           associatedTokenAccount: userAta,
           payer: provider.wallet.publicKey,
           destinationWallet: destinationWallet,
@@ -180,7 +160,7 @@ describe("soap-program", () => {
 
     try {
       const tx = await program.methods
-        .withdrawPot(soapCount, new anchor.BN(LAMPORTS_PER_SOL * 0.1))
+        .withdrawPot(new anchor.BN(LAMPORTS_PER_SOL * 0.1))
         .accounts({
           authority: payer.publicKey,
           pot,

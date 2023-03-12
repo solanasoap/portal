@@ -25,10 +25,6 @@ pub mod soap_program {
         create::handler(ctx, soap_title, soap_symbol, soap_uri)
     }
 
-    pub fn init_user_profile(ctx: Context<InitUserProfile>) -> Result<()> {
-        init_user_profile::handler(ctx)
-    }
-
     pub fn fund_pot(ctx: Context<FundPot>, sol_lamports: u64) -> Result<()> {
         fund_pot::handler(ctx, sol_lamports)
     }

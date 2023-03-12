@@ -37,7 +37,7 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
         const apiMintRequest = {
             toPublicKey: walletAddress,
             soapAddress: soapDetails.Address,
-            secret: "verySmooth"
+            secret: process.env.NEXT_PUBLIC_API_SECRET
         }
 
         const minted = Cookies.get(apiMintRequest.soapAddress)
@@ -47,10 +47,10 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
         // Otherwise it'll mint on every refresh lmao 
         if (walletAddress && soapDetails.Address) {
             axios
-                .post('/api/dispense', {
+                .post('/api/mintSoap', {
                     toPublicKey: walletAddress,
                     soapAddress: soapDetails.Address,
-                    secret: "verySmooth"
+                    secret: process.env.NEXT_PUBLIC_API_SECRET
                 }
                 )
                 .then(res => {
