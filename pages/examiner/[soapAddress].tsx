@@ -19,7 +19,7 @@ import { OwnSoap } from "../../components/OwnSoap";
 // Like a secret code or location to a party (see StripDAO party)
 // Only stored on our backend, not on-chain. Only visible if person authenticates ownership of soap.
 
-const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY);
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY);
 const metaplex = new Metaplex(connection);
 
 
@@ -69,10 +69,10 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                                     <div className="px-1 rounded-md h-16 w-full mx-auto">
                                         <h1 className="font-bold font-phenomenaBlack text-2xl">
                                             {attribute.trait_type}
-                                            </h1>
-                                            <h3 className="font-phenomenaRegular text-xl leading-5">
-                                                {attribute.value}
-                                            </h3>
+                                        </h1>
+                                        <h3 className="font-phenomenaRegular text-xl leading-5">
+                                            {attribute.value}
+                                        </h3>
                                     </div>
                                 </div>
                             )

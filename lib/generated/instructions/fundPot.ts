@@ -14,7 +14,6 @@ import * as web3 from '@solana/web3.js'
  * @category generated
  */
 export type FundPotInstructionArgs = {
-  soapCount: number
   solLamports: beet.bignum
 }
 /**
@@ -29,7 +28,6 @@ export const fundPotStruct = new beet.BeetArgsStruct<
 >(
   [
     ['instructionDiscriminator', beet.uniformFixedSizeArray(beet.u8, 8)],
-    ['soapCount', beet.u16],
     ['solLamports', beet.u64],
   ],
   'FundPotInstructionArgs'

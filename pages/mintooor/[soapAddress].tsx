@@ -9,7 +9,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const RPCURL = "https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY
+const RPCURL = process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY
 // const RPCURL = "https://api.mainnet-beta.solana.com"
 const connection = new Connection(RPCURL);
 const metaplex = new Metaplex(connection);

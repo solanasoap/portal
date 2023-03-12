@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import Link from 'next/link';
 
 
-const mxconnection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'confirmed');
+const mxconnection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'confirmed');
 const mx = Metaplex.make(mxconnection);
 const soapCollectionId = new PublicKey("9McAofPndtizYttpcdPD4EnQniJZdCG7o6usF2d4JPDV")
 

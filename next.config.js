@@ -21,6 +21,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.dweb.link',
       },
+      {
+        protocol: 'https',
+        hostname: 'shdw-drive.genesysgo.net',
+      },
     ],
   },
 }

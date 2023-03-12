@@ -7,7 +7,7 @@ import { clusterApiUrl, Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/we
 import { PublicKey, findMetadataPda, Metaplex, Pda } from "@metaplex-foundation/js";
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
-import { POT_TAG } from "./constants";
+import { POT_TAG } from "../lib/constants";
 
 const PROGRAM_ID = new anchor.web3.PublicKey(
   "4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq"

@@ -30,7 +30,7 @@ pub struct FundPot<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<FundPot>, soap_count: u16, sol_lamports: u64) -> Result<()> {
+pub fn handler(ctx: Context<FundPot>, sol_lamports: u64) -> Result<()> {
     let cpi_program = ctx.accounts.system_program.to_account_info();
     let cpi_accounts = Transfer {
         from: ctx.accounts.authority.to_account_info(),

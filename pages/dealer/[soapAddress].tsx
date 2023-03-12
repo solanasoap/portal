@@ -5,7 +5,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import Image from "next/image";
 import WalletLogin from "../../components/WalletLogin";
 
-const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY);
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY);
 const metaplex = new Metaplex(connection);
 
 // SCOPE NO

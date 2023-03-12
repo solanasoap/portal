@@ -10,7 +10,7 @@ console.log("🚀 ~ file: signShdw.tsx:9 ~ keypair:", keypair.publicKey)
 
 
 // Set up foundation
-const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
 
 export default async function handler(req: NextRequest, res) {
     // const uniqueKeypair = Keypair.generate()

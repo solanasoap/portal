@@ -13,6 +13,7 @@ import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from "@metaplex-foundation/mp
 import { Wallet, web3 } from "@project-serum/anchor";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import dynamic from "next/dynamic";
+import { POT_TAG } from "../../lib/constants";
 
 const WalletMultiButtonDynamic = dynamic(
     async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
@@ -250,5 +251,3 @@ const Creator: NextPage = (props) => {
 }
 
 export default Creator
-
-const POT_TAG = Buffer.from("POT_STATE");

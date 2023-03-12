@@ -29,8 +29,8 @@ pub mod soap_program {
         init_user_profile::handler(ctx)
     }
 
-    pub fn fund_pot(ctx: Context<FundPot>, soap_count: u16, sol_lamports: u64) -> Result<()> {
-        fund_pot::handler(ctx, soap_count, sol_lamports)
+    pub fn fund_pot(ctx: Context<FundPot>, sol_lamports: u64) -> Result<()> {
+        fund_pot::handler(ctx, sol_lamports)
     }
 
     pub fn withdraw_pot(

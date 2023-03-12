@@ -1,6 +1,6 @@
 import { createProgramAddressSync, findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { PublicKey } from "@solana/web3.js";
-import { POT_TAG, USER_PROFILE_TAG } from "./constants";
+import { POT_TAG, USER_PROFILE_TAG } from "../lib/constants";
 import * as anchor from "@project-serum/anchor";
 import { SoapProgram } from "../target/types/soap_program";
 
