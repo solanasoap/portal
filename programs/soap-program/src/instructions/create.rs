@@ -1,8 +1,4 @@
-use std::str::FromStr;
-
 use mpl_token_metadata::state::{Creator, Collection};
-
-use crate::states::{UserProfile};
 
 use {
     crate::{constants::{POT_TAG}},

@@ -156,10 +156,6 @@
       ],
       "args": [
         {
-          "name": "soapCount",
-          "type": "u16"
-        },
-        {
           "name": "solLamports",
           "type": "u64"
         }

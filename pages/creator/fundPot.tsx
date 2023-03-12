@@ -10,7 +10,7 @@ import Header from "../../components/Header";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
-import { FundPotInstructionAccounts, FundPotInstructionArgs, PROGRAM_ID, createFundPotInstruction } from "../../lib/generated";
+import { FundPotInstructionAccounts, FundPotInstructionArgs, PROGRAM_ID, WithdrawPotInstructionAccounts, WithdrawPotInstructionArgs, createFundPotInstruction, createWithdrawPotInstruction } from "../../lib/generated";
 import { POT_TAG } from "../../lib/constants";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { BN } from "@project-serum/anchor";
@@ -28,7 +28,7 @@ const WalletMultiButtonDynamic = dynamic(
 // Like a secret code or location to a party (see StripDAO party)
 // Only stored on our backend, not on-chain. Only visible if person authenticates ownership of soap.
 
-const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY);
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, "confirmed");
 const metaplex = new Metaplex(connection);
 
 
@@ -90,14 +90,62 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
             blockhash: blockhash
         }).add(fundPotIx)
 
-        // Need to sign with the new soaps keypair
-        // transaction.partialSign(newSoapKeypair)
-
         const signature = await sendTransaction(transaction, connection, { minContextSlot });
 
         await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature });
         console.log("Pot filled. TX: ", signature)
-    }, [publicKey, sendTransaction, connection]);
+        alert("Pot filled successfully!")
+    }, [publicKey, sendTransaction, connection, amount]);
+
+    const submitWithdrawPot = useCallback(async () => {
+        if (!publicKey) throw new WalletNotConnectedError();
+        if (amount < 1) {
+            alert("Please put in an amount higher than 0")
+        }
+
+        const potBalance = await connection.getBalance(new PublicKey(potAddress))
+        console.log("Pot balance: ", potBalance)
+
+        const amountToTransfer = new BN(potBalance)
+
+
+        const pot = Pda.find(PROGRAM_ID, [POT_TAG, new PublicKey(soapAddress).toBuffer(), publicKey.toBuffer()])
+        console.log("Pot Address: ", pot.toBase58())
+
+        const fundPotIxAccs: WithdrawPotInstructionAccounts = {
+            authority: publicKey,
+            pot: pot,
+            payer: publicKey,
+            mintAccount: new PublicKey(soapAddress)
+        }
+
+        const fundPotIxArgs: WithdrawPotInstructionArgs = {
+            solLamports: amountToTransfer
+        }
+
+        const fundPotIx = createWithdrawPotInstruction(
+            fundPotIxAccs,
+            fundPotIxArgs,
+            PROGRAM_ID
+        )
+
+        const {
+            context: { slot: minContextSlot },
+            value: { blockhash, lastValidBlockHeight }
+        } = await connection.getLatestBlockhashAndContext();
+
+        const transaction = new Transaction({
+            feePayer: publicKey,
+            lastValidBlockHeight,
+            blockhash: blockhash
+        }).add(fundPotIx)
+
+        const signature = await sendTransaction(transaction, connection, { minContextSlot });
+
+        await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature });
+        console.log("Pot withdrawn. TX: ", signature)
+        alert("Pot withdrawn successfully!")
+    }, [publicKey, sendTransaction, connection, amount]);
 
     return (
         <div className="px-4">
@@ -139,12 +187,20 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                                 Pot Address: {soapDetails.PotAddress}
                             </h1>
                         </div>
+                        <div className="inline text-l font-neueHaasUnicaRegular h-12">
+                            <h1>
+                                The pot has enough funds for {Math.round(soapDetails.PotBalance / LAMPORTS_PER_SOL / 0.0021)} Soap mints.
+                            </h1>
+                        </div>
                         <div>
-                            How many soaps do you want to have?
+                            Add more funds for this many Soaps:
                             <input type="text" value={amount} onChange={handleInputChange} className="text-gray-700 mx-4 w-16 px-2 rounded-md" placeholder="eg. 10" />
                         </div>
-                        <button onClick={submitFillUpPot} disabled={!publicKey && (amount > 0)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400">
-                            Fill up Pot
+                        <button onClick={submitFillUpPot} disabled={!publicKey && (amount > 0)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 mx-2">
+                            Add funds
+                        </button>
+                        <button onClick={submitWithdrawPot} disabled={!publicKey && (amount > 0)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 mx-2">
+                            Withdraw Pot
                         </button>
                     </div>
                 </div>
@@ -172,6 +228,8 @@ export async function getServerSideProps(context) {
     // TODO: Maybe filter if it is a soap and send back a "not soap mfer" pic if not
     const soap = await metaplex.nfts().findByMint({ mintAddress });
     console.log("Soap details: ", soap)
+    const potBalance = await connection.getBalance(soap.mint.mintAuthorityAddress)
+
     const soapDetails: soapDetails = {
         Address: soapAddress,
         Image: soap.json.image || "https://www.seekpng.com/png/full/251-2514375_free-high-quality-error-youtube-icon-png-2018.png", // FIXME: lol random error pic
@@ -180,7 +238,8 @@ export async function getServerSideProps(context) {
         Attributes: soap.json.attributes || "no attributes",
         Model: soap.model || "no model",
         UpdateAuthority: soap.updateAuthorityAddress.toBase58() || "no creator",
-        PotAddress: soap.mint.mintAuthorityAddress.toBase58() || ""
+        PotAddress: soap.mint.mintAuthorityAddress.toBase58() || "",
+        PotBalance: potBalance
     }
 
     return {
@@ -196,5 +255,6 @@ type soapDetails = {
     Attributes: any,
     Model: string,
     UpdateAuthority: string,
-    PotAddress: string
+    PotAddress: string,
+    PotBalance: number,
 }

@@ -16,7 +16,7 @@ pub struct WithdrawPot<'info> {
         POT_TAG,
         mint_account.key().as_ref(),
         authority.key().as_ref()
-        ], bump)] // seeds = amount of total soaps count
+        ], bump)]
     pub pot: SystemAccount<'info>,
 
     #[account(mut)]
@@ -27,9 +27,7 @@ pub struct WithdrawPot<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<WithdrawPot>, soap_count: u16, sol_lamports: u64) -> Result<()> {
-    let pot = &mut ctx.accounts.pot;
-
+pub fn handler(ctx: Context<WithdrawPot>, sol_lamports: u64) -> Result<()> {
     let cpi_program = ctx.accounts.system_program.to_account_info();
     let cpi_accounts = Transfer {
         to: ctx.accounts.authority.to_account_info(),

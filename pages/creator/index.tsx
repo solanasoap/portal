@@ -14,6 +14,8 @@ import { Wallet, web3 } from "@project-serum/anchor";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import dynamic from "next/dynamic";
 import { POT_TAG } from "../../lib/constants";
+import { useRouter } from 'next/router'
+// import { redirect } from 'next/navigation';
 
 const WalletMultiButtonDynamic = dynamic(
     async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
@@ -112,6 +114,7 @@ function createMetadata(name: string, description: string, imageUri: string) {
 
 
 const Creator: NextPage = (props) => {
+    const router = useRouter()
     const [name, setName] = useState();
     const [description, setDescription] = useState();
     const [image, setImage] = useState<File | undefined>();
@@ -202,6 +205,11 @@ const Creator: NextPage = (props) => {
         await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature });
         console.log("Soap minted. TX: ", signature)
         setSoap(soapAddress.toBase58())
+
+        // Navigate to soap fundpot page
+        // redirect(`${router.asPath}/fundPot?soapAddress=${soapAddress.toBase58()}`)
+        router.push(`${router.asPath}/fundPot?soapAddress=${soapAddress.toBase58()}`)
+
     }, [publicKey, sendTransaction, connection, image, name, description, soap]);
 
 

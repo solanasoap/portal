@@ -33,12 +33,8 @@ pub mod soap_program {
         fund_pot::handler(ctx, sol_lamports)
     }
 
-    pub fn withdraw_pot(
-        ctx: Context<WithdrawPot>,
-        soap_count: u16,
-        sol_lamports: u64,
-    ) -> Result<()> {
-        withdraw_pot::handler(ctx, soap_count, sol_lamports)
+    pub fn withdraw_pot(ctx: Context<WithdrawPot>, sol_lamports: u64) -> Result<()> {
+        withdraw_pot::handler(ctx, sol_lamports)
     }
 
     pub fn mint_soap(ctx: Context<MintSoap>) -> Result<()> {
