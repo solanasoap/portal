@@ -27,6 +27,15 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config, { dev }) => {
+    config.module.rules.push(
+      {
+        test: /\.soap-program.ts$/,
+        loader: 'ignore-loader'
+      }
+    );
+    return config;
+  },
 }
 
 module.exports = nextConfig
