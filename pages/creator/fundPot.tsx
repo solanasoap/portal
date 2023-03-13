@@ -39,7 +39,7 @@ const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process
 const metaplex = new Metaplex(connection);
 
 
-const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
+const SoapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
     const [amount, setamount] = useState(10);
     const [soapAddress, setSoapAddress] = useState(soapDetails.Address)
     const [potAddress, setPotAddress] = useState(soapDetails.PotAddress)
@@ -198,7 +198,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                         Heads up, save this link!
                     </div>
                     <div className="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-600">
-                        <p>Save this page to top up and withdraw from the Soap's Pot. You won't be able to come back to it unless you have the link.</p>
+                        <p>Save this page to top up and withdraw from the Soap&#39;s Pot. You won&#39;t be able to come back to it unless you have the link.</p>
                         <p>Only the Creator of the Soap can add and withdraw from the Pot.</p>
                     </div>
                 </div>
@@ -282,7 +282,7 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
     )
 }
 
-export default soapAddress
+export default SoapAddress
 
 export async function getServerSideProps(context) {
     const soapAddress: string = context.query.soapAddress;

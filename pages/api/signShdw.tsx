@@ -15,7 +15,7 @@ const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process
 export default async function handler(req: NextRequest, res) {
     // const uniqueKeypair = Keypair.generate()
 
-    const jsonReqBody = req.body;
+    const jsonReqBody = await req.json();
     const soapAddress = jsonReqBody.soapAddress;
     console.log("JSON Request Body SignShdw: ", jsonReqBody)
 
