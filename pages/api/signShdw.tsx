@@ -9,7 +9,8 @@ import crypto from "crypto";
 export default async function handler(req, res) {
 
     // Load a local keypair.
-    const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
+    // const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
+    const keypair = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(process.env.SOAP_KEYPAIR)));
     console.log("Backend Keypair Pubkey: ", keypair.publicKey)
 
     // Set up connection

@@ -127,6 +127,8 @@ const Creator: NextPage = (props) => {
         wallet: ""
     })
 
+    console.log(process.env)
+
     const notifySoapCreated = () => toast("Soap Created! Redirecting...");
     const notifySoapDismissed = () => toast.error("Transaction rejected!",);
     // toast.error("Error. Please try again");
@@ -215,10 +217,14 @@ const Creator: NextPage = (props) => {
             feePayer: publicKey,
             lastValidBlockHeight,
             blockhash: blockhash
-        }).add(ix)
+        });
+
+        transaction.add(ix)
 
         // Need to sign with the new soaps keypair
         transaction.partialSign(newSoapKeypair)
+
+        console.log("Serialized TX: ", transaction.serialize({ requireAllSignatures: false }).toString('base64'))
 
         const signature = await sendTransaction(transaction, connection, { minContextSlot }).catch(e => {
             setErrors({ wallet: "AHH" })
@@ -226,6 +232,8 @@ const Creator: NextPage = (props) => {
         });
 
         if (!signature) return setLoading(false)
+
+        console.log("Signature: ", signature)
 
         await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature });
         console.log("Soap minted. TX: ", signature)

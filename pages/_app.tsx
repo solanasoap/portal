@@ -22,7 +22,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
     // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
     const network = process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY;
     // You can also provide a custom RPC endpoint
-    const endpoint = useMemo(() => (network), [WalletAdapterNetwork.Mainnet]);
+    const endpoint = useMemo(() => (network), []);
     // const endpoint = useMemo((process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY), []);
 
     // @solana/wallet-adapter-wallets includes all the adapters but supports tree shaking and lazy loading --
