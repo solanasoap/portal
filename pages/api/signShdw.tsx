@@ -4,18 +4,18 @@ import { bs58 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { NextRequest } from 'next/server';
 import crypto from "crypto";
 
-// Load a local keypair.
-const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
-console.log("🚀 ~ file: signShdw.tsx:9 ~ keypair:", keypair.publicKey)
 
 
-// Set up foundation
-const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
+export default async function handler(req, res) {
 
-export default async function handler(req: NextRequest, res) {
-    // const uniqueKeypair = Keypair.generate()
+    // Load a local keypair.
+    const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
+    console.log("Backend Keypair Pubkey: ", keypair.publicKey)
 
-    const jsonReqBody = await req.json();
+    // Set up connection
+    const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
+
+    const jsonReqBody = await req.body;
     const soapAddress = jsonReqBody.soapAddress;
     console.log("JSON Request Body SignShdw: ", jsonReqBody)
 

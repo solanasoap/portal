@@ -27,14 +27,6 @@ const WalletMultiButtonDynamic = dynamic(
     { ssr: false }
 );
 
-// TODO: Add the ability to have secrets on this page when you own the soap
-// Like a secret code or location to a party (see StripDAO party)
-// Only stored on our backend, not on-chain. Only visible if person authenticates ownership of soap.
-
-// TODO: Add the ability to have secrets on this page when you own the soap
-// Like a secret code or location to a party (see StripDAO party)
-// Only stored on our backend, not on-chain. Only visible if person authenticates ownership of soap.
-
 const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, "confirmed");
 const metaplex = new Metaplex(connection);
 
@@ -296,7 +288,7 @@ export async function getServerSideProps(context) {
     const potBalance = await connection.getBalance(soap.mint.mintAuthorityAddress)
 
     const soapDetails: soapDetails = {
-        Address: soapAddress,
+        Address: soapAddress || "",
         Image: soap.json.image || "https://www.seekpng.com/png/full/251-2514375_free-high-quality-error-youtube-icon-png-2018.png", // FIXME: lol random error pic
         Name: soap.json.name || "no name",
         Description: soap.json.description || "no description",

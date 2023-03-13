@@ -42,7 +42,7 @@ async function uploadSoap(soapName: string, soapDescription: string, imageFile: 
         headers: {
             "content-type": "application/json"
         },
-        body: JSON.stringify({ // We only need this for the file extension
+        body: JSON.stringify({
             imageFileName: imageFile.name,
             soapAddress: soapAddress
         })
