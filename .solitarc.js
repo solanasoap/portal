@@ -7,7 +7,7 @@ const binaryInstallDir = path.join(__dirname, '.crates');
 module.exports = {
     idlGenerator: 'anchor',
     programName: 'soap_program',
-    programId: '4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq',
+    programId: 'soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN',
     idlDir,
     sdkDir,
     binaryInstallDir,

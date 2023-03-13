@@ -114,7 +114,7 @@ export async function getServerSideProps(context) {
         Image: soap.json.image || "https://www.seekpng.com/png/full/251-2514375_free-high-quality-error-youtube-icon-png-2018.png", // FIXME: lol random error pic
         Name: soap.json.name || "no name",
         Description: soap.json.description || "no description",
-        Attributes: soap.json.attributes || "no attributes",
+        Attributes: soap.json.attributes || null,
         Model: soap.model || "no model",
     }
 

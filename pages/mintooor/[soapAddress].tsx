@@ -59,8 +59,12 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                 })
                 .catch(err => {
                     if (err.response.status == 403) {
-                        console.log("Forbidden: Wallet already has this soap.")
+                        console.log("Failed to Mint. Try again.")
                         setTxSignature("403")
+                    }
+                    if (err.response.status == 418) {
+                        console.log("Forbidden: Wallet already has this soap.")
+                        setTxSignature("418")
                     }
                     console.log('error in request', err);
                 });
@@ -115,7 +119,7 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                 )}
                 {txSignature && (
                     <>
-                        {(txSignature == "403") ? (
+                        {(txSignature == "418") ? (
                             <>
                                 <p className="text-4xl font-phenomenaBlack pb-2 text-center items-center bg-transparent text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight">
                                     You already have this soap
@@ -130,7 +134,6 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                                                 <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
                                                 <button className="relative px-7 py-4 bg-black rounded text-lg mt-4 font-bold leading-none flex items-center uppercase font-neueHaasUnicaBlack">
                                                     See in my Collection
-
                                                 </button>
                                             </div>
                                         </Link>
@@ -139,34 +142,44 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                             </>
                         ) : (
                             <>
-                                <div>
-                                    <div className="flex justify-center flex-row items-center mt-2 pt-2 gap-4">
-                                        <Link href={`https://solscan.io/tx/${txSignature}`}>
-                                            <div className="relative group">
-                                                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                                                <button className="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center uppercase font-neueHaasUnicaBlack">
-                                                    Blockchain proof
-                                                </button>
+                                {(txSignature == "403") ? (
+                                    <>
+                                        <p className="text-4xl font-phenomenaBlack pb-2 text-center items-center bg-transparent text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">
+                                            Error, please try again later.
+                                        </p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div>
+                                            <div className="flex justify-center flex-row items-center mt-2 pt-2 gap-4">
+                                                <Link href={`https://solscan.io/tx/${txSignature}`}>
+                                                    <div className="relative group">
+                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                                                        <button className="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center uppercase font-neueHaasUnicaBlack">
+                                                            Blockchain proof
+                                                        </button>
+                                                    </div>
+                                                </Link>
+                                                <Link href={`/examiner/${soapDetails.Address}`}>
+                                                    <div className="relative group">
+                                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                                                        <button className="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center uppercase font-neueHaasUnicaBlack">
+                                                            See in my Collection
+                                                        </button>
+                                                    </div>
+                                                </Link>
                                             </div>
-                                        </Link>
-                                        <Link href={`/examiner/${soapDetails.Address}`}>
-                                            <div className="relative group">
-                                                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                                                <button className="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center uppercase font-neueHaasUnicaBlack">
-                                                    See in my Collection
-                                                </button>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                </div>
-                                <div className='pt-4'>
-                                    <p className="text-5xl font-phenomenaBlack text-center py-2 px-12 items-center text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight">
-                                        You just minted
-                                    </p>
-                                    <p className="text-4xl font-phenomenaBlack text-center px-12 items-center text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight">
-                                        {soapDetails.Name}
-                                    </p>
-                                </div>
+                                        </div>
+                                        <div className='pt-4'>
+                                            <p className="text-5xl font-phenomenaBlack text-center py-2 px-12 items-center text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight">
+                                                You just minted
+                                            </p>
+                                            <p className="text-4xl font-phenomenaBlack text-center px-12 items-center text-transparent bg-clip-text bg-gradient-to-r from-greenBottomLeft to-greenTopRight">
+                                                {soapDetails.Name}
+                                            </p>
+                                        </div>
+                                    </>)
+                                }
                             </>
                         )}
                     </>

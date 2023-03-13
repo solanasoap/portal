@@ -67,7 +67,7 @@ export const fundPotInstructionDiscriminator = [
 export function createFundPotInstruction(
   accounts: FundPotInstructionAccounts,
   args: FundPotInstructionArgs,
-  programId = new web3.PublicKey('4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq')
+  programId = new web3.PublicKey('soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN')
 ) {
   const [data] = fundPotStruct.serialize({
     instructionDiscriminator: fundPotInstructionDiscriminator,

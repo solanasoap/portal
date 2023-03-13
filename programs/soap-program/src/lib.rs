@@ -6,7 +6,7 @@ pub mod errors;
 pub mod instructions;
 pub mod states;
 
-declare_id!("4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq");
+declare_id!("soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN");
 
 #[program]
 pub mod soap_program {

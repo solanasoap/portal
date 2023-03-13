@@ -6,7 +6,7 @@ import { SoapProgram } from "../target/types/soap_program";
 
 const program = anchor.workspace.SoapProgram as anchor.Program<SoapProgram>;
 const PROGRAM_ID = new anchor.web3.PublicKey(
-  "4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq"
+  "soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN"
 );
 export const numberToU16 = (number: number) => {
   // return Buffer.from(Uint16Array.of(number));

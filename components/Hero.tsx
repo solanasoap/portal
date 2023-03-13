@@ -12,7 +12,7 @@ export default function Hero() {
                         </div>
                     </div>
                     <div className="py-2 text-lg lg:w-5/6">
-                        <p> Soap lets you create digital collectibles and helps you distribute them. Be it a virtual or real life experience, soap offers tools to engage with your community on-chain. </p>
+                        <p> Soap enables you to easily create and distribute digital collectibles to your community.  </p>
                     </div>
                     <div className="py-8 flex-row flex gap-4 lg:justify-start ">
                         <Link href="/soaps">

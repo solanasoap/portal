@@ -44,6 +44,16 @@ export default async function handler(req, res) {
     //get associated token account address for target wallet
     const tokenATA = await getAssociatedTokenAddress(soapAddress, toPublicKey);
 
+    // My God need much better error handling here. Eg. if Pot Empty, user already has soap etc.
+    const tokenAccountBalance = await connection.getBalance(tokenATA).catch();
+    if (tokenAccountBalance == 0) { console.log("Token acc doesn't exist for user, continuing.") }
+    if (tokenAccountBalance != 0) {
+        console.log("Token Account exists: ");
+        console.log("Not minting, one unique soap per wallet.");
+        res.status(418).json({ error: 'Error: You already have this soap.' });
+        return;
+    }
+
     const soap = await metaplex.nfts().findByMint({ mintAddress: soapAddress })
     const potBalance = await connection.getBalance(soap.mint.mintAuthorityAddress)
 
@@ -74,7 +84,11 @@ export default async function handler(req, res) {
     soapMintTransaction.add(mintSoapIx)
 
     // console.log("Soap mint transaction: ", soapMintTransaction)
-    const transactionId = await sendAndConfirmTransaction(connection, soapMintTransaction, [soapKeyPair], { commitment: 'confirmed' });
+    const transactionId = await sendAndConfirmTransaction(connection, soapMintTransaction, [soapKeyPair], { commitment: 'confirmed' }).catch(e => {
+        console.log("Error in MintSoap: ", e)
+        res.status(403).json({ "error": "Failed to mint. Try again." });
+        return;
+    });
 
     const end = Date.now();
     console.log("Mint tx: ", transactionId)

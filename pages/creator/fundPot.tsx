@@ -18,6 +18,8 @@ import {
     createQR,
 } from '@solana/pay';
 import { useQRCode } from 'next-qrcode';
+import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css"
 
 
 const WalletMultiButtonDynamic = dynamic(
@@ -39,11 +41,18 @@ const metaplex = new Metaplex(connection);
 
 const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
     const [amount, setamount] = useState(10);
-    const [soapAddress, setSoapAddress] = useState('')
-    const [potAddress, setPotAddress] = useState('')
+    const [soapAddress, setSoapAddress] = useState(soapDetails.Address)
+    const [potAddress, setPotAddress] = useState(soapDetails.PotAddress)
     const { connection } = useConnection();
     const { publicKey, sendTransaction } = useWallet();
     const { Canvas } = useQRCode();
+
+    const notifyPotFilling = () => toast("Filling up Pot...");
+    const notifyPotFilled = () => toast("Pot filled successfully!");
+    const notifyPotWithdrawing = () => toast("Withdrawing Pot...");
+    const notifyPotWithdrawn = () => toast("Pot withdrawn successfully!");
+    const notifyPotDismissed = () => toast.error("Transaction error! Try again.",);
+    const notifyLinkCopied = () => toast.success("Link copied!",);
 
     useEffect(() => {
         setSoapAddress(soapDetails.Address)
@@ -59,12 +68,20 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
         }
     };
 
+    const soapLink = `https://${process.env.NEXT_PUBLIC_BASE_URL}/dealer/${soapAddress}`;
+    const copylink = (e) => {
+        navigator.clipboard.writeText(soapLink)
+        notifyLinkCopied()
+    }
+
     const submitFillUpPot = useCallback(async () => {
         if (!publicKey) throw new WalletNotConnectedError();
         if (amount < 1) {
             alert("Please put in an amount higher than 0");
             return;
         }
+
+        notifyPotFilling()
 
         const amountToTransfer = new BN((LAMPORTS_PER_SOL * 0.00204) * amount)
 
@@ -99,15 +116,21 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
             blockhash: blockhash
         }).add(fundPotIx)
 
-        const signature = await sendTransaction(transaction, connection, { minContextSlot });
+        const signature = await sendTransaction(transaction, connection, { minContextSlot }).catch(e => {
+            notifyPotDismissed()
+        });
+
+        if (!signature) return;
 
         await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature });
         console.log("Pot filled. TX: ", signature)
-        alert("Pot filled successfully!")
+        notifyPotFilled()
     }, [publicKey, sendTransaction, connection, amount]);
 
     const submitWithdrawPot = useCallback(async () => {
         if (!publicKey) throw new WalletNotConnectedError();
+
+        notifyPotWithdrawing()
 
         const potBalance = await connection.getBalance(new PublicKey(potAddress))
         console.log("Pot balance: ", potBalance)
@@ -146,11 +169,15 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
             blockhash: blockhash
         }).add(fundPotIx)
 
-        const signature = await sendTransaction(transaction, connection, { minContextSlot });
+        const signature = await sendTransaction(transaction, connection, { minContextSlot }).catch(e => {
+            notifyPotDismissed()
+        });
+
+        if (!signature) return;
 
         await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature });
         console.log("Pot withdrawn. TX: ", signature)
-        alert("Pot withdrawn successfully!")
+        notifyPotWithdrawn()
     }, [publicKey, sendTransaction, connection, amount]);
 
     return (
@@ -161,77 +188,94 @@ const soapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                 <link rel="icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
+            <ToastContainer autoClose={4000} draggable={false} transition={Zoom} />
             <main className="lg:max-w-7xl mx-auto">
                 <div className="m-6 justify-center items-center w-auto flex">
                     <WalletMultiButtonDynamic />
                 </div>
-                <div className="justify-center items-center w-auto flex">
-                    <div className="py-2 w-full drop-shadow-xl">
-                        <div className="relative w-auto items-center">
-                            <Image src={soapDetails.Image} width="200" height="200" className="rounded-lg relative" />
-                        </div>
+                <div role="alert">
+                    <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                        Heads up, save this link!
                     </div>
-
-                    <div className="flex-col py-2">
-                        <div className="inline text-6xl font-phenomenaBlack h-12">
-                            <h1>
-                                {soapDetails.Name}
-                            </h1>
+                    <div className="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-600">
+                        <p>Save this page to top up and withdraw from the Soap's Pot. You won't be able to come back to it unless you have the link.</p>
+                        <p>Only the Creator of the Soap can add and withdraw from the Pot.</p>
+                    </div>
+                </div>
+                <div className="flex flex-wrap justify-end items-end">
+                    <div className="w-full md:w-1/2 px-4">
+                        <div className="py-2 w-full">
+                            <div className="relative w-auto items-center">
+                                <Image src={soapDetails.Image} width="300" height="300" className="rounded-lg relative" />
+                            </div>
                         </div>
-                        <div className="inline text-xl font-neueHaasUnicaRegular h-12">
-                            <h1>
-                                {soapDetails.Description}
-                            </h1>
+                        <div className="py-2">
+                            <Canvas
+                                text={soapLink}
+                                options={{
+                                    level: 'M',
+                                    margin: 3,
+                                    scale: 4,
+                                    width: 300,
+                                    color: {
+                                        dark: '#000000',
+                                        light: '#FFFFFF',
+                                    },
+                                }}
+                            />
                         </div>
-                        <div className="inline text-l font-neueHaasUnicaRegular h-12">
-                            <h1>
-                                Creator: {soapDetails.UpdateAuthority}
-                            </h1>
+                        <p className="w-auto">Save the QR code image or <a onClick={copylink} className="cursor-pointer select-none underline">copy to clipboard</a>.</p>
+                        <p>People can scan this to redeem their Soaps.</p>
+                    </div>
+                    <div className="w-full md:w-1/2 px-4">
+                        <div className="py-2">
+                            <div className="block text-6xl font-phenomenaBlack">
+                                <h1 className="font-bold">{soapDetails.Name}</h1>
+                            </div>
+                            <div className="block text-xl font-neueHaasUnica py-4">
+                                <h1>{soapDetails.Description}</h1>
+                            </div>
+                            <div className="block text-xl font-neueHaasUnica py-4">
+                                <p>Remaining balance: <span className="font-bold">{Math.round(soapDetails.PotBalance / LAMPORTS_PER_SOL / 0.00204)} Soap mints.</span></p>
+                                {/* <p>Remaining balance: <span className="font-bold">{Math.round((soapDetails.PotBalance - 2040000) / LAMPORTS_PER_SOL / 0.00204)} Soap mints.</span></p> */}
+                            </div>
+                            <div className="py-4">
+                                <p className="mb-2 font-bold text-lg">Add more funds for this many Soaps:</p>
+                                <input type="text" value={amount} onChange={handleInputChange} className="text-gray-700 w-16 px-2 py-1 rounded-md border border-gray-400 focus:border-blue-500 focus:outline-none" placeholder="eg. 10" />
+                            </div>
+                            <div className="flex justify-start">
+                                <button onClick={submitFillUpPot} disabled={!publicKey && (amount > 0)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 uppercase mr-2 font-neueHaasUnicaBlack">
+                                    Add funds
+                                </button>
+                                <button onClick={submitWithdrawPot} disabled={!publicKey && (amount > 0)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 uppercase mr-2 font-neueHaasUnicaBlack">
+                                    Withdraw Pot
+                                </button>
+                                <Link href={`https://explorer.solana.com/address/${soapDetails.Address}`}>
+                                    <div className="relative group">
+                                        <button className="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center uppercase font-neueHaasUnicaBlack">
+                                            See soap on-chain
+                                        </button>
+                                    </div>
+                                </Link>
+                            </div>
+                            <div className="inline-block text-lg font-neueHaasUnica h-12 py-4">
+                                <h1 className="font-bold">Creator</h1>
+                                <p>{soapDetails.UpdateAuthority}</p>
+                            </div>
+                            <div className="inline-block text-lg font-neueHaasUnica h-12 py-4">
+                                <h1 className="font-bold">Pot Address</h1>
+                                <p>{soapDetails.PotAddress}</p>
+                            </div>
+                            <div className="inline-block text-lg font-neueHaasUnica h-12 py-4">
+                                <h1 className="font-bold">Soap Address</h1>
+                                <p>{soapDetails.Address}</p>
+                            </div>
                         </div>
-                        <div className="inline text-l font-neueHaasUnicaRegular h-12">
-                            <h1>
-                                Pot Address: {soapDetails.PotAddress}
-                            </h1>
-                        </div>
-                        <div className="inline text-l font-neueHaasUnicaRegular h-12">
-                            <h1>
-                                The pot has enough funds for {Math.round(soapDetails.PotBalance / LAMPORTS_PER_SOL / 0.00204)} Soap mints.
-                            </h1>
-                        </div>
-                        <div>
-                            Add more funds for this many Soaps:
-                            <input type="text" value={amount} onChange={handleInputChange} className="text-gray-700 mx-4 w-16 px-2 rounded-md" placeholder="eg. 10" />
-                        </div>
-                        <button onClick={submitFillUpPot} disabled={!publicKey && (amount > 0)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 mx-2">
-                            Add funds
-                        </button>
-                        <button onClick={submitWithdrawPot} disabled={!publicKey && (amount > 0)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 mx-2">
-                            Withdraw Pot
-                        </button>
-                        <Canvas
-                            text={`https://${process.env.NEXT_PUBLIC_BASE_URL}/dealer/${soapAddress}`}
-                            options={{
-                                level: 'M',
-                                margin: 3,
-                                scale: 4,
-                                width: 200,
-                                color: {
-                                    dark: '#000000',
-                                    light: '#FFFFFF',
-                                },
-                            }}
-                        />
                     </div>
                 </div>
 
                 <div className="flex justify-center flex-row items-center mt-2 mb-12 pt-2 gap-4">
-                    <Link href={`https://explorer.solana.com/address/${soapDetails.Address}`}>
-                        <div className="relative group">
-                            <button className="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center uppercase font-neueHaasUnicaBlack">
-                                See soap on-chain
-                            </button>
-                        </div>
-                    </Link>
+
                 </div>
             </main>
         </div>
@@ -246,6 +290,9 @@ export async function getServerSideProps(context) {
 
     // TODO: Maybe filter if it is a soap and send back a "not soap mfer" pic if not
     const soap = await metaplex.nfts().findByMint({ mintAddress });
+    // Must calculate better.
+    // If Pot has 0.00204 SOL, it will show "1 soap remaining" but it can't mint because it would go below rent
+    // So if fill up the pot with 1 Soap, it won't be able to mint. You can't go below "1 soap remaining"
     const potBalance = await connection.getBalance(soap.mint.mintAuthorityAddress)
 
     const soapDetails: soapDetails = {

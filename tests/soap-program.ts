@@ -10,7 +10,7 @@ import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { POT_TAG } from "../lib/constants";
 
 const PROGRAM_ID = new anchor.web3.PublicKey(
-  "4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq"
+  "soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN"
 );
 
 const destinationWallet = Keypair.generate().publicKey
@@ -87,13 +87,6 @@ describe("soap-program", () => {
   it("Fund the Pot", async () => {
     console.log("\n\n\n WE FUND POT HERE EYYY")
 
-
-    const userProfile = getUserProfile(payer.publicKey);
-    const userProfileData = await program.account.userProfile.fetch(
-      userProfile
-    );
-    const soapCount = userProfileData.totalSoapsCount - 1;
-
     const tx = await program.methods
       .fundPot(new anchor.BN(LAMPORTS_PER_SOL * 0.2))
       .accounts({
@@ -110,12 +103,6 @@ describe("soap-program", () => {
 
   it("Mint to end user wallet", async () => {
     try {
-      const creatorProfileAccount = getUserProfile(payer.publicKey);
-
-      const creatorProfileData = await program.account.userProfile.fetch(
-        creatorProfileAccount
-      );
-      const soapCount = creatorProfileData.totalSoapsCount - 1;
 
       const tokenMetadata = await Metaplex.make(provider.connection).nfts().findByMint({ mintAddress: mintKeypair.publicKey })
 
@@ -151,12 +138,6 @@ describe("soap-program", () => {
 
   it("Withdraw from the Pot", async () => {
     console.log("\n\n\n WE WITHDRAW FROM POT HERE EYYY")
-
-    const userProfile = getUserProfile(payer.publicKey);
-    const userProfileData = await program.account.userProfile.fetch(
-      userProfile
-    );
-    const soapCount = userProfileData.totalSoapsCount - 1;
 
     try {
       const tx = await program.methods

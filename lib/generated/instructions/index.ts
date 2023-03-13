@@ -1,5 +1,4 @@
 export * from './create'
 export * from './fundPot'
-export * from './initUserProfile'
 export * from './mintSoap'
 export * from './withdrawPot'

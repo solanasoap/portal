@@ -15,7 +15,8 @@ import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pub
 import dynamic from "next/dynamic";
 import { POT_TAG } from "../../lib/constants";
 import { useRouter } from 'next/router'
-// import { redirect } from 'next/navigation';
+import { ToastContainer, toast, Zoom, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css"
 
 const WalletMultiButtonDynamic = dynamic(
     async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
@@ -30,7 +31,7 @@ type UploadResponse = {
 
 async function uploadSoap(soapName: string, soapDescription: string, imageFile: File, soapAddress: string) {
     // Return value is a link to the JSON metadata URI on Shadow Drive
-    // EG. https://shdw-drive.genesysgo.net/EBK6SU7F3HmMoMuhYocd8b1bbbKnJnYBg72cM624K8a8/BvGw2bJ9p61Zp4RWW8v7HELEPNi6d2hsXuGg3h1jmVYw.json
+    // EG. https://shdw-drive.genesysgo.net/4T16TQNnnc1x96avUQzQZ9qHMo54sS4tsuEUW2bumHtu/BvGw2bJ9p61Zp4RWW8v7HELEPNi6d2hsXuGg3h1jmVYw.json
     // This function uploads the soap's image to a specified Shadow Drive bucket,
     // assembles a json metadata with it and uploads that too to shadow.
     // Both the image and json file use the same uniquely generated filename from /api/signShdw
@@ -116,11 +117,22 @@ function createMetadata(name: string, description: string, imageUri: string) {
 const Creator: NextPage = (props) => {
     const router = useRouter()
     const [name, setName] = useState();
+    const [loading, setLoading] = useState(false)
     const [description, setDescription] = useState();
     const [image, setImage] = useState<File | undefined>();
     const [soap, setSoap] = useState<string>()
     const { connection } = useConnection();
     const { publicKey, sendTransaction } = useWallet();
+    const [errors, setErrors] = useState({
+        wallet: ""
+    })
+
+    const notifySoapCreated = () => toast("Soap Created! Redirecting...");
+    const notifySoapDismissed = () => toast.error("Transaction rejected!",);
+    // toast.error("Error. Please try again");
+    // toast.success("Success!")
+    // toast.info("Info")
+    // toast.warn("Warning")
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -146,6 +158,7 @@ const Creator: NextPage = (props) => {
     };
 
     const submitSoapCreation = useCallback(async () => {
+        setLoading(true)
         if (!publicKey) throw new WalletNotConnectedError();
         console.log("Image: ", image)
         if (!image) {
@@ -207,15 +220,22 @@ const Creator: NextPage = (props) => {
         // Need to sign with the new soaps keypair
         transaction.partialSign(newSoapKeypair)
 
-        const signature = await sendTransaction(transaction, connection, { minContextSlot });
+        const signature = await sendTransaction(transaction, connection, { minContextSlot }).catch(e => {
+            setErrors({ wallet: "AHH" })
+            notifySoapDismissed()
+        });
+
+        if (!signature) return setLoading(false)
 
         await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature });
         console.log("Soap minted. TX: ", signature)
+        notifySoapCreated()
         setSoap(soapAddress.toBase58())
 
         // Navigate to soap fundpot page. Justin wont like this lmao
         router.push(`${router.asPath}/fundPot?soapAddress=${soapAddress.toBase58()}`)
 
+        // setLoading(false)
     }, [publicKey, sendTransaction, connection, image, name, description, soap]);
 
 
@@ -227,6 +247,7 @@ const Creator: NextPage = (props) => {
                 <link rel="icon" href="/favicon.ico" />
                 <link rel="apple-touch-icon" href="/favicon.ico" />
             </Head>
+            <ToastContainer autoClose={4000} draggable={false} transition={Zoom} />
             <main className="w-full max-w-md">
                 <div className="m-6 justify-center items-center w-auto flex">
                     <WalletMultiButtonDynamic />
@@ -244,19 +265,27 @@ const Creator: NextPage = (props) => {
                         Image:
                         <input type="file" accept="image/jpeg, image/png" onChange={handleImageChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                     </label>
-                    <button onClick={submitSoapCreation} disabled={!publicKey && !name} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400">
-                        Create Soap
+                    <button onClick={submitSoapCreation} disabled={!publicKey || !name || !image || loading} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400">
+                        {
+                            loading ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 animate-spin">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                                : "Create Soap"
+                        }
                     </button>
+                    {/* <div className="text-gray-800">
+                        <button onClick={notifySoapCreated} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400">Notify !</button>
+                    </div>
                     {soap && (
                         <>
                             <label className="block text-gray-700 text-sm font-bold mb-2">
-                                Soap Created:
+                                Soap Created. Redirecting, please wait...
                             </label>
                             <label className="block text-gray-700 text-sm font-bold mb-2">
                                 {soap}
                             </label>
                         </>
-                    )}
+                    )} */}
                 </form>
             </main>
         </div>

@@ -3,7 +3,7 @@ use mpl_token_metadata::state::{Creator, Collection};
 use {
     crate::{constants::{POT_TAG}},
     anchor_lang::{prelude::*, solana_program::program::invoke_signed},
-    anchor_spl::token,
+    anchor_spl::{token, metadata},
     mpl_token_metadata::{instruction as mpl_instruction },
 };
 
@@ -52,7 +52,7 @@ pub struct Create<'info> {
     pub rent: Sysvar<'info, Rent>,
 
     /// CHECK: This is not dangerous because we don't read or write from this account
-    pub metadata_program: AccountInfo<'info>,
+    pub metadata_program: Program<'info, metadata::Metadata>,
     pub token_program: Program<'info, token::Token>,
     pub system_program: Program<'info, System>,
 }
