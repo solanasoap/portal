@@ -15,9 +15,8 @@ export default async function handler(req, res) {
     // Set up connection
     const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
 
-    const jsonReqBody = JSON.parse(req.body);
+    const jsonReqBody: { imageFileName: string, soapAddress: string } = req.body;
     const soapAddress = jsonReqBody.soapAddress;
-    console.log("JSON Request Body SignShdw: ", jsonReqBody)
 
 
     // Sign image upload
