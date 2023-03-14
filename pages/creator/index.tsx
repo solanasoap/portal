@@ -127,8 +127,6 @@ const Creator: NextPage = (props) => {
         wallet: ""
     })
 
-    console.log(process.env)
-
     const notifySoapCreated = () => toast("Soap Created! Redirecting...");
     const notifySoapDismissed = () => toast.error("Transaction rejected!",);
     // toast.error("Error. Please try again");
