@@ -226,6 +226,7 @@ const Creator: NextPage = (props) => {
 
         const signature = await sendTransaction(transaction, connection, { minContextSlot }).catch(e => {
             setErrors({ wallet: "AHH" })
+            console.log("Error in sending transaction: ", e)
             notifySoapDismissed()
         });
 
