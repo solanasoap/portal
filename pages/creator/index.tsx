@@ -217,9 +217,7 @@ const Creator: NextPage = (props) => {
             feePayer: publicKey,
             lastValidBlockHeight,
             blockhash: blockhash
-        });
-
-        transaction.add(ix)
+        }).add(ix)
 
         // Need to sign with the new soaps keypair
         transaction.partialSign(newSoapKeypair)
