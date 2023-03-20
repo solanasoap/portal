@@ -1,15 +1,16 @@
 # SOAP🧼
-Soap is a next generation token dispenser, built on Solana. It lets you create and distribute digital collectibles to anyone easily. Give attendance tokens to your event's visitors, airdrop them the aftermovie, and send them an invitation for the next occasion. If you're a Spaces kind of dude, let your listeners get soaps for each space, and reward your biggest fans through airdrops and exclusive content.
+Soap is a cutting-edge token dispenser built on Solana that simplifies the creation and distribution of digital collectibles. It allows event organizers to issue attendance tokens, airdrop aftermovies, and send invitations for future events. For Spaces enthusiasts, it enables the distribution of Soaps for each space, while rewarding loyal fans with airdrops and exclusive content.
 
 ## Mobile first
-This portal has a one of soap's core innovations implemented already. It lets you connect your wallet in a mobile browser. Open Safari on your iPhone, and sign in with your Phantom or Solflare wallet seamlessly.
+A key innovation of Soap is its mobile-first approach. The portal is designed to work seamlessly with mobile browsers, allowing users to connect their Phantom or Solflare wallets easily. It's buttery smooth.
 
 ![deeplink_demo](/static/deeplink_demo.gif)
 
+## Creator Portal
+The Soap Creator Portal, developed for the Grizzlython Hackathon, enables users to easily create and distribute their own Soaps. Users simply upload an image, name their Soap, and generate it with a single click. To cover minting costs, they can then add funds to a Pot. Each Soap redemption costs 0.0021 SOL, so 100 Soaps would amount to 0.21 SOL. While this method isn't as cost-effective as compression, it is well-suited for the current use case since wallet support for compression is lacking. However, a transition to compression can be made once wallet support becomes available.
 
-## MVP Roadmap
-See [ROADMAP.md](/ROADMAP.md) 
-
+### Soap Program
+The Soap Program manages the creation, minting, and funding of Soaps using the address soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN. It works in conjunction with the Metaplex token metadata program to produce SFTs. The program heavily relies on Program Derived Accounts (PDAs) since Pots are PDAs themselves. Each Soap has its own Pot, which serves as both the rent payer and mint authority. The entire process is open-source and accessible to all users.
 
 
 # Next.JS Original docs
