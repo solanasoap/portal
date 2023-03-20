@@ -14,7 +14,7 @@ import { createAssociatedTokenAccountInstruction, getAccount, createMintToInstru
 const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
 
 // Set up foundation
-const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'confirmed');
 const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(keypair))
 console.log("Public key of keypair being used: ", keypair.publicKey.toBase58())
@@ -39,13 +39,13 @@ export default async function handler(req, res) {
 
     // Create keypair from metaplex identity
     const soapKeyPair = Keypair.fromSecretKey(metaplex.identity().secretKey)
-    
+
     //get associated token account address for target wallet
     const tokenATA = await getAssociatedTokenAddress(soapAddress, toPublicKey);
-    
+
     // Create new transaction object
     let soapMintTransaction = new Transaction()
-    
+
     try {
         console.log("Finding ATA for account: ", toPublicKey.toBase58())
         const tokenAccount = await getAccount(connection, tokenATA, 'finalized');
@@ -68,22 +68,22 @@ export default async function handler(req, res) {
                 tokenATA, //Associated token account 
                 toPublicKey, //Token account owner
                 soapAddress, //Mint
-              )
+            )
         )
     }
 
 
     soapMintTransaction.add(
-          createMintToInstruction(
+        createMintToInstruction(
             soapAddress, //Mint
             tokenATA, //Destination Token Account
             metaplex.identity().publicKey, //Authority
             1,//number of tokens
-          )
+        )
     )
 
     // console.log("Soap mint transaction: ", soapMintTransaction)
-    const transactionId =  await sendAndConfirmTransaction(connection, soapMintTransaction, [soapKeyPair], {commitment: 'confirmed'});
+    const transactionId = await sendAndConfirmTransaction(connection, soapMintTransaction, [soapKeyPair], { commitment: 'confirmed' });
 
     const end = Date.now();
     console.log("Mint tx: ", transactionId)

@@ -6,7 +6,7 @@ pub mod errors;
 pub mod instructions;
 pub mod states;
 
-declare_id!("4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq");
+declare_id!("soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN");
 
 #[program]
 pub mod soap_program {
@@ -25,20 +25,12 @@ pub mod soap_program {
         create::handler(ctx, soap_title, soap_symbol, soap_uri)
     }
 
-    pub fn init_user_profile(ctx: Context<InitUserProfile>) -> Result<()> {
-        init_user_profile::handler(ctx)
+    pub fn fund_pot(ctx: Context<FundPot>, sol_lamports: u64) -> Result<()> {
+        fund_pot::handler(ctx, sol_lamports)
     }
 
-    pub fn fund_pot(ctx: Context<FundPot>, soap_count: u16, sol_lamports: u64) -> Result<()> {
-        fund_pot::handler(ctx, soap_count, sol_lamports)
-    }
-
-    pub fn withdraw_pot(
-        ctx: Context<WithdrawPot>,
-        soap_count: u16,
-        sol_lamports: u64,
-    ) -> Result<()> {
-        withdraw_pot::handler(ctx, soap_count, sol_lamports)
+    pub fn withdraw_pot(ctx: Context<WithdrawPot>, sol_lamports: u64) -> Result<()> {
+        withdraw_pot::handler(ctx, sol_lamports)
     }
 
     pub fn mint_soap(ctx: Context<MintSoap>) -> Result<()> {

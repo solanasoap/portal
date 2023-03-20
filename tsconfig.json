@@ -1,52 +1,38 @@
 {
   "compilerOptions": {
-    "types": ["mocha", "chai"],
-    "typeRoots": ["./node_modules/@types"],
-    "lib": ["es2015"],
-    "module": "commonjs",
-    "target": "es6",
-    "esModuleInterop": true
-  }
+    "types": [
+      "mocha",
+      "chai"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "lib": [
+      "es2022",
+      "dom",
+      "dom.iterable"
+    ],
+    "target": "es2022",
+    "module": "esnext",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "tests"
+  ]
 }
-
-// {
-//   "compilerOptions": {
-//     "target": "es2022",
-//     "lib": [
-//       "dom",
-//       "dom.iterable",
-//       "esnext"
-//     ],
-//     "allowJs": true,
-//     "skipLibCheck": true,
-//     "strict": false,
-//     "forceConsistentCasingInFileNames": true,
-//     "noEmit": true,
-//     "incremental": true,
-//     "esModuleInterop": true,
-//     "module": "esnext",
-//     "moduleResolution": "node",
-//     "resolveJsonModule": true,
-//     "isolatedModules": true,
-//     "types": [
-//       "mocha",
-//       "chai"
-//     ],
-//     "typeRoots": [
-//       "./node_modules/@types"
-//     ],
-//     "jsx": "preserve"
-//   },
-//   "ts-node": {
-//     "esm": true
-//   },
-//   "include": [
-//     "next-env.d.ts",
-//     "**/*.ts",
-//     "**/*.tsx",
-//     "adhoc/createsft.ts"
-//   ],
-//   "exclude": [
-//     "node_modules"
-//   ]
-// }

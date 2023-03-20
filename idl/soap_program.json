@@ -1,0 +1,236 @@
+{
+  "version": "0.1.0",
+  "name": "soap_program",
+  "constants": [
+    {
+      "name": "USER_PROFILE_TAG",
+      "type": "bytes",
+      "value": "[85, 83, 69, 82, 95, 80, 82, 79, 70, 73, 76, 69, 95, 83, 84, 65, 84, 69]"
+    },
+    {
+      "name": "POT_TAG",
+      "type": "bytes",
+      "value": "[80, 79, 84, 95, 83, 84, 65, 84, 69]"
+    },
+    {
+      "name": "SOAP_DEALER",
+      "type": "string",
+      "value": "\"aquaZKhcuUU1KetKdzNzumpbzEvcyHMqbkyysnMjMWr\""
+    }
+  ],
+  "instructions": [
+    {
+      "name": "create",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "pot",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "metadataAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "soapTitle",
+          "type": "string"
+        },
+        {
+          "name": "soapSymbol",
+          "type": "string"
+        },
+        {
+          "name": "soapUri",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "fundPot",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "pot",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "solLamports",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdrawPot",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "pot",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mintAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "solLamports",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "mintSoap",
+      "accounts": [
+        {
+          "name": "mintAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pot",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "destinationWallet",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "creator",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "UserProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "totalSoapsCount",
+            "type": "u16"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InsufficientFundsForTransaction",
+      "msg": "Insufficient funds for transaction."
+    }
+  ],
+  "metadata": {
+    "address": "soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN",
+    "origin": "anchor",
+    "binaryVersion": "0.26.0",
+    "libVersion": "0.26.0"
+  }
+}

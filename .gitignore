@@ -46,3 +46,9 @@ target
 **/*.rs.bk
 node_modules
 test-ledger
+
+# Solita
+.crates
+
+# Secret
+secret

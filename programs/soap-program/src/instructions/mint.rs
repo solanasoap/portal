@@ -1,19 +1,13 @@
-use anchor_spl::{associated_token::AssociatedToken, token::TokenAccount};
+use std::str::FromStr;
 
-use crate::{constants::POT_TAG, constants::USER_PROFILE_TAG, states::UserProfile};
+use crate::{constants::POT_TAG, constants::SOAP_DEALER};
 
 use {
     anchor_lang::prelude::*,
     anchor_spl::{associated_token, token},
 };
 
-// FOR MINT TO WORK
-// - One wallet initiates all mints, Pot funds rent
-// - Mint given Soap to target wallet
-
 pub fn handler(ctx: Context<MintSoap>) -> Result<()> {
-    // TODO create associated token account
-
     associated_token::create(CpiContext::new_with_signer(
         ctx.accounts.associated_token_program.to_account_info(),
         associated_token::Create {
@@ -34,7 +28,6 @@ pub fn handler(ctx: Context<MintSoap>) -> Result<()> {
 
     token::mint_to(
         CpiContext::new_with_signer(
-            //new_with_signed for pda
             ctx.accounts.token_program.to_account_info(),
             token::MintTo {
                 mint: ctx.accounts.mint_account.to_account_info(),
@@ -65,18 +58,14 @@ pub struct MintSoap<'info> {
      POT_TAG,
      mint_account.key().as_ref(),
      creator.key().as_ref()
-     ], bump)] // seeds = amount of total soaps count
+     ], bump)]
     pub pot: SystemAccount<'info>,
-
-    // We don't really need this but whatever
-    #[account(seeds = [USER_PROFILE_TAG, creator.key().as_ref()], bump)]
-    pub user_profile: Account<'info, UserProfile>,
 
     /// CHECK: associated token program create checks it
     #[account(mut)]
     pub associated_token_account: UncheckedAccount<'info>,
 
-    #[account(mut)]
+    #[account(mut, address = Pubkey::from_str(SOAP_DEALER).unwrap())]
     pub payer: Signer<'info>,
     /// CHECK: Safe bc reasons
     #[account()]
@@ -87,7 +76,3 @@ pub struct MintSoap<'info> {
     pub associated_token_program: Program<'info, associated_token::AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
-
-// frontend s
-
-// Soap keypair calls MintTo

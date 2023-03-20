@@ -1,12 +1,12 @@
 import { createProgramAddressSync, findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { PublicKey } from "@solana/web3.js";
-import { POT_TAG, USER_PROFILE_TAG } from "./constants";
+import { POT_TAG, USER_PROFILE_TAG } from "../lib/constants";
 import * as anchor from "@project-serum/anchor";
 import { SoapProgram } from "../target/types/soap_program";
 
 const program = anchor.workspace.SoapProgram as anchor.Program<SoapProgram>;
 const PROGRAM_ID = new anchor.web3.PublicKey(
-  "4ytc1xagmoutbU1ppmEPMUuFFM7Eso3c2ZRk4nBrkGYq"
+  "soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN"
 );
 export const numberToU16 = (number: number) => {
   // return Buffer.from(Uint16Array.of(number));
@@ -21,12 +21,12 @@ export const getUserProfile = (authority: PublicKey) => {
   )[0];
 };
 
-export const getPot = (mint: PublicKey, authority: PublicKey, soap_count: number) => {
+export const getPot = (mint: PublicKey, authority: PublicKey) => {
   return findProgramAddressSync(
     [
       POT_TAG,
-      //mint.toBuffer(),
-      // authority.toBuffer()
+      mint.toBuffer(),
+      authority.toBuffer()
     ],
     PROGRAM_ID
   )[0];

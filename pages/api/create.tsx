@@ -10,7 +10,7 @@ const clusterString = "mainnet-beta"
 const keypair = Keypair.fromSecretKey(Buffer.from(JSON.parse(process.env.SOAP_KEYPAIR)));
 
 // Set up foundation
-const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'finalized');
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY, 'confirmed');
 const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(keypair))
 console.log("Public key of keypair being used: ", keypair.publicKey.toBase58())
@@ -113,8 +113,8 @@ export default async function handler(req, res) {
     const end = Date.now();
     console.log(`Execution time: ${end - start} ms\n`);
 
-    res.status(200).json({ 
-        "result": "created", 
+    res.status(200).json({
+        "result": "created",
         "sft_address": sft.mintAddress.toBase58(),
         "tx": tx_url
     })

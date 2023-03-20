@@ -5,7 +5,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import Image from "next/image";
 import WalletLogin from "../../components/WalletLogin";
 
-const connection = new Connection("https://rpc.helius.xyz/?api-key=" + process.env.NEXT_PUBLIC_HELIUS_API_KEY);
+const connection = new Connection(process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY);
 const metaplex = new Metaplex(connection);
 
 // SCOPE NO
@@ -101,12 +101,12 @@ export default soapAddress
 export async function getStaticPaths() {
     return {
         paths: [
-            { params: { soapAddress: 'YngRrzzvjvdAhWTCyNMgvyrmeJ8jt4hL7NUqaK4derF' } }, // early testooor
-            { params: { soapAddress: '3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH' } }, // soap lisbon
-            { params: { soapAddress: '8TmfqtbvH58aHL2NcRGXA9SS3s39j2gseCVBdyyk8En' } }, // unloc rally
-            { params: { soapAddress: 'Ha2Cvs4YqdTY4f7is9E8v3G6BXNMHhE2jHVmQgeRweft' } }, // BluntDAO proof of sesh v2.6
-            { params: { soapAddress: 'EKoubfYoTcfdj6uML7dnUPFFwMHkRTWZM5cMpNDrzxku' } }, // SpliffDAO proof of sesh v2.6
-            { params: { soapAddress: 'HvegCrU6Vc9UvSwJaPZeULWZN6u3fnWPdx5sefH85Fei' } }, // HackaTUM
+            // { params: { soapAddress: 'YngRrzzvjvdAhWTCyNMgvyrmeJ8jt4hL7NUqaK4derF' } }, // early testooor
+            // { params: { soapAddress: '3NBSGW817Zg1kvttcn8eZWbz4iw7FtyBDVrrmy7YxaiH' } }, // soap lisbon
+            // { params: { soapAddress: '8TmfqtbvH58aHL2NcRGXA9SS3s39j2gseCVBdyyk8En' } }, // unloc rally
+            // { params: { soapAddress: 'Ha2Cvs4YqdTY4f7is9E8v3G6BXNMHhE2jHVmQgeRweft' } }, // BluntDAO proof of sesh v2.6
+            // { params: { soapAddress: 'EKoubfYoTcfdj6uML7dnUPFFwMHkRTWZM5cMpNDrzxku' } }, // SpliffDAO proof of sesh v2.6
+            // { params: { soapAddress: 'HvegCrU6Vc9UvSwJaPZeULWZN6u3fnWPdx5sefH85Fei' } }, // HackaTUM
         ],
         fallback: 'blocking', // can also be true or 'blocking'
     }

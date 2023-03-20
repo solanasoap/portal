@@ -21,7 +21,20 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.dweb.link',
       },
+      {
+        protocol: 'https',
+        hostname: 'shdw-drive.genesysgo.net',
+      },
     ],
+  },
+  webpack: (config, { dev }) => {
+    config.module.rules.push(
+      {
+        test: /\.soap-program.ts$/,
+        loader: 'ignore-loader'
+      }
+    );
+    return config;
   },
 }
 
