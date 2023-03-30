@@ -34,7 +34,7 @@ export default function Header() {
         <>
             <div className="lg:max-w-6xl m-auto">
                 <header className={`relative flex my-4 mx-4 lg:mx-10 justify-left ${styles.header}`}>
-                    <img src="/Puddle.png" alt="Puddle" className="puddle" />
+                    <img src="/public/Puddle.png" alt="Puddle" className="puddle" />
                     <Link href="/">
                         <h1 className={`${styles.soap} text-6xl font-phenomenaBlack h-12 leading-6 cursor-pointer`}>soap</h1>
                     </Link>
