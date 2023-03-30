@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from 'next/router'
+import styles from './Header.module.css'
 
 export default function Header() {
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
@@ -31,9 +32,9 @@ export default function Header() {
     return (
         <>
             <div className="lg:max-w-6xl m-auto">
-                <header className="flex my-4 mx-4 lg:mx-0 justify-between">
+                <header className={`flex my-4 mx-4 lg:mx-0 justify-between ${styles.header}`}>
                     <Link href="/">
-                        <h1 className='text-6xl font-phenomenaBlack h-12 leading-6 cursor-pointer'>soap</h1>
+                        <h1 className={`${styles.soap} text-6xl font-phenomenaBlack h-12 leading-6 cursor-pointer`}>soap</h1>
                     </Link>
                     {displayWalletBtn && (
                         <div className="font-neueHaasUnicaRegular">
