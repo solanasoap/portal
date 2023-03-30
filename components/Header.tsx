@@ -5,8 +5,6 @@ import { useRouter } from 'next/router'
 import styles from './Header.module.css'
 import Image from 'next/image'
 
-import BubbleImage from '../public/Bubble.png';
-
 export default function Header() {
     const [walletAddress, setWalletAddress] = useState<string | null>(null)
     let displayWalletBtn = false
@@ -36,7 +34,7 @@ export default function Header() {
         <>
             <div className="lg:max-w-6xl m-auto">
                 <header className={`relative flex my-4 mx-4 lg:mx-10 justify-left ${styles.header}`}>
-                    <img src="/puddle.png" alt="Puddle" className="puddle" />
+                    <img src="/Puddle.png" alt="Puddle" className="puddle" />
                     <Link href="/">
                         <h1 className={`${styles.soap} text-6xl font-phenomenaBlack h-12 leading-6 cursor-pointer`}>soap</h1>
                     </Link>
