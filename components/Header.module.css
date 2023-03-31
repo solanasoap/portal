@@ -1,14 +1,39 @@
-.soap {
+.header {
+    position: relative;
+  }
+  
+  .soap {
+    position: relative;
+    z-index: 1;
     opacity: 0;
     animation: slide-in 1s forwards;
-}
-
-@keyframes slide-in {
+    left: calc(0% - 150px);
+  }
+  
+  .puddle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    animation: puddle-slide 1s ease-in-out;
+    width: 120%; /* Adjusted to make the puddle slightly shorter */
+  }
+  
+  @keyframes slide-in {
     from {
-        transform: translateX(-100%);
+      transform: translateX(-100%);
     }
     to {
-        transform: translateX(0);
-        opacity: 1;
+      transform: translateX(0);
+      opacity: 1;
     }
-}
+  }
+  
+  @keyframes puddle-slide {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
