@@ -6,7 +6,7 @@ Soap is a cutting-edge token dispenser built on Solana that simplifies the creat
 1. Create a new keypair locally using `solana-keygen new -o soapkeypair.json`. 
 2. Open the `soapkeypair.json` file, and copy its contents `[18,223,250,12...]`.
 3. Open your desktop wallet, and import this private key.
-4. Go to [Shadow Storage](https://shadow.storage) and create a new bucket using the `soapkeypair` wallet. Copy the bucket's pubkey.
+4. Go to [Shadow Storage](https://shadow.storage) and create a new space using the `soapkeypair` wallet. Copy the space's address.
 
 ### Run
 1. Clone the repo, open in your editor
