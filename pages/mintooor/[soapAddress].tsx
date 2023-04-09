@@ -186,9 +186,6 @@ const Dispenser: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) => {
                 )}
             </main>
         </div>
-
-
-
     )
 }
 

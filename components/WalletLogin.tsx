@@ -34,7 +34,7 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
             dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
             cluster: "mainnet-beta",
             app_url: `https://${base_url}`,
-            redirect_link: (onConnectRedirectLink + extraQueryParams ),
+            redirect_link: (onConnectRedirectLink + extraQueryParams),
         });
 
         const url = buildUrl(walletEndpoint, "connect", params);
@@ -111,7 +111,7 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
                                 </button>
                             </Link>
                             <Link href={`${connect("solflare.com")}`}>
-                            <button className="bg-gradient-to-tr from-[#fc4d2e] to-[#fe9820] hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2 block">
+                                <button className="bg-gradient-to-tr from-[#fc4d2e] to-[#fe9820] hover:shadow-md text-white font-bold py-2 px-4 rounded w-64 h-16 my-2 block">
                                     {`${walletAction} with Solflare`}
                                 </button>
                             </Link>
@@ -129,7 +129,7 @@ export default function WalletLogin({ walletAction, target, forceReconnect }) {
                 )}
                 {(incognito == true) && (
                     <h4 className="text-center font-bold text-2xl leading-6">
-                        {`You're currently in a private window. Open this page in your normal browser to ${walletAction.toLowerCase()}.`}
+                        {`You're currently in a private window. Open this page in a regular window to ${walletAction.toLowerCase()}.`}
                     </h4>
                 )}
             </div>

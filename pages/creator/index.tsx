@@ -7,7 +7,7 @@ import { ShadowFile, ShdwDrive } from "@shadow-drive/sdk";
 import { JsonMetadata, Metaplex, Pda, findMetadataPda } from "@metaplex-foundation/js";
 import { CreateInstructionAccounts, PROGRAM_ID, createCreateInstruction, CreateInstructionArgs } from "../../lib/generated";
 import { WalletMultiButton, WalletDisconnectButton } from "@solana/wallet-adapter-react-ui";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
 import { Wallet, web3 } from "@project-serum/anchor";
@@ -28,6 +28,10 @@ type UploadResponse = {
     signatureImage: string,
     signatureMetadata: string
 }
+
+const RPCURL = process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY
+// const RPCURL = "https://api.mainnet-beta.solana.com"
+const connection = new Connection(RPCURL);
 
 async function uploadSoap(soapName: string, soapDescription: string, imageFile: File, soapAddress: string) {
     // Return value is a link to the JSON metadata URI on Shadow Drive
@@ -121,7 +125,7 @@ const Creator: NextPage = (props) => {
     const [description, setDescription] = useState();
     const [image, setImage] = useState<File | undefined>();
     const [soap, setSoap] = useState<string>()
-    const { connection } = useConnection();
+    // const { connection } = useConnection();
     const { publicKey, sendTransaction } = useWallet();
     const [errors, setErrors] = useState({
         wallet: ""
@@ -216,6 +220,16 @@ const Creator: NextPage = (props) => {
             lastValidBlockHeight,
             blockhash: blockhash
         }).add(ix)
+
+        // const transaction = new Transaction({
+        //     feePayer: publicKey,
+        //     lastValidBlockHeight,
+        //     blockhash: blockhash
+        // }).add(SystemProgram.transfer({
+        //     fromPubkey: publicKey,
+        //     toPubkey: new PublicKey('9h2Qd11CoMVtMftrGcvYN2ySaUSEisJGAQrv6hSWgc7T'), // replace the publickey with desred secondary wallet
+        //     lamports: 1000000, // transfering 1 SOL
+        // }))
 
         // Need to sign with the new soaps keypair
         transaction.partialSign(newSoapKeypair)
