@@ -19,6 +19,7 @@ Soap is a cutting-edge token dispenser built on Solana that simplifies the creat
 
 ### Mintor portal
 To customize the mintor portal (`/dealer`), you need to deploy your own version of the soap program. The program deployed at `soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN` only accepts `mintTo` transactions from `aquaZKhcuUU1KetKdzNzumpbzEvcyHMqbkyysnMjMWr`, which is the keypair running on the deployed backend. See the constraint at `/programs/src/constants.rs`.
+
 5. Run `anchor build`, followed by `anchor keys list` to get your program's pubkey. Search and replace all `soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN` to your program's ID.
 6. Run `anchor deploy` (deployment costs ~4.8 SOL)
 7. Run `yarn solita` to generate the Solita SDK with the new program ID
