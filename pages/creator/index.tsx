@@ -7,7 +7,7 @@ import { ShadowFile, ShdwDrive } from "@shadow-drive/sdk";
 import { JsonMetadata, Metaplex, Pda, findMetadataPda } from "@metaplex-foundation/js";
 import { CreateInstructionAccounts, PROGRAM_ID, createCreateInstruction, CreateInstructionArgs } from "../../lib/generated";
 import { WalletMultiButton, WalletDisconnectButton } from "@solana/wallet-adapter-react-ui";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
 import { Wallet, web3 } from "@project-serum/anchor";
@@ -31,7 +31,7 @@ type UploadResponse = {
 
 const RPCURL = process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY
 // const RPCURL = "https://api.mainnet-beta.solana.com"
-const connection = new Connection(RPCURL);
+// const connection = new Connection(RPCURL);
 
 async function uploadSoap(soapName: string, soapDescription: string, imageFile: File, soapAddress: string) {
     // Return value is a link to the JSON metadata URI on Shadow Drive
@@ -125,7 +125,7 @@ const Creator: NextPage = (props) => {
     const [description, setDescription] = useState();
     const [image, setImage] = useState<File | undefined>();
     const [soap, setSoap] = useState<string>()
-    // const { connection } = useConnection();
+    const { connection } = useConnection();
     const { publicKey, sendTransaction } = useWallet();
     const [errors, setErrors] = useState({
         wallet: ""
