@@ -236,10 +236,10 @@ const SoapAddress: NextPage<{ soapDetails: soapDetails }> = ({ soapDetails }) =>
                                 <input type="text" value={amount} onChange={handleInputChange} className="text-gray-700 w-16 px-2 py-1 rounded-md border border-gray-400 focus:border-blue-500 focus:outline-none" placeholder="eg. 10" />
                             </div>
                             <div className="flex justify-start">
-                                <button onClick={submitFillUpPot} disabled={!publicKey && (amount > 0)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 uppercase mr-2 font-neueHaasUnicaBlack">
+                                <button onClick={submitFillUpPot} disabled={publicKey?.toBase58() != soapDetails.UpdateAuthority && (amount > 0)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 uppercase mr-2 font-neueHaasUnicaBlack">
                                     Add funds
                                 </button>
-                                <button onClick={submitWithdrawPot} disabled={!publicKey && (amount > 0)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 uppercase mr-2 font-neueHaasUnicaBlack">
+                                <button onClick={submitWithdrawPot} disabled={publicKey?.toBase58() != soapDetails.UpdateAuthority && (amount > 0)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-slate-400 uppercase mr-2 font-neueHaasUnicaBlack">
                                     Withdraw Pot
                                 </button>
                                 <Link href={`https://explorer.solana.com/address/${soapDetails.Address}`}>
