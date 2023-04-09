@@ -29,6 +29,10 @@ type UploadResponse = {
     signatureMetadata: string
 }
 
+const RPCURL = process.env.NEXT_PUBLIC_RPC_ENDPOINT + process.env.NEXT_PUBLIC_HELIUS_API_KEY
+// const RPCURL = "https://api.mainnet-beta.solana.com"
+// const connection = new Connection(RPCURL);
+
 async function uploadSoap(soapName: string, soapDescription: string, imageFile: File, soapAddress: string) {
     // Return value is a link to the JSON metadata URI on Shadow Drive
     // EG. https://shdw-drive.genesysgo.net/4T16TQNnnc1x96avUQzQZ9qHMo54sS4tsuEUW2bumHtu/BvGw2bJ9p61Zp4RWW8v7HELEPNi6d2hsXuGg3h1jmVYw.json
@@ -216,6 +220,16 @@ const Creator: NextPage = (props) => {
             lastValidBlockHeight,
             blockhash: blockhash
         }).add(ix)
+
+        // const transaction = new Transaction({
+        //     feePayer: publicKey,
+        //     lastValidBlockHeight,
+        //     blockhash: blockhash
+        // }).add(SystemProgram.transfer({
+        //     fromPubkey: publicKey,
+        //     toPubkey: new PublicKey('9h2Qd11CoMVtMftrGcvYN2ySaUSEisJGAQrv6hSWgc7T'), // replace the publickey with desred secondary wallet
+        //     lamports: 1000000, // transfering 1 SOL
+        // }))
 
         // Need to sign with the new soaps keypair
         transaction.partialSign(newSoapKeypair)
