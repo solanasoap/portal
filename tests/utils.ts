@@ -1,4 +1,7 @@
-import { createProgramAddressSync, findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
+import {
+  createProgramAddressSync,
+  findProgramAddressSync,
+} from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { PublicKey } from "@solana/web3.js";
 import { POT_TAG, USER_PROFILE_TAG } from "../lib/constants";
 import * as anchor from "@project-serum/anchor";
@@ -23,22 +26,19 @@ export const getUserProfile = (authority: PublicKey) => {
 
 export const getPot = (mint: PublicKey, authority: PublicKey) => {
   return findProgramAddressSync(
-    [
-      POT_TAG,
-      mint.toBuffer(),
-      authority.toBuffer()
-    ],
+    [POT_TAG, mint.toBuffer(), authority.toBuffer()],
     PROGRAM_ID
   )[0];
 };
 
-export const logDevnetSignature = (name: string, value) => console.log(`
+export const logDevnetSignature = (name: string, value) =>
+  console.log(`
 ${name}
 https://solscan.io/tx/${value}?cluster=devnet
-`)
+`);
 
-
-export const logDevnetAccount = (name: string, value) => console.log(`
+export const logDevnetAccount = (name: string, value) =>
+  console.log(`
 ${name}
 https://solscan.io/account/${value}?cluster=devnet
-`)
+`);

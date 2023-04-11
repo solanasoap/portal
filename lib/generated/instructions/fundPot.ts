@@ -5,8 +5,8 @@
  * See: https://github.com/metaplex-foundation/solita
  */
 
-import * as beet from '@metaplex-foundation/beet'
-import * as web3 from '@solana/web3.js'
+import * as beet from "@metaplex-foundation/beet";
+import * as web3 from "@solana/web3.js";
 
 /**
  * @category Instructions
@@ -14,8 +14,8 @@ import * as web3 from '@solana/web3.js'
  * @category generated
  */
 export type FundPotInstructionArgs = {
-  solLamports: beet.bignum
-}
+  solLamports: beet.bignum;
+};
 /**
  * @category Instructions
  * @category FundPot
@@ -23,15 +23,15 @@ export type FundPotInstructionArgs = {
  */
 export const fundPotStruct = new beet.BeetArgsStruct<
   FundPotInstructionArgs & {
-    instructionDiscriminator: number[] /* size: 8 */
+    instructionDiscriminator: number[] /* size: 8 */;
   }
 >(
   [
-    ['instructionDiscriminator', beet.uniformFixedSizeArray(beet.u8, 8)],
-    ['solLamports', beet.u64],
+    ["instructionDiscriminator", beet.uniformFixedSizeArray(beet.u8, 8)],
+    ["solLamports", beet.u64],
   ],
-  'FundPotInstructionArgs'
-)
+  "FundPotInstructionArgs"
+);
 /**
  * Accounts required by the _fundPot_ instruction
  *
@@ -43,16 +43,16 @@ export const fundPotStruct = new beet.BeetArgsStruct<
  * @category generated
  */
 export type FundPotInstructionAccounts = {
-  authority: web3.PublicKey
-  pot: web3.PublicKey
-  mintAccount: web3.PublicKey
-  systemProgram?: web3.PublicKey
-  anchorRemainingAccounts?: web3.AccountMeta[]
-}
+  authority: web3.PublicKey;
+  pot: web3.PublicKey;
+  mintAccount: web3.PublicKey;
+  systemProgram?: web3.PublicKey;
+  anchorRemainingAccounts?: web3.AccountMeta[];
+};
 
 export const fundPotInstructionDiscriminator = [
   128, 40, 51, 21, 246, 133, 100, 196,
-]
+];
 
 /**
  * Creates a _FundPot_ instruction.
@@ -67,12 +67,12 @@ export const fundPotInstructionDiscriminator = [
 export function createFundPotInstruction(
   accounts: FundPotInstructionAccounts,
   args: FundPotInstructionArgs,
-  programId = new web3.PublicKey('soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN')
+  programId = new web3.PublicKey("6ymG1oXi6Y7SKgPTEhGQpP7jRH4tB9mp7iJFowfD9hMz")
 ) {
   const [data] = fundPotStruct.serialize({
     instructionDiscriminator: fundPotInstructionDiscriminator,
     ...args,
-  })
+  });
   const keys: web3.AccountMeta[] = [
     {
       pubkey: accounts.authority,
@@ -94,11 +94,11 @@ export function createFundPotInstruction(
       isWritable: false,
       isSigner: false,
     },
-  ]
+  ];
 
   if (accounts.anchorRemainingAccounts != null) {
     for (const acc of accounts.anchorRemainingAccounts) {
-      keys.push(acc)
+      keys.push(acc);
     }
   }
 
@@ -106,6 +106,6 @@ export function createFundPotInstruction(
     programId,
     keys,
     data,
-  })
-  return ix
+  });
+  return ix;
 }

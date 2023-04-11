@@ -5,8 +5,8 @@
  * See: https://github.com/metaplex-foundation/solita
  */
 
-import * as beet from '@metaplex-foundation/beet'
-import * as web3 from '@solana/web3.js'
+import * as beet from "@metaplex-foundation/beet";
+import * as web3 from "@solana/web3.js";
 
 /**
  * @category Instructions
@@ -14,8 +14,8 @@ import * as web3 from '@solana/web3.js'
  * @category generated
  */
 export type WithdrawPotInstructionArgs = {
-  solLamports: beet.bignum
-}
+  solLamports: beet.bignum;
+};
 /**
  * @category Instructions
  * @category WithdrawPot
@@ -23,15 +23,15 @@ export type WithdrawPotInstructionArgs = {
  */
 export const withdrawPotStruct = new beet.BeetArgsStruct<
   WithdrawPotInstructionArgs & {
-    instructionDiscriminator: number[] /* size: 8 */
+    instructionDiscriminator: number[] /* size: 8 */;
   }
 >(
   [
-    ['instructionDiscriminator', beet.uniformFixedSizeArray(beet.u8, 8)],
-    ['solLamports', beet.u64],
+    ["instructionDiscriminator", beet.uniformFixedSizeArray(beet.u8, 8)],
+    ["solLamports", beet.u64],
   ],
-  'WithdrawPotInstructionArgs'
-)
+  "WithdrawPotInstructionArgs"
+);
 /**
  * Accounts required by the _withdrawPot_ instruction
  *
@@ -44,17 +44,17 @@ export const withdrawPotStruct = new beet.BeetArgsStruct<
  * @category generated
  */
 export type WithdrawPotInstructionAccounts = {
-  authority: web3.PublicKey
-  pot: web3.PublicKey
-  payer: web3.PublicKey
-  mintAccount: web3.PublicKey
-  systemProgram?: web3.PublicKey
-  anchorRemainingAccounts?: web3.AccountMeta[]
-}
+  authority: web3.PublicKey;
+  pot: web3.PublicKey;
+  payer: web3.PublicKey;
+  mintAccount: web3.PublicKey;
+  systemProgram?: web3.PublicKey;
+  anchorRemainingAccounts?: web3.AccountMeta[];
+};
 
 export const withdrawPotInstructionDiscriminator = [
   236, 48, 215, 185, 245, 23, 17, 182,
-]
+];
 
 /**
  * Creates a _WithdrawPot_ instruction.
@@ -69,12 +69,12 @@ export const withdrawPotInstructionDiscriminator = [
 export function createWithdrawPotInstruction(
   accounts: WithdrawPotInstructionAccounts,
   args: WithdrawPotInstructionArgs,
-  programId = new web3.PublicKey('soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN')
+  programId = new web3.PublicKey("6ymG1oXi6Y7SKgPTEhGQpP7jRH4tB9mp7iJFowfD9hMz")
 ) {
   const [data] = withdrawPotStruct.serialize({
     instructionDiscriminator: withdrawPotInstructionDiscriminator,
     ...args,
-  })
+  });
   const keys: web3.AccountMeta[] = [
     {
       pubkey: accounts.authority,
@@ -101,11 +101,11 @@ export function createWithdrawPotInstruction(
       isWritable: false,
       isSigner: false,
     },
-  ]
+  ];
 
   if (accounts.anchorRemainingAccounts != null) {
     for (const acc of accounts.anchorRemainingAccounts) {
-      keys.push(acc)
+      keys.push(acc);
     }
   }
 
@@ -113,6 +113,6 @@ export function createWithdrawPotInstruction(
     programId,
     keys,
     data,
-  })
-  return ix
+  });
+  return ix;
 }

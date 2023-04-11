@@ -1,0 +1,28 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+@font-face {
+  font-family: "NeueHaasUnica-Regular";
+  src: url("/fonts/NeueHaasUnica-Regular.ttf");
+}
+
+@font-face {
+  font-family: "NeueHaasUnica-Black";
+  src: url("/fonts/NeueHaasUnica-Black.ttf");
+}
+
+@font-face {
+  font-family: "Phenomena-Black";
+  src: url("/fonts/Phenomena-Black.otf");
+}
+
+@font-face {
+  font-family: "Phenomena-Regular";
+  src: url("/fonts/Phenomena-Regular.otf");
+}
+
+body {
+  background-color: #0c0c0c;
+  color: white;
+}

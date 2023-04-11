@@ -5,9 +5,9 @@
  * See: https://github.com/metaplex-foundation/solita
  */
 
-import * as web3 from '@solana/web3.js'
-import * as beetSolana from '@metaplex-foundation/beet-solana'
-import * as beet from '@metaplex-foundation/beet'
+import * as web3 from "@solana/web3.js";
+import * as beetSolana from "@metaplex-foundation/beet-solana";
+import * as beet from "@metaplex-foundation/beet";
 
 /**
  * Arguments used to create {@link UserProfile}
@@ -15,11 +15,11 @@ import * as beet from '@metaplex-foundation/beet'
  * @category generated
  */
 export type UserProfileArgs = {
-  authority: web3.PublicKey
-  totalSoapsCount: number
-}
+  authority: web3.PublicKey;
+  totalSoapsCount: number;
+};
 
-export const userProfileDiscriminator = [32, 37, 119, 205, 179, 180, 13, 194]
+export const userProfileDiscriminator = [32, 37, 119, 205, 179, 180, 13, 194];
 /**
  * Holds the data for the {@link UserProfile} Account and provides de/serialization
  * functionality for that data
@@ -37,7 +37,7 @@ export class UserProfile implements UserProfileArgs {
    * Creates a {@link UserProfile} instance from the provided args.
    */
   static fromArgs(args: UserProfileArgs) {
-    return new UserProfile(args.authority, args.totalSoapsCount)
+    return new UserProfile(args.authority, args.totalSoapsCount);
   }
 
   /**
@@ -48,7 +48,7 @@ export class UserProfile implements UserProfileArgs {
     accountInfo: web3.AccountInfo<Buffer>,
     offset = 0
   ): [UserProfile, number] {
-    return UserProfile.deserialize(accountInfo.data, offset)
+    return UserProfile.deserialize(accountInfo.data, offset);
   }
 
   /**
@@ -65,11 +65,11 @@ export class UserProfile implements UserProfileArgs {
     const accountInfo = await connection.getAccountInfo(
       address,
       commitmentOrConfig
-    )
+    );
     if (accountInfo == null) {
-      throw new Error(`Unable to find UserProfile account at ${address}`)
+      throw new Error(`Unable to find UserProfile account at ${address}`);
     }
-    return UserProfile.fromAccountInfo(accountInfo, 0)[0]
+    return UserProfile.fromAccountInfo(accountInfo, 0)[0];
   }
 
   /**
@@ -80,10 +80,10 @@ export class UserProfile implements UserProfileArgs {
    */
   static gpaBuilder(
     programId: web3.PublicKey = new web3.PublicKey(
-      'soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN'
+      "6ymG1oXi6Y7SKgPTEhGQpP7jRH4tB9mp7iJFowfD9hMz"
     )
   ) {
-    return beetSolana.GpaBuilder.fromStruct(programId, userProfileBeet)
+    return beetSolana.GpaBuilder.fromStruct(programId, userProfileBeet);
   }
 
   /**
@@ -91,7 +91,7 @@ export class UserProfile implements UserProfileArgs {
    * @returns a tuple of the account data and the offset up to which the buffer was read to obtain it.
    */
   static deserialize(buf: Buffer, offset = 0): [UserProfile, number] {
-    return userProfileBeet.deserialize(buf, offset)
+    return userProfileBeet.deserialize(buf, offset);
   }
 
   /**
@@ -102,7 +102,7 @@ export class UserProfile implements UserProfileArgs {
     return userProfileBeet.serialize({
       accountDiscriminator: userProfileDiscriminator,
       ...this,
-    })
+    });
   }
 
   /**
@@ -110,7 +110,7 @@ export class UserProfile implements UserProfileArgs {
    * {@link UserProfile}
    */
   static get byteSize() {
-    return userProfileBeet.byteSize
+    return userProfileBeet.byteSize;
   }
 
   /**
@@ -126,7 +126,7 @@ export class UserProfile implements UserProfileArgs {
     return connection.getMinimumBalanceForRentExemption(
       UserProfile.byteSize,
       commitment
-    )
+    );
   }
 
   /**
@@ -134,7 +134,7 @@ export class UserProfile implements UserProfileArgs {
    * hold {@link UserProfile} data.
    */
   static hasCorrectByteSize(buf: Buffer, offset = 0) {
-    return buf.byteLength - offset === UserProfile.byteSize
+    return buf.byteLength - offset === UserProfile.byteSize;
   }
 
   /**
@@ -145,7 +145,7 @@ export class UserProfile implements UserProfileArgs {
     return {
       authority: this.authority.toBase58(),
       totalSoapsCount: this.totalSoapsCount,
-    }
+    };
   }
 }
 
@@ -156,14 +156,14 @@ export class UserProfile implements UserProfileArgs {
 export const userProfileBeet = new beet.BeetStruct<
   UserProfile,
   UserProfileArgs & {
-    accountDiscriminator: number[] /* size: 8 */
+    accountDiscriminator: number[] /* size: 8 */;
   }
 >(
   [
-    ['accountDiscriminator', beet.uniformFixedSizeArray(beet.u8, 8)],
-    ['authority', beetSolana.publicKey],
-    ['totalSoapsCount', beet.u16],
+    ["accountDiscriminator", beet.uniformFixedSizeArray(beet.u8, 8)],
+    ["authority", beetSolana.publicKey],
+    ["totalSoapsCount", beet.u16],
   ],
   UserProfile.fromArgs,
-  'UserProfile'
-)
+  "UserProfile"
+);

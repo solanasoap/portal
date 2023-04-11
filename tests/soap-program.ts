@@ -2,10 +2,29 @@ import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { SoapProgram } from "../target/types/soap_program";
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
-import { getPot, getUserProfile, logDevnetAccount, logDevnetSignature } from "./utils";
-import { clusterApiUrl, Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { PublicKey, findMetadataPda, Metaplex, Pda } from "@metaplex-foundation/js";
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync } from "@solana/spl-token";
+import {
+  getPot,
+  getUserProfile,
+  logDevnetAccount,
+  logDevnetSignature,
+} from "./utils";
+import {
+  clusterApiUrl,
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
+import {
+  PublicKey,
+  findMetadataPda,
+  Metaplex,
+  Pda,
+} from "@metaplex-foundation/js";
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddressSync,
+} from "@solana/spl-token";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { POT_TAG } from "../lib/constants";
 
@@ -13,7 +32,7 @@ const PROGRAM_ID = new anchor.web3.PublicKey(
   "soap4c4g3L9vQUQYSCJxhTbHdJYSiX3aZPzPGnp2CoN"
 );
 
-const destinationWallet = Keypair.generate().publicKey
+const destinationWallet = Keypair.generate().publicKey;
 
 describe("soap-program", () => {
   const provider = anchor.AnchorProvider.env();
@@ -28,9 +47,16 @@ describe("soap-program", () => {
   );
   const payer = provider.wallet as anchor.Wallet;
   const mintKeypair: anchor.web3.Keypair = anchor.web3.Keypair.generate();
-  const pot = Pda.find(PROGRAM_ID, [POT_TAG, mintKeypair.publicKey.toBuffer(), payer.publicKey.toBuffer()]);
+  const pot = Pda.find(PROGRAM_ID, [
+    POT_TAG,
+    mintKeypair.publicKey.toBuffer(),
+    payer.publicKey.toBuffer(),
+  ]);
 
-  console.log("Pot Address", getPot(mintKeypair.publicKey, payer.publicKey).toBase58());
+  console.log(
+    "Pot Address",
+    getPot(mintKeypair.publicKey, payer.publicKey).toBase58()
+  );
 
   const tokenTitle = "Soap Program";
   const tokenSymbol = "SOAP";
@@ -38,8 +64,7 @@ describe("soap-program", () => {
     "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/spl-token.json";
 
   it("Create a Soap!", async () => {
-
-    console.log("\n\n\n WE CREATING A SOAP HERE EYYY")
+    console.log("\n\n\n WE CREATING A SOAP HERE EYYY");
 
     const metadataAddress = findMetadataPda(
       mintKeypair.publicKey,
@@ -85,7 +110,7 @@ describe("soap-program", () => {
   });
 
   it("Fund the Pot", async () => {
-    console.log("\n\n\n WE FUND POT HERE EYYY")
+    console.log("\n\n\n WE FUND POT HERE EYYY");
 
     const tx = await program.methods
       .fundPot(new anchor.BN(LAMPORTS_PER_SOL * 0.2))
@@ -103,16 +128,19 @@ describe("soap-program", () => {
 
   it("Mint to end user wallet", async () => {
     try {
+      const tokenMetadata = await Metaplex.make(provider.connection)
+        .nfts()
+        .findByMint({ mintAddress: mintKeypair.publicKey });
 
-      const tokenMetadata = await Metaplex.make(provider.connection).nfts().findByMint({ mintAddress: mintKeypair.publicKey })
-
-      const userAta = getAssociatedTokenAddressSync(mintKeypair.publicKey, destinationWallet)
+      const userAta = getAssociatedTokenAddressSync(
+        mintKeypair.publicKey,
+        destinationWallet
+      );
 
       logDevnetAccount("User ATA", userAta);
-      logDevnetAccount("Pot Address", pot)
-      logDevnetAccount("Destination Wallet", destinationWallet)
-      logDevnetAccount('Soap Mint', mintKeypair.publicKey)
-
+      logDevnetAccount("Pot Address", pot);
+      logDevnetAccount("Destination Wallet", destinationWallet);
+      logDevnetAccount("Soap Mint", mintKeypair.publicKey);
 
       const tx = await program.methods
         .mintSoap()
@@ -137,7 +165,7 @@ describe("soap-program", () => {
   });
 
   it("Withdraw from the Pot", async () => {
-    console.log("\n\n\n WE WITHDRAW FROM POT HERE EYYY")
+    console.log("\n\n\n WE WITHDRAW FROM POT HERE EYYY");
 
     try {
       const tx = await program.methods
@@ -156,5 +184,3 @@ describe("soap-program", () => {
     }
   });
 });
-
-
