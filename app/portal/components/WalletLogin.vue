@@ -34,7 +34,7 @@ const connect = (walletEndpoint: string) => {
   }/onConnect`;
   const params = new URLSearchParams({
     dapp_encryption_public_key: bs58.encode(dappKeyPair.value.publicKey),
-    cluster: "devnet",
+    cluster: "mainnet-beta",
     app_url: `https://${base_url}`,
     redirect_link: onConnectRedirectLink + extraQueryParams,
   });
