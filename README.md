@@ -1,6 +1,16 @@
 # SOAP🧼
 Soap is a cutting-edge token dispenser built on Solana that simplifies the creation and distribution of digital collectibles. It allows event organizers to issue attendance tokens, airdrop aftermovies, and send invitations for future events. For Spaces enthusiasts, it enables the distribution of Soaps for each space, while rewarding loyal fans with airdrops and exclusive content.
 
+The Soap name and brand is CC0 licensed, meaning anyone can use it any way they want. Soap is not a registered trademark. 
+
+[See here for the announcement](https://twitter.com/solanasoap/status/1665188145246117889?s=20)
+
+![cc0 tweet](https://github.com/solanasoap/portal/assets/20590073/ae01f5d0-9317-48d5-842e-49996bad67aa)
+
+# Development
+The creator portal only works locally on the Next version. There's a `nuxt` branch with an implementation in Nuxt 3.
+
+
 ## Local development
 ### Setup
 1. Create a new keypair locally using `solana-keygen new -o soapkeypair.json`. 
