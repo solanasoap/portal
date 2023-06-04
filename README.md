@@ -9,7 +9,7 @@ The Soap name and brand is CC0 licensed, meaning anyone can use it any way they 
 
 # Development
 The creator portal only works locally on the Next version. There's a `nuxt` branch with an implementation in Nuxt 3.
-
+[Grizzlython submission video](https://www.youtube.com/watch?v=px8jjqwnJtI)
 
 ## Local development
 ### Setup
